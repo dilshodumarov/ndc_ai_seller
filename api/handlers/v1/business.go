@@ -1,0 +1,218 @@
+package v1
+
+import (
+	"database/sql"
+	"sugurta/api/handlers"
+	status_http "sugurta/api/http_status"
+	"sugurta/internal/entity"
+	"sugurta/internal/pkg/config"
+	"sugurta/internal/usecase/business"
+
+	"net/http"
+
+	"github.com/casbin/casbin/v2"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+)
+
+type businessRoutes struct {
+	handlers.BaseHandler
+	log           *zap.Logger
+	cfg           *config.Config
+	enforcer      *casbin.CachedEnforcer
+	bussnesUscase business.Business
+}
+
+// NewAuthRoutes creates a new auth routes controller
+func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) {
+	r := &businessRoutes{
+		log:           option.Logger,
+		cfg:           option.Config,
+		enforcer:      option.Enforcer,
+		bussnesUscase: option.Business,
+	}
+
+	business := apiV1Group.Group("/business")
+	{
+		business.POST("", r.CreateBusiness)
+		business.GET("/:id", r.GetBusiness)
+		business.PUT("/:id", r.UpdateBusiness)
+		business.DELETE("/:id", r.DeleteBusiness)
+		business.GET("", r.GetAllBusinesses)
+	}
+}
+
+// CreateBusiness godoc
+// @Summary Create a new business
+// @Description Create a new business with the provided details
+// @Tags BUSINESS
+// @Accept json
+// @Produce json
+// @Param business body entity.CreateBusinessRequest true "Business details"
+// @Success 201 {object} status_http.Response{data=string} "Success"
+// @Response 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @Router /business [post]
+func (b *businessRoutes) CreateBusiness(c *gin.Context) {
+	var business entity.CreateBusinessRequest
+
+	if err := c.ShouldBindJSON(&business); err != nil {
+		b.handleResponse(c, status_http.BadRequest, err.Error())
+		return
+	}
+
+	if business.Name == "" {
+		b.handleResponse(c, status_http.BadRequest, "name is required")
+	}
+	if business.OwnerID == "" {
+		b.handleResponse(c, status_http.BadRequest, "description is required")
+	}
+
+	if err := b.bussnesUscase.Create(c, &business); err != nil {
+		b.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	b.handleResponse(c, status_http.Created, "Business created successfully")
+}
+
+// GetBusiness godoc
+// @Summary Get a business by ID
+// @Description Get business details by its ID
+// @Tags BUSINESS
+// @Accept json
+// @Produce json
+// @Param id path string true "Business ID"
+// @Success 200 {object} status_http.Response{data=string} "Business"
+// @Response400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @Router /business/{id} [get]
+func (b *businessRoutes) GetBusiness(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		b.handleResponse(c, status_http.BadRequest, "business ID is required")
+		return
+	}
+
+	business, err := b.bussnesUscase.Get(c.Request.Context(), id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			b.handleResponse(c, status_http.BadRequest, "business not found")
+			return
+		}
+		b.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	b.handleResponse(c, status_http.OK, business)
+}
+
+// UpdateBusiness godoc
+// @Summary Update a business
+// @Description Update business details
+// @Tags BUSINESS
+// @Accept json
+// @Produce json
+// @Param id path string true "Business ID"
+// @Param business body entity.UpdateBusinessRequestForSwagger true "Business details"
+// @Success 200 {object} status_http.Response{data=string} "Business updated"
+// @Response 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @Router /business/{id} [put]
+func (b *businessRoutes) UpdateBusiness(c *gin.Context) {
+	var business entity.UpdateBusinessRequest
+	if err := c.ShouldBindJSON(&business); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	id := c.Param("id")
+	business.ID=id
+	if err := b.bussnesUscase.Update(c, &business); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, business)
+}
+
+// DeleteBusiness godoc
+// @Summary Delete a business
+// @Description Delete a business by ID
+// @Tags BUSINESS
+// @Accept json
+// @Produce json
+// @Param id path string true "Business ID"
+// @Success 200 {object} status_http.Response{data=string} "Successfully deleted"
+// @Response 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @Router /business/{id} [delete]
+func (b *businessRoutes) DeleteBusiness(c *gin.Context) {
+	id := c.Param("id")
+
+	if id == "" {
+		b.handleResponse(c, status_http.BadRequest, "business ID is required")
+		return
+	}
+
+	if err := b.bussnesUscase.Delete(c.Request.Context(), id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Business successfully deleted"})
+}
+
+// GetAllBusinesses godoc
+// @Summary Get all businesses
+// @Description Get all businesses with pagination
+// @Tags BUSINESS
+// @Accept json
+// @Produce json
+// @Param owner_id query string true "Owner ID"
+// @Param limit query int false "Limit per page" default(10)
+// @Param page query int false "Page number" default(0)
+// @Success 200 {object} status_http.Response
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @Router /business [get]
+func (b *businessRoutes) GetAllBusinesses(c *gin.Context) {
+	req := entity.GetAllBusinessesRequest{
+		OwnerID: c.Query("owner_id"),
+		Limit:   c.GetInt("limit"),
+		Page:    c.GetInt("page"),
+	}
+
+	if req.OwnerID == "" {
+		b.handleResponse(c, status_http.BadRequest, "owner ID is required")
+		return
+	}
+
+	businesses, err := b.bussnesUscase.List(c.Request.Context(), req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, businesses)
+}
+
+func (h *businessRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {
+	switch code := status.Code; {
+	case code < 400:
+	default:
+		h.log.Error(
+			"response",
+			zap.Int("code", status.Code),
+			zap.String("status", status.Status),
+			zap.Any("description", status.Description),
+			zap.Any("data", data),
+			zap.Any("custom_message", status.CustomMessage),
+		)
+	}
+
+	c.JSON(status.Code, status_http.Response{
+		Status:        status.Status,
+		Description:   status.Description,
+		Data:          data,
+		CustomMessage: status.CustomMessage,
+	})
+}

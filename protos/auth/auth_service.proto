@@ -1,0 +1,36 @@
+syntax = "proto3";
+import "auth.proto";
+
+package auth;
+
+option go_package="genproto/auth_service";
+
+// User service definition
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (User) {}
+  rpc GetUserByID(GetUserByIDRequest) returns (User) {}
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (User) {}
+  rpc UpdatePassword(UpdatePasswordRequest) returns (Empty) {}
+  rpc UpdateUser(UpdateUserRequest) returns (Empty) {}
+  rpc DeleteUser(DeleteUserRequest) returns (Empty) {}
+}
+
+// Role service definition
+service RoleService {
+  rpc CreateRole(CreateRoleRequest) returns (Empty) {}
+  rpc GetRoleByID(GetRoleByIDRequest) returns (Role) {}
+  rpc GetRoleByName(GetRoleByNameRequest) returns (Role) {}
+  rpc GetRoles(GetRolesRequest) returns (RoleListResponse) {}
+  rpc UpdateRole(UpdateRoleRequest) returns (Empty) {}
+  rpc DeleteRole(DeleteRoleRequest) returns (Empty) {}
+}
+
+// ClientType service definition
+service ClientTypeService {
+  rpc CreateClientType(CreateClientTypeRequest) returns (Empty) {}
+  rpc GetClientTypeById(GetClientTypeByIdRequest) returns (ClientType) {}
+  rpc GetClientTypeByName(GetClientTypeByNameRequest) returns (ClientType) {}
+  rpc GetClientTypes(GetClientTypesRequest) returns (ClientTypeListResponse) {}
+  rpc UpdateClientType(UpdateClientTypeRequest) returns (Empty) {}
+  rpc DeleteClientType(DeleteClientTypeRequest) returns (Empty) {}
+}

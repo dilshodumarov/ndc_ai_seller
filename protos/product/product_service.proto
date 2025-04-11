@@ -1,0 +1,39 @@
+syntax = "proto3";
+import "product.proto";
+
+package product;
+
+option go_package="genproto/product_service";
+
+
+// Product service definition
+service ProductService {
+  rpc CreateProduct(CreateProductRequest) returns (Empty) {}
+  rpc GetProduct(GetProductRequest) returns (Product) {}
+  rpc UpdateProduct(UpdateProductRequest) returns (Empty) {}
+  rpc DeleteProduct(DeleteProductRequest) returns (Empty) {}
+}
+
+// Category service definition
+service CategoryService {
+  rpc CreateCategory(CreateCategoryRequest) returns (Empty) {}
+  rpc GetCategory(GetCategoryRequest) returns (Category) {}
+  rpc UpdateCategory(UpdateCategoryRequest) returns (Empty) {}
+  rpc DeleteCategory(DeleteCategoryRequest) returns (Empty) {}
+}
+
+// Order service definition
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse) {}
+  rpc GetOrder(GetOrderRequest) returns (Order) {}
+  rpc UpdateOrder(UpdateOrderRequest) returns (Empty) {}
+  rpc DeleteOrder(DeleteOrderRequest) returns (Empty) {}
+}
+
+// OrderProducts service definition
+service OrderProductsService {
+  rpc CreateOrderProducts(CreateOrderProductsRequest) returns (Empty) {}
+  rpc GetOrderProducts(GetOrderProductsRequest) returns (OrderProducts) {}
+  rpc UpdateOrderProducts(UpdateOrderProductsRequest) returns (Empty) {}
+  rpc DeleteOrderProducts(DeleteOrderProductsRequest) returns (Empty) {}
+}

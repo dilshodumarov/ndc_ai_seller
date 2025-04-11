@@ -1,0 +1,17 @@
+syntax = "proto3";
+import "business.proto";
+
+package business;
+
+option go_package="genproto/business_service";
+
+
+
+// Business service definition
+service BusinessService {
+  rpc CreateBusiness(CreateBusinessRequest) returns (Empty) {}
+  rpc GetBusiness(GetBusinessRequest) returns (Business) {}
+  rpc GetAllBusinesses(GetAllBusinessesRequest) returns (GetAllBusinessesResponse) {}
+  rpc UpdateBusiness(UpdateBusinessRequest) returns (Empty) {}
+  rpc DeleteBusiness(DeleteBusinessRequest) returns (Empty) {}
+}
