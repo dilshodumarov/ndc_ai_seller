@@ -13,6 +13,7 @@ import (
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
 	clienttype "sugurta/internal/usecase/client-type"
+	"sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
@@ -39,6 +40,7 @@ type HandlerOption struct {
 	Product    product.Product
 	Category   category.Category
 	Order      order.Order
+	Integration integration.Integration
 }
 
 type BaseHandler struct {

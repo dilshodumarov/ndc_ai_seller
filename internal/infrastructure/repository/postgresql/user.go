@@ -1,10 +1,11 @@
 package postgresql
 
 import (
+	"context"
+	"database/sql"
+	"fmt"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/postgres"
-	"context"
-	"fmt"
 	"time"
 
 	"github.com/Masterminds/squirrel"
@@ -92,33 +93,50 @@ func (p *userRepo) Create(ctx context.Context, u *entity.User) (*entity.User, er
 
 func (p *userRepo) Get(ctx context.Context, params map[string]string) (*entity.User, error) {
 	var (
-		user entity.User
+		user       entity.User
+		businessID sql.NullString
+		roleName   sql.NullString
+		clientTypeID sql.NullString
+		roleCreatedAt, roleUpdatedAt sql.NullTime
 	)
 
-	fmt.Println("params: ", params)
-
-	// ctx, span := otlp.Start(ctx, userServiceName, userSpanRepoPrefix+"Get")
-	// defer span.End()
-
-	queryBuilder := p.userSelectQueryPrefix()
+	var whereClause string
+	var args []interface{}
+	i := 1
 
 	for key, value := range params {
+		if whereClause != "" {
+			whereClause += " AND "
+		}
 		switch key {
 		case "id":
-			queryBuilder = queryBuilder.Where(p.db.Sq.Equal("'guid'", value))
+			whereClause += fmt.Sprintf("u.guid = $%d", i)
+			args = append(args, value)
 		case "email":
-			queryBuilder = queryBuilder.Where(p.db.Sq.Equal("'email'", value))
+			whereClause += fmt.Sprintf("u.email = $%d", i)
+			args = append(args, value)
 		case "phone_number":
-			queryBuilder = queryBuilder.Where(p.db.Sq.Equal("'phone_number'", value))
+			whereClause += fmt.Sprintf("u.phone_number = $%d", i)
+			args = append(args, value)
 		}
-	}
-	query, args, err := queryBuilder.ToSql()
-	if err != nil {
-		return nil, p.db.ErrSQLBuild(err, fmt.Sprintf("%s %s", p.tableName, "get"))
+		i++
 	}
 
-	fmt.Println("sql: ", query)
-	if err = p.db.QueryRow(ctx, query, args...).Scan(
+	query := fmt.Sprintf(`
+		SELECT 
+			u.guid, u.first_name, u.last_name, u.email, u.phone_number,
+			u.password, u.role_id, u.is_active, u.created_at, u.updated_at,
+			b.guid AS business_id,
+			r.name AS role_name, r.client_type_id, r.created_at, r.updated_at
+		FROM "user" u
+		LEFT JOIN business b ON b.owner_id = u.guid AND b.deleted_at IS NULL
+		LEFT JOIN role r ON r.guid = u.role_id
+		WHERE %s
+	`, whereClause)
+
+	fmt.Println("query: ", query)
+
+	err := p.db.QueryRow(ctx, query, args...).Scan(
 		&user.ID,
 		&user.FirstName,
 		&user.LastName,
@@ -129,13 +147,32 @@ func (p *userRepo) Get(ctx context.Context, params map[string]string) (*entity.U
 		&user.IsActive,
 		&user.CreatedAt,
 		&user.UpdatedAt,
-	); err != nil {
+		&businessID,
+		&roleName,
+		&clientTypeID,
+		&roleCreatedAt,
+		&roleUpdatedAt,
+	)
+	if err != nil {
 		fmt.Println("errr: ", p.db.Error(err))
 		return nil, p.db.Error(err)
 	}
 
+	if businessID.Valid {
+		user.BusinessID = businessID.String
+	}
+
+	user.RoleData = entity.Role{
+		ID:            user.RoleID,
+		Name:          roleName.String,
+		ClientTypeId:  clientTypeID.String,
+		CreatedAt:     roleCreatedAt.Time,
+		UpdatedAt:     roleUpdatedAt.Time,
+	}
+
 	return &user, nil
 }
+
 
 func (p *userRepo) List(ctx context.Context, limit, offset uint64, filter map[string]string) ([]*entity.User, error) {
 	// ctx, span := otlp.Start(ctx, userServiceName, userSpanRepoPrefix+"List")

@@ -5,13 +5,17 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"net/http"
 	"strconv"
+	"strings"
 	"time"
 	"unicode"
 
 	"sugurta/internal/entity"
+	"sugurta/internal/pkg/config"
 
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/cast"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -88,12 +92,13 @@ func GenerateRandomCode(length int) (string, error) {
 }
 
 // GenerateJWT generates a JWT token with given claims
-func GenerateJWT(userID, role, signingKey string, timeout int) (string, string, error) {
+func GenerateJWT(userID, busnessId, role, signingKey string, timeout int) (string, string, error) {
 	// Access token
 	accessTokenClaims := jwt.MapClaims{
-		"sub":  userID,
-		"role": role,
-		"exp":  time.Now().Add(time.Hour * time.Duration(timeout)).Unix(),
+		"sub":      userID,
+		"role":     role,
+		"owner_id": busnessId,
+		"exp":      time.Now().Add(time.Hour * time.Duration(timeout)).Unix(),
 	}
 
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, accessTokenClaims)
@@ -141,9 +146,10 @@ func ParseToken(tokenString, signingKey string) (*entity.JWTClaims, error) {
 	}
 
 	return &entity.JWTClaims{
-		Sub:  claims["sub"].(string),
-		Role: claims["role"].(string),
-		Exp:  int64(claims["exp"].(float64)),
+		Sub:        claims["sub"].(string),
+		Role:       claims["role"].(string),
+		Exp:        int64(claims["exp"].(float64)),
+		BusinessId: claims["owner_id"].(string),
 	}, nil
 }
 
@@ -170,4 +176,47 @@ func GetPaginationParams(c *gin.Context) (int, int) {
 	}
 
 	return page, limit
+}
+
+func GetBusnessIdFromToken(c *gin.Context, Config config.Config) (string, int) {
+	var softToken string
+	token := c.GetHeader("Authorization")
+	if token == "" {
+		return "unauthorized", http.StatusUnauthorized
+	} else if strings.Contains(token, "Bearer") {
+		softToken = strings.TrimPrefix(token, "Bearer ")
+	} else {
+		softToken = token
+	}
+
+	claims, err := ParseJWT(softToken, Config.SigningKey.SigningKey)
+	if err != nil {
+		return "unauthorized", http.StatusUnauthorized
+	}
+
+	return cast.ToString(claims["owner_id"]), 0
+}
+
+
+func ParseJWT(tokenString string, jwtKey string) (jwt.MapClaims, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Validate the algorithm
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		// Return the secret key
+		return []byte(jwtKey), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return nil, fmt.Errorf("invalid token")
+	}
+
+	return claims, nil
 }

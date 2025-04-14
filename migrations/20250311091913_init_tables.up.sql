@@ -32,14 +32,24 @@ CREATE TABLE IF NOT EXISTS  "business" (
     "guid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "owner_id" UUID REFERENCES "user"(guid) ON DELETE CASCADE, 
     "name" VARCHAR(255),
-    "integration_token" VARCHAR(255),
-    "integration_type" VARCHAR(55),
     "description" VARCHAR(255),
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "deleted_at" TIMESTAMP DEFAULT NULL
 );
 
+CREATE TABLE IF NOT EXISTS  "integration" (
+    "guid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "owner_id" UUID REFERENCES "business"(guid) ON DELETE CASCADE, 
+    "integration_token" VARCHAR(255),
+    "integration_type" VARCHAR(55),
+    "status"     VARCHAR(10) DEFAULT 'active',
+    "started_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "stoped_at"  TIMESTAMP DEFAULT NULL,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "deleted_at" TIMESTAMP DEFAULT NULL
+);
 
 CREATE TABLE IF NOT EXISTS "client" (
     "guid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -88,12 +98,12 @@ CREATE TABLE IF NOT EXISTS "product" (
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS "integration" (
-    "guid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "name" VARCHAR(255) NOT NULL,
-    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+-- CREATE TABLE IF NOT EXISTS "integration" (
+--     "guid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+--     "name" VARCHAR(255) NOT NULL,
+--     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
 
 CREATE TABLE IF NOT EXISTS "order" (
     "guid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

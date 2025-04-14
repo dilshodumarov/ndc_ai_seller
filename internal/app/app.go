@@ -9,6 +9,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"go.uber.org/zap"
 
+	"net/http"
 	"sugurta/internal/infrastructure/repository/postgresql"
 	"sugurta/internal/pkg/config"
 	"sugurta/internal/pkg/otlp"
@@ -17,11 +18,11 @@ import (
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
 	clienttype "sugurta/internal/usecase/client-type"
+	"sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
 	"sugurta/internal/usecase/user"
-	"net/http"
 
 	"sugurta/api"
 
@@ -47,6 +48,7 @@ type App struct {
 	product    product.Product
 	category   category.Category
 	order      order.Order
+	integration integration.Integration
 }
 
 func NewApp(cfg config.Config) (*App, error) {
@@ -114,6 +116,9 @@ func NewApp(cfg config.Config) (*App, error) {
 	categoryRepo := postgresql.NewCategoryRepo(db)
 	categoryUseCase := category.NewCategoryService(contextTimeout, categoryRepo)
 
+	intgrationRepo := postgresql.NewIntegrationRepo(db)
+	intgrationUscase := integration.NewIntegrationService(contextTimeout, intgrationRepo)
+
 	orderRepo := postgresql.NewOrderRepo(db)
 	orderUseCase:=order.NewRoleService(contextTimeout,orderRepo)
 	fmt.Println("order repo: ", orderUseCase)
@@ -133,6 +138,7 @@ func NewApp(cfg config.Config) (*App, error) {
 		product:      productUseCase,
 		category:     categoryUseCase,
 		order:        orderUseCase,
+		integration:  intgrationUscase,
 		// BrokerProducer: event.NewBrokerProducer(cfg.Kafka.Brokers, cfg.Kafka.Topic),
 	}, nil
 }
@@ -169,6 +175,7 @@ func (a *App) Run() error {
 		User:           a.user,
 		Business:       a.business,
 		Order:           a.order,
+		Integration:    a.integration,
 	})
 
 	fmt.Println("here 5")

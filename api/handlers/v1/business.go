@@ -168,7 +168,7 @@ func (b *businessRoutes) DeleteBusiness(c *gin.Context) {
 // @Tags BUSINESS
 // @Accept json
 // @Produce json
-// @Param owner_id query string true "Owner ID"
+// @Param owner_id query string false "Owner ID"
 // @Param limit query int false "Limit per page" default(10)
 // @Param page query int false "Page number" default(0)
 // @Success 200 {object} status_http.Response
@@ -181,10 +181,6 @@ func (b *businessRoutes) GetAllBusinesses(c *gin.Context) {
 		Page:    c.GetInt("page"),
 	}
 
-	if req.OwnerID == "" {
-		b.handleResponse(c, status_http.BadRequest, "owner ID is required")
-		return
-	}
 
 	businesses, err := b.bussnesUscase.List(c.Request.Context(), req)
 	if err != nil {
@@ -194,6 +190,8 @@ func (b *businessRoutes) GetAllBusinesses(c *gin.Context) {
 
 	c.JSON(http.StatusOK, businesses)
 }
+
+
 
 func (h *businessRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {
 	switch code := status.Code; {

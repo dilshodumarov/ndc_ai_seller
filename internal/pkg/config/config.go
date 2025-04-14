@@ -23,6 +23,7 @@ type (
 		Email         EmailConfig
 		SigningKey    SigningKey
 		OTLPCollector WebAddress
+		JWT           JWT
 	}
 
 	Server struct {
@@ -103,6 +104,10 @@ type (
 		Host string
 		Port string
 	}
+
+	JWT struct {
+		Secret string `env-required:"true" yaml:"secret" env:"JWT_SECRET"`
+	}
 )
 
 func NewConfig() (*Config, error) {
@@ -148,7 +153,7 @@ func NewConfig() (*Config, error) {
 	// otlp collector configuration
 	config.OTLPCollector.Host = getEnv("OTLP_COLLECTOR_HOST", "localhost")
 	config.OTLPCollector.Port = getEnv("OTLP_COLLECTOR_PORT", ":4317")
-
+	config.JWT.Secret=getEnv("JWT_SECRET", "jlakdjfadkjfl")
 	// kafka configuration
 	// config.Kafka.Address = strings.Split(getEnv("KAFKA_ADDRESS", "localhost:29092"), ",")
 	// config.Kafka.Topic.InvestmentPaymentTransaction = getEnv("KAFKA_TOPIC_INVESTMENT_PAYMENT_TRANSACTION", "investment.payment.transaction")

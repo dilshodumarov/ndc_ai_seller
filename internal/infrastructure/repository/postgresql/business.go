@@ -31,16 +31,14 @@ func NewBusinessRepo(db *postgres.Postgres) *businessRepo {
 // CreateBusiness creates a new business record.
 func (p *businessRepo) Create(ctx context.Context, b *entity.CreateBusinessRequest) error {
 	query := fmt.Sprintf(
-		`INSERT INTO %s (owner_id, name, integration_token, integration_type, description) 
-		 VALUES ($1, $2, $3, $4, $5)`,
+		`INSERT INTO %s (owner_id, name, description) 
+		 VALUES ($1, $2, $3)`,
 		p.tableName,
 	)
 
 	_, err := p.db.Exec(ctx, query,
 		b.OwnerID,
 		b.Name,
-		b.IntegrationToken,
-		b.IntegrationType,
 		b.Description,
 	)
 	if err != nil {
@@ -55,7 +53,7 @@ func (p *businessRepo) Get(ctx context.Context, id string) (*entity.Business, er
 	var business entity.Business
 
 	query := fmt.Sprintf(
-		"SELECT id, owner_id, name, description, created_at, updated_at FROM %s WHERE id = $1 AND deleted_at IS NULL",
+		"SELECT guid, owner_id, name, description, created_at, updated_at FROM %s WHERE guid = $1 AND deleted_at IS NULL",
 		p.tableName,
 	)
 
@@ -76,44 +74,55 @@ func (p *businessRepo) Get(ctx context.Context, id string) (*entity.Business, er
 
 // List retrieves a list of businesses with filtering and pagination.
 func (p *businessRepo) List(ctx context.Context, req entity.GetAllBusinessesRequest) (*entity.GetAllBusinessesResponse, error) {
-	// Default to pagination values if not provided
-	offset := (req.Page - 1) * req.Limit
-
-	// Build the query for businesses with filtering and pagination
-	query := fmt.Sprintf(
-		"SELECT id, owner_id, name, description, created_at, updated_at FROM %s WHERE deleted_at IS NULL",
-		p.tableName,
-	)
-
-	// Apply filtering by OwnerID if provided
-	if req.OwnerID != "" {
-		query += " AND owner_id = $1"
+	if req.Page <= 0 {
+		req.Page = 1
+	}
+	if req.Limit <= 0 {
+		req.Limit = 10 // default limit
 	}
 
-	// Apply pagination
-	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", len(req.OwnerID)+1, len(req.OwnerID)+2)
-
-	// Prepare the arguments for pagination and filtering
-	args := []interface{}{req.OwnerID, req.Limit, offset}
-
-	// Total count query
+	offset := (req.Page - 1) * req.Limit
+	args := []interface{}{}
+	query := fmt.Sprintf(
+		"SELECT guid, owner_id, name, description, created_at, updated_at FROM %s WHERE deleted_at IS NULL",
+		p.tableName,
+	)
 	countQuery := fmt.Sprintf(
 		"SELECT COUNT(1) FROM %s WHERE deleted_at IS NULL",
 		p.tableName,
 	)
 
+	// Filtering
 	if req.OwnerID != "" {
-		countQuery += " AND owner_id = $1"
+		query += " AND owner_id = $" + fmt.Sprint(len(args)+1)
+		countQuery += " AND owner_id = $" + fmt.Sprint(len(args)+1)
+		args = append(args, req.OwnerID)
 	}
 
-	// Get total count
+	// LIMIT va OFFSET qo‘shamiz (argumentlar soniga qarab)
+	query += " LIMIT $" + fmt.Sprint(len(args)+1)
+	args = append(args, req.Limit)
+
+	query += " OFFSET $" + fmt.Sprint(len(args)+1)
+	args = append(args, offset)
+
+	// Total count
 	var total int
-	err := p.db.QueryRow(ctx, countQuery, req.OwnerID).Scan(&total)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get total count: %w", err)
+	if len(args) > 2 {
+		// OwnerID bilan
+		err := p.db.QueryRow(ctx, countQuery, args[0]).Scan(&total)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get total count: %w", err)
+		}
+	} else {
+		// OwnerID yo‘q
+		err := p.db.QueryRow(ctx, countQuery).Scan(&total)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get total count: %w", err)
+		}
 	}
 
-	// Execute the main query
+	// Query bajarish
 	rows, err := p.db.Query(ctx, query, args...)
 	if err != nil {
 		return nil, p.db.Error(err)
@@ -135,12 +144,11 @@ func (p *businessRepo) List(ctx context.Context, req entity.GetAllBusinessesRequ
 		}
 		businesses.Itmes = append(businesses.Itmes, business)
 	}
-
-	// Set total count
 	businesses.Total = total
-
 	return &businesses, nil
 }
+
+
 
 // UpdateBusiness updates an existing business record.
 func (p *businessRepo) Update(ctx context.Context, b *entity.UpdateBusinessRequest) error {
@@ -160,17 +168,6 @@ func (p *businessRepo) Update(ctx context.Context, b *entity.UpdateBusinessReque
 		argID++
 	}
 
-	if b.IntegrationType != "" {
-		setClauses = append(setClauses, fmt.Sprintf("integration_type = $%d", argID))
-		args = append(args, b.IntegrationType)
-		argID++
-	}
-
-	if b.IntegrationToken != "" {
-		setClauses = append(setClauses, fmt.Sprintf("integration_token = $%d", argID))
-		args = append(args, b.IntegrationToken)
-		argID++
-	}
 
 	setClauses = append(setClauses, fmt.Sprintf("updated_at = $%d", argID))
 	args = append(args, time.Now().UTC())
@@ -190,7 +187,7 @@ func (p *businessRepo) Update(ctx context.Context, b *entity.UpdateBusinessReque
 // DeleteBusiness deletes a business record by ID.
 func (p *businessRepo) Delete(ctx context.Context, id string) error {
 	query := fmt.Sprintf(
-		"UPDATE %s SET deleted_at = $1 WHERE id = $2",
+		"UPDATE %s SET deleted_at = $1 WHERE guid = $2",
 		p.tableName,
 	)
 
@@ -201,3 +198,4 @@ func (p *businessRepo) Delete(ctx context.Context, id string) error {
 
 	return nil
 }
+

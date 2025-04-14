@@ -13,6 +13,7 @@ import (
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
 	clienttype "sugurta/internal/usecase/client-type"
+	"sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
@@ -48,7 +49,7 @@ type RouteOption struct {
 	Product    product.Product
 	Category   category.Category
 	Order      order.Order
-
+	Integration integration.Integration
 	// Service        grpcClients.ServiceClient
 	// RefreshToken   refresh_token.RefreshToken
 	// BrokerProducer event.BrokerProducer
@@ -74,6 +75,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		User:           option.User,
 		Business:       option.Business,
 		Order:          option.Order,
+		Integration:    option.Integration,
 	}
 
 	app := gin.New()
@@ -123,6 +125,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		v1.NewAuthRoutes(apiV1Group, handleOption)
 		v1.NewOrderRoutes(apiV1Group, handleOption )
 		v1.NewBusinessRoutes(apiV1Group,handleOption)
+		v1.NewIntegrationRoutes(apiV1Group,handleOption)
 		// v1.NewClientTypeRoutes(apiV1Group, auth, h.cfg, h.log, h.inMemory)
 		// v1.NewRoleRoutes(apiV1Group, auth, h.cfg, h.log, h.inMemory)
 		//v1.NewBusinessRoutes(apiV1Group, business, h.cfg, h.log, h.inMemory)

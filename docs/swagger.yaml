@@ -42,10 +42,6 @@ definitions:
     properties:
       description:
         type: string
-      integrationToken:
-        type: string
-      integrationType:
-        type: string
       name:
         type: string
       ownerID:
@@ -114,6 +110,46 @@ definitions:
         type: array
       total:
         type: integer
+    type: object
+  entity.IntegrationCreate:
+    properties:
+      integrationToken:
+        type: string
+      integrationType:
+        type: string
+      ownerID:
+        type: string
+    type: object
+  entity.IntegrationGetResponse:
+    properties:
+      guid:
+        type: string
+      integrationToken:
+        type: string
+      integrationType:
+        type: string
+      startedAt:
+        type: string
+      status:
+        type: string
+      stoppedAt:
+        type: string
+    type: object
+  entity.IntegrationUpdate:
+    properties:
+      id:
+        type: string
+      status:
+        type: string
+      token:
+        type: string
+    type: object
+  entity.IntegrationUpdateStatus:
+    properties:
+      id:
+        type: string
+      status:
+        type: string
     type: object
   entity.LoginRequest:
     properties:
@@ -198,10 +234,6 @@ definitions:
   entity.UpdateBusinessRequestForSwagger:
     properties:
       description:
-        type: string
-      integrationToken:
-        type: string
-      integrationType:
         type: string
       name:
         type: string
@@ -662,7 +694,6 @@ paths:
       - description: Owner ID
         in: query
         name: owner_id
-        required: true
         type: string
       - default: 10
         description: Limit per page
@@ -1271,6 +1302,228 @@ paths:
       summary: Get ClientType By ID
       tags:
       - CLIENT TYPE
+  /integration:
+    post:
+      consumes:
+      - application/json
+      description: Create a new integration with given token and type
+      parameters:
+      - description: Integration data
+        in: body
+        name: integration
+        required: true
+        schema:
+          $ref: '#/definitions/entity.IntegrationCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create a new integration
+      tags:
+      - INTEGRATION
+    put:
+      consumes:
+      - application/json
+      description: Update integration token using ID
+      parameters:
+      - description: Update integration
+        in: body
+        name: integration
+        required: true
+        schema:
+          $ref: '#/definitions/entity.IntegrationUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Update integration token
+      tags:
+      - INTEGRATION
+  /integration/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete integration by ID
+      parameters:
+      - description: Integration ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Delete integration
+      tags:
+      - INTEGRATION
+  /integration/owner/{owner_id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve integration data by owner ID
+      parameters:
+      - description: Owner ID
+        in: path
+        name: owner_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.IntegrationGetResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get integration by owner ID
+      tags:
+      - INTEGRATION
+  /integration/status:
+    put:
+      consumes:
+      - application/json
+      description: Update integration status using ID
+      parameters:
+      - description: Update integration status
+        in: body
+        name: integration
+        required: true
+        schema:
+          $ref: '#/definitions/entity.IntegrationUpdateStatus'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Update integration status
+      tags:
+      - INTEGRATION
   /orders:
     get:
       consumes:

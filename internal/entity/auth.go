@@ -28,6 +28,7 @@ type (
 		UpdatedAt    time.Time `json:"updated_at"`
 		AccessToken  string    `json:"access_token"`
 		RefreshToken string    `json:"refresh_token,omitempty"`
+		BusinessID  string    `json:"business_id,omitempty"`
 	}
 
 	ListUsers struct {
@@ -75,6 +76,7 @@ type (
 		Sub  string `json:"sub"`
 		Role string `json:"role"`
 		Exp  int64  `json:"exp"`
+		BusinessId string  `json:"bussnes_id"`
 	}
 
 	// UpdatePassword represents a request to update a password

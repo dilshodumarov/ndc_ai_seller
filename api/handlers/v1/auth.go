@@ -284,7 +284,7 @@ func (a *authRoutes) verify(c *gin.Context) {
 	}
 
 	// Generate JWT tokens
-	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.RoleData.Name, a.cfg.SigningKey.SigningKey, 12) // 12 hours
+	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.BusinessID,userResp.RoleData.Name, a.cfg.SigningKey.SigningKey, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
@@ -318,7 +318,7 @@ func (a *authRoutes) refreshAccessToken(c *gin.Context) {
 	}
 
 	// Generate new access token
-	accessToken, _, err := helper.GenerateJWT(claims.Sub, claims.Role, a.cfg.SigningKey.SigningKey, 12) // 12 hours
+	accessToken, _, err := helper.GenerateJWT(claims.Sub, claims.BusinessId,claims.Role, a.cfg.SigningKey.SigningKey, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.BadRequest, err.Error())
 		return
@@ -345,12 +345,11 @@ func (a *authRoutes) login(c *gin.Context) {
 	)
 	
 	err := c.ShouldBindJSON(&req)
-	fmt.Println("Error: ",err)
 	if err != nil {
 		a.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	fmt.Println(111)
+	
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -358,6 +357,7 @@ func (a *authRoutes) login(c *gin.Context) {
 	user, err := a.userUseCase.Get(ctx, map[string]string{
 		"email": req.Email,
 	})
+	
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			a.handleResponse(c, status_http.BadRequest, ErrWrongEmailOrPass)
@@ -375,7 +375,8 @@ func (a *authRoutes) login(c *gin.Context) {
 	}
 
 	// Generate tokens
-	accessToken, refreshToken, err := helper.GenerateJWT(user.ID, user.RoleData.Name, a.cfg.SigningKey.SigningKey, 12) // 12 hours
+	
+	accessToken, refreshToken, err := helper.GenerateJWT(user.ID, user.BusinessID,user.RoleData.Name, a.cfg.SigningKey.SigningKey, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.BadRequest, err.Error())
 		return

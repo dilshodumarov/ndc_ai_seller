@@ -6,11 +6,11 @@ type (
 	CreateBusinessRequest struct {
 		OwnerID          string
 		Name             string
-		IntegrationToken string
-		IntegrationType  string
 		Description      string
 	}
-
+	StartBot struct {
+		BusinessId string
+	}
 	Business struct {
 		ID          string    `json:"id"`
 		OwnerID     string    `json:"owner_id"`
@@ -24,15 +24,11 @@ type (
 		ID          string `json:"id"`
 		Name        string `json:"name"`
 		Description string `json:"description"`
-		IntegrationType  string
-		IntegrationToken string
 	}
 
 	UpdateBusinessRequestForSwagger struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
-		IntegrationType  string
-		IntegrationToken string
 	}
 
 	GetAllBusinessesRequest struct {

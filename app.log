@@ -5237,3 +5237,1015 @@ main.main.func1
 2025-04-11T10:11:06.690+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T10:01:31.194+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T10:01:37.034+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/index.html 
+2025-04-14T10:01:37.059+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui.css 
+2025-04-14T10:01:37.059+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui-bundle.js 
+2025-04-14T10:01:37.063+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-04-14T10:01:37.186+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/doc.json 
+2025-04-14T10:01:37.266+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/favicon-32x32.png 
+2025-04-14T10:04:09.885+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T10:04:09.885+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T10:04:13.107+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T10:04:14.906+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/index.html 
+2025-04-14T10:04:14.924+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui.css 
+2025-04-14T10:04:14.924+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-04-14T10:04:14.924+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui-bundle.js 
+2025-04-14T10:04:15.066+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/doc.json 
+2025-04-14T10:04:15.070+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/favicon-32x32.png 
+2025-04-14T10:04:18.387+0500	ERROR	v1/business.go:204	response	{"code": 400, "status": "BAD_REQUEST", "description": "The server could not understand the request due to invalid syntax", "data": "owner ID is required", "custom_message": ""}
+sugurta/api/handlers/v1.(*businessRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:204
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:185
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T10:04:18.387+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T10:04:50.303+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T10:04:50.303+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T10:04:52.100+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T10:04:53.555+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T10:12:07.768+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T10:12:07.768+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T10:12:09.599+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T10:12:11.532+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T10:12:13.100+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T10:13:26.411+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T10:13:26.411+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T10:13:27.896+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T10:13:29.228+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T10:13:40.156+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T10:13:40.156+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T10:13:41.432+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T10:13:42.915+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T10:15:39.430+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T10:15:39.431+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T10:15:40.720+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T10:15:41.999+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T10:18:29.362+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T10:18:29.362+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T10:18:30.719+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T10:18:32.764+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T10:19:23.594+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T10:19:23.595+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T10:19:24.953+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T10:19:27.322+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T10:21:26.489+0500	ERROR	v1/intgration.go:143	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: column \"owner_id\" of relation \"integration\" does not exist (SQLSTATE 42703)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:143
+sugurta/api/handlers/v1.(*integrationRoutes).CreateIntegration
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:58
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T10:21:26.489+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/integration 
+2025-04-14T10:23:28.891+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/integration 
+2025-04-14T10:28:47.276+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T10:28:47.276+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T11:05:03.154+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T11:07:06.625+0500	ERROR	v1/intgration.go:172	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "no rows in result set", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:172
+sugurta/api/handlers/v1.(*integrationRoutes).UpdateIntegration
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:86
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T11:07:06.626+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration 
+2025-04-14T11:11:29.892+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration 
+2025-04-14T11:11:58.061+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration 
+2025-04-14T11:13:37.126+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T11:13:37.137+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T11:13:39.261+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T11:13:41.440+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration 
+2025-04-14T11:21:23.904+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T11:21:23.904+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:14:23.838+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:14:26.984+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/index.html 
+2025-04-14T12:14:27.001+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-04-14T12:14:27.002+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui.css 
+2025-04-14T12:14:27.003+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui-bundle.js 
+2025-04-14T12:14:27.132+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/doc.json 
+2025-04-14T12:14:27.137+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/favicon-32x32.png 
+2025-04-14T12:15:02.277+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:15:33.135+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:15:33.136+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:15:34.740+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:15:37.284+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:16:28.446+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:16:28.446+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:16:48.230+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:16:49.705+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:17:16.100+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:17:16.111+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:17:17.385+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:17:18.911+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: column \"start_at\" does not exist (SQLSTATE 42703)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).UpdateStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:140
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:17:18.911+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:17:39.556+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:17:39.557+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:17:40.922+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:17:42.963+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: column \"start_at\" does not exist (SQLSTATE 42703)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).UpdateStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:140
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:17:42.963+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:18:26.529+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:18:26.529+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:18:27.742+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:18:29.221+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: inconsistent types deduced for parameter $1 (SQLSTATE 42P08)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).UpdateStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:140
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:18:29.221+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:19:54.551+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:19:54.551+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:19:56.011+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:19:57.310+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: inconsistent types deduced for parameter $1 (SQLSTATE 42P08)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).UpdateStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:140
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:19:57.310+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:21:26.959+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:21:26.960+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:21:28.428+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:21:29.872+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: inconsistent types deduced for parameter $1 (SQLSTATE 42P08)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).UpdateStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:140
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:21:29.872+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:22:03.114+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:22:03.115+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:22:04.559+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:22:06.543+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: inconsistent types deduced for parameter $1 (SQLSTATE 42P08)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).UpdateStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:140
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:22:06.543+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:22:51.713+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:22:51.714+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:22:52.905+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:22:55.570+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: inconsistent types deduced for parameter $1 (SQLSTATE 42P08)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).UpdateStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:140
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:22:55.570+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:24:03.184+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:24:03.184+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:24:05.580+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:24:08.428+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: inconsistent types deduced for parameter $1 (SQLSTATE 42P08)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).UpdateStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:140
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:24:08.428+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:25:47.669+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:25:47.670+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:25:49.069+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:25:51.478+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:26:54.747+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:27:09.601+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:27:29.986+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:27:47.162+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:30:42.617+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/integration 
+2025-04-14T12:32:09.618+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:33:19.552+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T12:38:31.958+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "can't scan into dest[3] (col: started_at): cannot scan timestamp (OID 1114) in binary format into *string", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).GetIntegrationByOwnerID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:236
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:38:31.959+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-04-14T12:39:01.398+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:39:01.398+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:39:03.048+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:39:04.950+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "can't scan into dest[3] (col: started_at): cannot scan timestamp (OID 1114) in binary format into *string", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).GetIntegrationByOwnerID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:236
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:39:04.951+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-04-14T12:39:17.026+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:39:17.026+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:39:18.542+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:39:20.950+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "can't scan into dest[3] (col: started_at): cannot scan timestamp (OID 1114) in binary format into *string", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).GetIntegrationByOwnerID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:236
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:39:20.951+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-04-14T12:40:03.625+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:40:03.626+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:40:04.888+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:40:06.436+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "can't scan into dest[3] (col: started_at): cannot scan timestamp (OID 1114) in binary format into *string", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).GetIntegrationByOwnerID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:236
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:40:06.436+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-04-14T12:40:41.140+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T12:41:29.272+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:41:29.273+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:41:30.758+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:41:39.485+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "can't scan into dest[4] (col: stoped_at): cannot scan NULL into *time.Time", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).GetIntegrationByOwnerID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:236
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:41:39.485+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-04-14T12:43:22.441+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:43:22.441+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:43:23.824+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:43:25.993+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-04-14T12:45:40.359+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T12:45:40.360+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T12:45:44.400+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T12:45:48.387+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-04-14T12:45:56.774+0500	INFO	middleware/logger.go:26	127.0.0.1 - DELETE /v1/integration/7ec2859b-6b74-4563-92ea-1e34eb9bce76 
+2025-04-14T12:46:01.151+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "no rows in result set", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).GetIntegrationByOwnerID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:236
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T12:46:01.152+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-04-14T12:46:58.955+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-04-14T14:47:16.690+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T14:48:44.187+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/index.html 
+2025-04-14T14:48:44.203+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui.css 
+2025-04-14T14:48:44.204+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui-bundle.js 
+2025-04-14T14:48:44.206+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-04-14T14:48:44.337+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/doc.json 
+2025-04-14T14:48:44.342+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /swagger/favicon-32x32.png 
+2025-04-14T14:48:47.613+0500	ERROR	v1/auth.go:572	response	{"code": 400, "status": "BAD_REQUEST", "description": "The server could not understand the request due to invalid syntax", "data": "Key: 'RegisterRequest.Email' Error:Field validation for 'Email' failed on the 'email' tag", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:572
+sugurta/api/handlers/v1.(*authRoutes).register
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:95
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T14:48:47.613+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/auth/register 
+2025-04-14T14:50:46.880+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/auth/register 
+2025-04-14T14:50:47.844+0500	ERROR	v1/auth.go:171	failed to send verification code: failed to send email: 535 5.7.8 Username and Password not accepted. For more information, go to
+5.7.8  https://support.google.com/mail/?p=BadCredentials 2adb3069b0e04-54d3d5026e0sm1061795e87.112 - gsmtp
+sugurta/api/handlers/v1.(*authRoutes).register.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:171
+2025-04-14T14:54:57.255+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T14:54:57.256+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T15:01:49.139+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T15:01:50.988+0500	ERROR	v1/auth.go:572	response	{"code": 400, "status": "BAD_REQUEST", "description": "The server could not understand the request due to invalid syntax", "data": "wrong email or password", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:572
+sugurta/api/handlers/v1.(*authRoutes).login
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:373
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T15:01:50.988+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/auth/login 
+2025-04-14T15:03:45.135+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T15:03:45.145+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T15:03:46.570+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T15:03:48.239+0500	ERROR	v1/auth.go:573	response	{"code": 400, "status": "BAD_REQUEST", "description": "The server could not understand the request due to invalid syntax", "data": "wrong email or password", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:573
+sugurta/api/handlers/v1.(*authRoutes).login
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:374
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T15:03:48.239+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/auth/login 
+2025-04-14T15:05:48.336+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T15:05:48.337+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T15:06:51.212+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T15:06:53.212+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/auth/login 
+2025-04-14T15:07:07.437+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T15:07:07.438+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T15:09:11.154+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T15:09:14.086+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/auth/login 
+2025-04-14T15:11:48.765+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T15:11:48.772+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T15:11:50.741+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T15:11:52.552+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/auth/login 
+2025-04-14T15:15:32.556+0500	ERROR	v1/business.go:200	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: INSERT has more expressions than target columns (SQLSTATE 42601)", "custom_message": ""}
+sugurta/api/handlers/v1.(*businessRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:200
+sugurta/api/handlers/v1.(*businessRoutes).CreateBusiness
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:72
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T15:15:32.559+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/business 
+2025-04-14T15:15:54.452+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T15:15:54.456+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-14T15:15:56.435+0500	INFO	app/main.go:29	Listen: 	{"address": "localhost:8080"}
+2025-04-14T15:15:58.802+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/business 
+2025-04-14T15:16:05.689+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/auth/login 
+2025-04-14T15:25:54.077+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: insert or update on table \"integration\" violates foreign key constraint \"integration_owner_id_fkey\" (SQLSTATE 23503)", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).CreateIntegration
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:62
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T15:25:54.080+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/integration 
+2025-04-14T15:26:17.969+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/business?limit=10&page=0 
+2025-04-14T15:26:42.288+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/integration 
+2025-04-14T15:27:37.655+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "no rows in result set", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).GetIntegrationByOwnerID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:236
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T15:27:37.655+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/aed71cea-ef23-4b31-ac2f-70e880229b5e 
+2025-04-14T15:28:05.862+0500	ERROR	v1/intgration.go:246	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "no rows in result set", "custom_message": ""}
+sugurta/api/handlers/v1.(*integrationRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:246
+sugurta/api/handlers/v1.(*integrationRoutes).GetIntegrationByOwnerID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/intgration.go:236
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-14T15:28:05.862+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/aed71cea-ef23-4b31-ac2f-70e880229b5e 
+2025-04-14T15:29:49.258+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/integration/owner/7bb53619-7beb-4fac-a1b6-c59b423ba98a 
+2025-04-14T15:30:47.952+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T15:30:48.053+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T15:32:00.690+0500	INFO	middleware/logger.go:26	127.0.0.1 - PUT /v1/integration/status 
+2025-04-14T16:42:11.022+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-14T16:42:11.032+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
