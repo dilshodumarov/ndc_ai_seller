@@ -34,9 +34,9 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 
 	integration := apiV1Group.Group("/integration")
 	{
-		integration.POST("", r.CreateIntegration)
-		integration.PUT("", r.UpdateIntegration)
-		integration.DELETE("/:id", r.DeleteIntegration)
+		integration.POST("/create", r.CreateIntegration)
+		integration.PUT("/update", r.UpdateIntegration)
+		integration.DELETE("/delete/:id", r.DeleteIntegration)
 		integration.GET("/owner/:owner_id", r.GetIntegrationByOwnerID)
 		integration.PUT("/status",r.UpdateStatus)
 	}
@@ -48,11 +48,12 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 // @Tags INTEGRATION
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param integration body entity.IntegrationCreateForSwagger true "Integration data"
 // @Success 201 {object} status_http.Response{data=string} "Created"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
-// @Router /integration [post]
+// @Router /integration/create [post]
 func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 	var req entity.IntegrationCreate
 	bussnesId,code:=helper.GetBusnessIdFromToken(c, *i.Config)
@@ -78,11 +79,12 @@ func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 // @Tags INTEGRATION
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param integration body entity.IntegrationUpdate true "Update integration"
 // @Success 200 {object} status_http.Response{data=string} "Updated"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
-// @Router /integration [put]
+// @Router /integration/update [put]
 func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 	var req entity.IntegrationUpdate
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -130,6 +132,7 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 // @Tags INTEGRATION
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param integration body entity.IntegrationUpdateStatus true "Update integration status"
 // @Success 200 {object} status_http.Response{data=string} "Updated"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
@@ -202,11 +205,12 @@ func (i *integrationRoutes) UpdateStatus(c *gin.Context) {
 // @Tags INTEGRATION
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "Integration ID"
 // @Success 200 {object} status_http.Response{data=string} "Deleted"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
-// @Router /integration/{id} [delete]
+// @Router /integration/delete/{id} [delete]
 func (i *integrationRoutes) DeleteIntegration(c *gin.Context) {
 	id := c.Param("id")
 	if id == "" {
@@ -226,6 +230,7 @@ func (i *integrationRoutes) DeleteIntegration(c *gin.Context) {
 // @Tags INTEGRATION
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param owner_id path string true "Owner ID"
 // @Success 200 {object} status_http.Response{data=entity.IntegrationGetResponse} "OK"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"

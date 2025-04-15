@@ -171,11 +171,12 @@ func (a *App) Run() error {
 		Logger:         a.Logger,
 		ContextTimeout: contextTimeout,
 		Cache:          cache,
-		Enforcer:       a.Enforcer,
+		// Enforcer:       a.Enforcer,
 		User:           a.user,
 		Business:       a.business,
 		Order:           a.order,
 		Integration:    a.integration,
+		Product:        a.product,
 	})
 
 	fmt.Println("here 5")

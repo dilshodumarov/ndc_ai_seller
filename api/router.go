@@ -13,13 +13,13 @@ import (
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
 	clienttype "sugurta/internal/usecase/client-type"
-	"sugurta/internal/usecase/intgration"
+	integration "sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
 	"sugurta/internal/usecase/user"
 
-	"github.com/casbin/casbin/v2"
+	"github.com/casbin/casbin"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -42,13 +42,13 @@ type RouteOption struct {
 	Cache          redisrepo.Cache
 	Enforcer       *casbin.CachedEnforcer
 
-	User       user.User
-	Role       role.Role
-	ClientType clienttype.ClientType
-	Business   business.Business
-	Product    product.Product
-	Category   category.Category
-	Order      order.Order
+	User        user.User
+	Role        role.Role
+	ClientType  clienttype.ClientType
+	Business    business.Business
+	Product     product.Product
+	Category    category.Category
+	Order       order.Order
 	Integration integration.Integration
 	// Service        grpcClients.ServiceClient
 	// RefreshToken   refresh_token.RefreshToken
@@ -65,17 +65,21 @@ type RouteOption struct {
 // @version     1.0
 // @host        localhost:8080
 // @BasePath    /v1
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func NewRouter(option *RouteOption) *gin.Engine {
 	handleOption := &handlers.HandlerOption{
 		Config:         option.Config,
 		Logger:         option.Logger,
 		ContextTimeout: option.ContextTimeout,
 		Cache:          option.Cache,
-		Enforcer:       option.Enforcer,
+		// Enforcer:       option.Enforcer,
 		User:           option.User,
 		Business:       option.Business,
 		Order:          option.Order,
 		Integration:    option.Integration,
+		Product:        option.Product,
 	}
 
 	app := gin.New()
@@ -85,7 +89,8 @@ func NewRouter(option *RouteOption) *gin.Engine {
 	// Options
 	app.Use(middleware.Logger(option.Logger))
 	app.Use(middleware.Recovery(option.Logger))
-
+	e := casbin.NewEnforcer("internal/pkg/config/rbac.conf", "internal/pkg/config/policy.csv")
+	app.Use(middleware.AuthMiddleware(e,*handleOption.Config))
 	app.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -123,13 +128,13 @@ func NewRouter(option *RouteOption) *gin.Engine {
 	apiV1Group := app.Group("/v1")
 	{
 		v1.NewAuthRoutes(apiV1Group, handleOption)
-		v1.NewOrderRoutes(apiV1Group, handleOption )
-		v1.NewBusinessRoutes(apiV1Group,handleOption)
-		v1.NewIntegrationRoutes(apiV1Group,handleOption)
+		v1.NewOrderRoutes(apiV1Group, handleOption)
+		v1.NewBusinessRoutes(apiV1Group, handleOption)
+		v1.NewIntegrationRoutes(apiV1Group, handleOption)
 		// v1.NewClientTypeRoutes(apiV1Group, auth, h.cfg, h.log, h.inMemory)
 		// v1.NewRoleRoutes(apiV1Group, auth, h.cfg, h.log, h.inMemory)
 		//v1.NewBusinessRoutes(apiV1Group, business, h.cfg, h.log, h.inMemory)
-		// v1.NewProductRoutes(apiV1Group, h.log)
+		v1.NewProductRoutes(apiV1Group, handleOption)
 	}
 
 	return app

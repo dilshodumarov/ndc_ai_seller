@@ -28,7 +28,6 @@ type (
 		ID                string    `json:"id"`
 		BusinessID        string    `json:"business_id"`
 		ClientID          string    `json:"client_id"`
-		IntegrationID     string    `json:"integration_id"`
 		Status            string    `json:"status"`
 		StatusChangedTime *time.Time    `json:"status_chaged_time"`
 		TotalCost         int       `json:"total_cost"`

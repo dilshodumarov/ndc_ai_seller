@@ -111,7 +111,7 @@ definitions:
       total:
         type: integer
     type: object
-  entity.IntegrationCreate:
+  entity.IntegrationCreateForSwagger:
     properties:
       integrationToken:
         type: string
@@ -284,6 +284,8 @@ definitions:
   entity.User:
     properties:
       access_token:
+        type: string
+      business_id:
         type: string
       created_at:
         type: string
@@ -685,45 +687,7 @@ paths:
       summary: Verify forgot password
       tags:
       - AUTH
-  /business:
-    get:
-      consumes:
-      - application/json
-      description: Get all businesses with pagination
-      parameters:
-      - description: Owner ID
-        in: query
-        name: owner_id
-        type: string
-      - default: 10
-        description: Limit per page
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/status_http.Response'
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: Get all businesses
-      tags:
-      - BUSINESS
+  /business/create:
     post:
       consumes:
       - application/json
@@ -765,10 +729,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Create a new business
       tags:
       - BUSINESS
-  /business/{id}:
+  /business/delete/{id}:
     delete:
       consumes:
       - application/json
@@ -809,9 +775,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Delete a business
       tags:
       - BUSINESS
+  /business/get/{id}:
     get:
       consumes:
       - application/json
@@ -843,9 +812,53 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Get a business by ID
       tags:
       - BUSINESS
+  /business/list:
+    get:
+      consumes:
+      - application/json
+      description: Get all businesses with pagination
+      parameters:
+      - description: Owner ID
+        in: query
+        name: owner_id
+        type: string
+      - default: 10
+        description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/status_http.Response'
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get all businesses
+      tags:
+      - BUSINESS
+  /business/update/{id}:
     put:
       consumes:
       - application/json
@@ -892,10 +905,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Update a business
       tags:
       - BUSINESS
-  /category:
+  /category/create:
     post:
       consumes:
       - application/json
@@ -937,9 +952,122 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Create a new category
       tags:
       - CATEGORY
+  /category/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a category from the database by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category deleted successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request Data
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: Category Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a category by ID
+      tags:
+      - CATEGORY
+  /category/get/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get category details by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.Category'
+              type: object
+        "400":
+          description: Bad request data
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: Category Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get category by ID
+      tags:
+      - CATEGORY
+  /category/update:
     put:
       consumes:
       - application/json
@@ -990,16 +1118,56 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Update an existing category
       tags:
       - CATEGORY
-  /category/{id}:
+  /client-type/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new ClientType
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CreateClientTypeRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create ClientType
+      tags:
+      - CLIENT TYPE
+  /client-type/delete/{id}:
     delete:
       consumes:
       - application/json
-      description: Delete a category from the database by ID
+      description: Delete ClientType by ID
       parameters:
-      - description: Category ID
+      - description: ClientType ID
         in: path
         name: id
         required: true
@@ -1008,7 +1176,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Category deleted successfully
+          description: Successfully deleted
           schema:
             allOf:
             - $ref: '#/definitions/status_http.Response'
@@ -1017,16 +1185,7 @@ paths:
                   type: string
               type: object
         "400":
-          description: Bad Request Data
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "404":
-          description: Category Not Found
+          description: Bad request
           schema:
             allOf:
             - $ref: '#/definitions/status_http.Response'
@@ -1043,15 +1202,18 @@ paths:
                 data:
                   type: string
               type: object
-      summary: Delete a category by ID
+      security:
+      - BearerAuth: []
+      summary: Delete ClientType
       tags:
-      - CATEGORY
+      - CLIENT TYPE
+  /client-type/get/{id}:
     get:
       consumes:
       - application/json
-      description: Get category details by ID
+      description: Get ClientType by ID
       parameters:
-      - description: Category ID
+      - description: ClientType ID
         in: path
         name: id
         required: true
@@ -1060,25 +1222,16 @@ paths:
       - application/json
       responses:
         "200":
-          description: Category
+          description: OK
           schema:
             allOf:
             - $ref: '#/definitions/status_http.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/entity.Category'
+                  $ref: '#/definitions/entity.ClientType'
               type: object
         "400":
-          description: Bad request data
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "404":
-          description: Category Not Found
+          description: Bad request
           schema:
             allOf:
             - $ref: '#/definitions/status_http.Response'
@@ -1095,10 +1248,12 @@ paths:
                 data:
                   type: string
               type: object
-      summary: Get category by ID
+      security:
+      - BearerAuth: []
+      summary: Get ClientType By ID
       tags:
-      - CATEGORY
-  /client-type:
+      - CLIENT TYPE
+  /client-type/list:
     get:
       consumes:
       - application/json
@@ -1142,44 +1297,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Get All ClientTypes
       tags:
       - CLIENT TYPE
-    post:
-      consumes:
-      - application/json
-      description: Create a new ClientType
-      parameters:
-      - description: Data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/entity.CreateClientTypeRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Success
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: Create ClientType
-      tags:
-      - CLIENT TYPE
+  /client-type/update:
     put:
       consumes:
       - application/json
@@ -1212,97 +1335,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Update ClientType
       tags:
       - CLIENT TYPE
-  /client-type/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete ClientType by ID
-      parameters:
-      - description: ClientType ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully deleted
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "400":
-          description: Bad request
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: Delete ClientType
-      tags:
-      - CLIENT TYPE
-    get:
-      consumes:
-      - application/json
-      description: Get ClientType by ID
-      parameters:
-      - description: ClientType ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/entity.ClientType'
-              type: object
-        "400":
-          description: Bad request
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: Get ClientType By ID
-      tags:
-      - CLIENT TYPE
-  /integration:
+  /integration/create:
     post:
       consumes:
       - application/json
@@ -1313,7 +1351,7 @@ paths:
         name: integration
         required: true
         schema:
-          $ref: '#/definitions/entity.IntegrationCreate'
+          $ref: '#/definitions/entity.IntegrationCreateForSwagger'
       produces:
       - application/json
       responses:
@@ -1344,54 +1382,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Create a new integration
       tags:
       - INTEGRATION
-    put:
-      consumes:
-      - application/json
-      description: Update integration token using ID
-      parameters:
-      - description: Update integration
-        in: body
-        name: integration
-        required: true
-        schema:
-          $ref: '#/definitions/entity.IntegrationUpdate'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Updated
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: Update integration token
-      tags:
-      - INTEGRATION
-  /integration/{id}:
+  /integration/delete/{id}:
     delete:
       consumes:
       - application/json
@@ -1432,6 +1428,8 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Delete integration
       tags:
       - INTEGRATION
@@ -1476,6 +1474,8 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Get integration by owner ID
       tags:
       - INTEGRATION
@@ -1521,38 +1521,28 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Update integration status
       tags:
       - INTEGRATION
-  /orders:
-    get:
+  /integration/update:
+    put:
       consumes:
       - application/json
-      description: List all orders with optional filters
+      description: Update integration token using ID
       parameters:
-      - default: 10
-        description: Limit
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Offset
-        in: query
-        name: offset
-        type: integer
-      - description: Filter by id, client_id, integration_id, status
-        in: query
-        name: filter
-        type: string
+      - description: Update integration
+        in: body
+        name: integration
+        required: true
+        schema:
+          $ref: '#/definitions/entity.IntegrationUpdate'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.GetAllOrdersResponse'
-        "500":
-          description: Server Error
+          description: Updated
           schema:
             allOf:
             - $ref: '#/definitions/status_http.Response'
@@ -1560,9 +1550,30 @@ paths:
                 data:
                   type: string
               type: object
-      summary: List Orders
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update integration token
       tags:
-      - Orders
+      - INTEGRATION
+  /orders/create:
     post:
       consumes:
       - application/json
@@ -1599,10 +1610,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Create Order
       tags:
       - Orders
-  /orders/{id}:
+  /orders/delete/{id}:
     delete:
       consumes:
       - application/json
@@ -1629,9 +1642,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Delete Order
       tags:
       - Orders
+  /orders/get/{id}:
     get:
       consumes:
       - application/json
@@ -1667,9 +1683,53 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Get Order
       tags:
       - Orders
+  /orders/list:
+    get:
+      consumes:
+      - application/json
+      description: List all orders with optional filters
+      parameters:
+      - default: 10
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Filter by id, client_id, integration_id, status
+        in: query
+        name: filter
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.GetAllOrdersResponse'
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: List Orders
+      tags:
+      - Orders
+  /orders/update/{id}:
     put:
       consumes:
       - application/json
@@ -1711,10 +1771,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Update Order
       tags:
       - Orders
-  /product:
+  /product/create:
     post:
       consumes:
       - application/json
@@ -1756,45 +1818,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Create a new product
       tags:
       - PRODUCT
-    put:
-      consumes:
-      - application/json
-      description: Update product details by ID
-      parameters:
-      - description: Product Details
-        in: body
-        name: product
-        required: true
-        schema:
-          $ref: '#/definitions/entity.UpdateProductRequest'
-      produces:
-      - application/json
-      responses:
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: Update an existing product
-      tags:
-      - PRODUCT
-  /product/{id}:
+  /product/delete/{id}:
     delete:
       consumes:
       - application/json
@@ -1835,9 +1864,12 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Delete a product by ID
       tags:
       - PRODUCT
+  /product/get/{id}:
     get:
       consumes:
       - application/json
@@ -1878,7 +1910,52 @@ paths:
                 data:
                   type: string
               type: object
+      security:
+      - BearerAuth: []
       summary: Get product by ID
       tags:
       - PRODUCT
+  /product/update:
+    put:
+      consumes:
+      - application/json
+      description: Update product details by ID
+      parameters:
+      - description: Product Details
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update an existing product
+      tags:
+      - PRODUCT
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

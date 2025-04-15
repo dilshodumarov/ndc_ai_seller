@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 	"sugurta/api/handlers"
@@ -39,20 +38,21 @@ func NewOrderRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption)
 
 	orderGroup := apiV1Group.Group("/orders")
 	{
-		orderGroup.POST("/", r.createOrder)
-		orderGroup.GET("/:id", r.getOrder)
-		orderGroup.GET("/", r.listOrders)
-		orderGroup.PUT("/:id", r.updateOrder)
-		orderGroup.DELETE("/:id", r.deleteOrder)
+		orderGroup.POST("/create", r.createOrder)
+		orderGroup.GET("/get/:id", r.getOrder)
+		orderGroup.GET("/list", r.listOrders)
+		orderGroup.PUT("/update/:id", r.updateOrder)
+		orderGroup.DELETE("/delete/:id", r.deleteOrder)
 	}
 }
 
-// @Router /orders [post]
+// @Router /orders/create [post]
 // @Summary Create Order
 // @Description Creates a new order
 // @Tags Orders
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param order body entity.CreateOrderRequest true "CreateOrderRequest"
 // @Success 201 {object} status_http.Response
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
@@ -73,12 +73,13 @@ func (r *OrderRoutes) createOrder(c *gin.Context) {
 	r.handleResponse(c, status_http.Created, gin.H{"order_id": id})
 }
 
-// @Router /orders/{id} [get]
+// @Router /orders/get/{id} [get]
 // @Summary Get Order
 // @Description Fetch a specific order by ID
 // @Tags Orders
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "Order ID"
 // @Success 200 {object} entity.Order
 // @Failure 404 {object} status_http.Response{data=string} "Order Not Found"
@@ -93,19 +94,20 @@ func (r *OrderRoutes) getOrder(c *gin.Context) {
 	r.handleResponse(c, status_http.OK, order)
 }
 
-// @Router /orders [get]
+// @Router /orders/list [get]
 // @Summary List Orders
 // @Description List all orders with optional filters
 // @Tags Orders
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param limit query int false "Limit" default(10)
 // @Param offset query int false "Offset" default(0)
 // @Param filter query string false "Filter by id, client_id, integration_id, status"
 // @Success 200 {object} entity.GetAllOrdersResponse
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (r *OrderRoutes) listOrders(c *gin.Context) {
-	
+
 	// Extract limit and offset from the query parameters
 	limit := c.DefaultQuery("limit", "10")
 	offset := c.DefaultQuery("offset", "0")
@@ -132,25 +134,26 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 			}
 		}
 	}
-	
+
 	// Call the List method with the constructed filter map
-	fmt.Println("order uscase: ",r.OrderUseCase)
+
 	orders, err := r.OrderUseCase.List(c, uint64(limitInt), uint64(offsetInt), filter)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		
+
 		return
 	}
-	
+
 	r.handleResponse(c, status_http.OK, orders)
 }
 
-// @Router /orders/{id} [put]
+// @Router /orders/update/{id} [put]
 // @Summary Update Order
 // @Description Update an existing order
 // @Tags Orders
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "Order ID"
 // @Param order body entity.OrderUpdate true "Order Data"
 // @Success 200 {object} status_http.Response
@@ -174,12 +177,13 @@ func (r *OrderRoutes) updateOrder(c *gin.Context) {
 	r.handleResponse(c, status_http.OK, "Order updated successfully")
 }
 
-// @Router /orders/{id} [delete]
+// @Router /orders/delete/{id} [delete]
 // @Summary Delete Order
 // @Description Delete a specific order
 // @Tags Orders
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "Order ID"
 // @Success 200 {object} status_http.Response
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"

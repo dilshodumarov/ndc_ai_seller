@@ -65,7 +65,7 @@ func (r *OrderRepo) Get(ctx context.Context, params map[string]string) (*entity.
 	}
 
 	query := fmt.Sprintf(`
-		SELECT id, client_id, integration_id, status, status_changed_time,  created_at, updated_at
+		SELECT id, client_id, status, status_changed_time,  created_at, updated_at
 		FROM %s %s
 		LIMIT 1
 	`, r.tableName, whereClause)
@@ -74,7 +74,6 @@ func (r *OrderRepo) Get(ctx context.Context, params map[string]string) (*entity.
 	err := row.Scan(
 		&o.ID,
 		&o.ClientID,
-		&o.IntegrationID,
 		&o.Status,
 		&o.StatusChangedTime,
 		&o.CreatedAt,
@@ -91,12 +90,12 @@ func (r *OrderRepo) Get(ctx context.Context, params map[string]string) (*entity.
 func (r *OrderRepo) List(ctx context.Context, limit, offset uint64, filter map[string]string) (*entity.GetAllOrdersResponse, error) {
 	var orders []entity.Order
 	var args []interface{}
-	query := `SELECT id, client_id, integration_id, status, status_changed_time,  created_at, updated_at FROM "order"`
+	query := `SELECT guid, client_id, status, status_changed_time,  created_at, updated_at FROM "order"`
 	whereClauses := ""
 	argPos := 1
 
 	for key, value := range filter {
-		if key == "id" || key == "client_id" || key == "integration_id" || key == "status" {
+		if key == "id" || key == "client_id" || key == "status" {
 			if whereClauses == "" {
 				whereClauses = fmt.Sprintf(` WHERE %s = $%d`, key, argPos)
 			} else {
@@ -127,7 +126,6 @@ func (r *OrderRepo) List(ctx context.Context, limit, offset uint64, filter map[s
 		err = rows.Scan(
 			&o.ID,
 			&o.ClientID,
-			&o.IntegrationID,
 			&o.Status,
 			&nullStatusChangedTime,
 			&o.CreatedAt,
@@ -180,11 +178,6 @@ func (r *OrderRepo) Update(ctx context.Context, o *entity.Order) error {
 		argPos++
 	}
 
-	if o.IntegrationID != "" {
-		updateFields = append(updateFields, fmt.Sprintf("integration_id = $%d", argPos))
-		args = append(args, o.IntegrationID)
-		argPos++
-	}
 
 	if o.Status != "" {
 		updateFields = append(updateFields, fmt.Sprintf("status = $%d", argPos))

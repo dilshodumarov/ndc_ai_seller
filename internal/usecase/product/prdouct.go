@@ -22,7 +22,7 @@ func NewProductService(ctxTimeout time.Duration, productRepo repository.Product)
 }
 
 // CreateProduct -.
-func (p *productService) Create(ctx context.Context, product *entity.CreateProductRequest) error {
+func (p *productService) Create(ctx context.Context, product *entity.CreateProductRequest) (string,error) {
 	ctx, cancel := context.WithTimeout(ctx, p.ctxTimeout)
 	defer cancel()
 

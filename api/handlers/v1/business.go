@@ -34,11 +34,11 @@ func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 
 	business := apiV1Group.Group("/business")
 	{
-		business.POST("", r.CreateBusiness)
-		business.GET("/:id", r.GetBusiness)
-		business.PUT("/:id", r.UpdateBusiness)
-		business.DELETE("/:id", r.DeleteBusiness)
-		business.GET("", r.GetAllBusinesses)
+		business.POST("/create", r.CreateBusiness)
+		business.GET("/get/:id", r.GetBusiness)
+		business.PUT("/update/:id", r.UpdateBusiness)
+		business.DELETE("/delete/:id", r.DeleteBusiness)
+		business.GET("/list", r.GetAllBusinesses)
 	}
 }
 
@@ -48,11 +48,12 @@ func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 // @Tags BUSINESS
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param business body entity.CreateBusinessRequest true "Business details"
 // @Success 201 {object} status_http.Response{data=string} "Success"
 // @Response 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /business [post]
+// @Router /business/create [post]
 func (b *businessRoutes) CreateBusiness(c *gin.Context) {
 	var business entity.CreateBusinessRequest
 
@@ -82,11 +83,12 @@ func (b *businessRoutes) CreateBusiness(c *gin.Context) {
 // @Tags BUSINESS
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "Business ID"
 // @Success 200 {object} status_http.Response{data=string} "Business"
 // @Response400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /business/{id} [get]
+// @Router /business/get/{id} [get]
 func (b *businessRoutes) GetBusiness(c *gin.Context) {
 	id := c.Param("id")
 	if id == "" {
@@ -113,12 +115,13 @@ func (b *businessRoutes) GetBusiness(c *gin.Context) {
 // @Tags BUSINESS
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "Business ID"
 // @Param business body entity.UpdateBusinessRequestForSwagger true "Business details"
 // @Success 200 {object} status_http.Response{data=string} "Business updated"
 // @Response 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /business/{id} [put]
+// @Router /business/update/{id} [put]
 func (b *businessRoutes) UpdateBusiness(c *gin.Context) {
 	var business entity.UpdateBusinessRequest
 	if err := c.ShouldBindJSON(&business); err != nil {
@@ -141,11 +144,12 @@ func (b *businessRoutes) UpdateBusiness(c *gin.Context) {
 // @Tags BUSINESS
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "Business ID"
 // @Success 200 {object} status_http.Response{data=string} "Successfully deleted"
 // @Response 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /business/{id} [delete]
+// @Router /business/delete/{id} [delete]
 func (b *businessRoutes) DeleteBusiness(c *gin.Context) {
 	id := c.Param("id")
 
@@ -168,12 +172,13 @@ func (b *businessRoutes) DeleteBusiness(c *gin.Context) {
 // @Tags BUSINESS
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param owner_id query string false "Owner ID"
 // @Param limit query int false "Limit per page" default(10)
 // @Param page query int false "Page number" default(0)
 // @Success 200 {object} status_http.Response
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /business [get]
+// @Router /business/list [get]
 func (b *businessRoutes) GetAllBusinesses(c *gin.Context) {
 	req := entity.GetAllBusinessesRequest{
 		OwnerID: c.Query("owner_id"),

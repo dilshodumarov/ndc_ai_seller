@@ -35,20 +35,21 @@ func NewClientTypeRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOp
 
 	clientTypeGroup := apiV1Group.Group("/client-type")
 	{
-		clientTypeGroup.POST("/", r.createClientType)
-		clientTypeGroup.GET("/:id", r.getClientTypeByID)
-		clientTypeGroup.GET("/", r.getClientTypeList)
-		clientTypeGroup.PUT("/", r.updateClientType)
-		clientTypeGroup.DELETE("/:id", r.deleteClientType)
+		clientTypeGroup.POST("/create", r.createClientType)
+		clientTypeGroup.GET("/get/:id", r.getClientTypeByID)
+		clientTypeGroup.GET("/list", r.getClientTypeList)
+		clientTypeGroup.PUT("/update", r.updateClientType)
+		clientTypeGroup.DELETE("/delete/:id", r.deleteClientType)
 	}
 }
 
-// @Router /client-type [post]
+// @Router /client-type/create [post]
 // @Summary Create ClientType
 // @Description Create a new ClientType
 // @Tags CLIENT TYPE
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param data body entity.CreateClientTypeRequest true "Data"
 // @Success 201 {object} status_http.Response{data=string} "Success"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -73,12 +74,13 @@ func (ct *clientTypeRoutes) createClientType(c *gin.Context) {
 	ct.handleResponse(c, status_http.Created, "created successfully")
 }
 
-// @Router /client-type/{id} [get]
+// @Router /client-type/get/{id} [get]
 // @Summary Get ClientType By ID
 // @Description Get ClientType by ID
 // @Tags CLIENT TYPE
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "ClientType ID"
 // @Success 200 {object} status_http.Response{data=entity.ClientType}
 // @Failure 400 {object} status_http.Response{data=string} "Bad request"
@@ -103,12 +105,13 @@ func (ct *clientTypeRoutes) getClientTypeByID(c *gin.Context) {
 	ct.handleResponse(c, status_http.OK, resp)
 }
 
-// @Router /client-type [get]
+// @Router /client-type/list [get]
 // @Summary Get All ClientTypes
 // @Description Get List of ClientTypes
 // @Tags CLIENT TYPE
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param page query int false "Page"
 // @Param limit query int false "Limit"
 // @Success 200 {object} status_http.Response{data=entity.ClientTypeListResponse} "Data"
@@ -129,12 +132,13 @@ func (ct *clientTypeRoutes) getClientTypeList(c *gin.Context) {
 	ct.handleResponse(c, status_http.OK, resp)
 }
 
-// @Router /client-type [put]
+// @Router /client-type/update [put]
 // @Summary Update ClientType
 // @Description Update ClientType by ID
 // @Tags CLIENT TYPE
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param data body entity.UpdateClientType true "Data"
 // @Success 200 {object} status_http.Response{data=string} "Success"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -160,12 +164,13 @@ func (ct *clientTypeRoutes) updateClientType(c *gin.Context) {
 	ct.handleResponse(c, status_http.OK, "Successfully updated")
 }
 
-// @Router /client-type/{id} [delete]
+// @Router /client-type/delete/{id} [delete]
 // @Summary Delete ClientType
 // @Description Delete ClientType by ID
 // @Tags CLIENT TYPE
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "ClientType ID"
 // @Success 200 {object} status_http.Response{data=string} "Successfully deleted"
 // @Success 400 {object} status_http.Response{data=string} "Bad request"

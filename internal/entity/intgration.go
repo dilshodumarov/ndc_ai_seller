@@ -55,6 +55,11 @@ type BotIntegration struct {
 	Guid    string
 }
 
+type BotNotification struct {
+	Guid string `json:"Guid"`
+	ProductId string
+}
+
 type BotIntegrationResponse struct {
 	Code    int
 	Message string

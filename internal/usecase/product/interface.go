@@ -6,7 +6,7 @@ import (
 )
 
 type Product interface {
-	Create(ctx context.Context, product *entity.CreateProductRequest) error
+	Create(ctx context.Context, product *entity.CreateProductRequest) (string,error)
 	Get(ctx context.Context, id string) (*entity.Product, error)
 	List(ctx context.Context, limit, offset uint64, filter map[string]string) (*entity.GetAllProductsResponse, error)
 	Update(ctx context.Context, product *entity.UpdateProductRequest) error

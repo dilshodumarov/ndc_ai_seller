@@ -33,19 +33,20 @@ func NewcategoryRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 
 	categoriesGroup := apiV1Group.Group("/category")
 	{
-		categoriesGroup.POST("", r.createCategory)
-		categoriesGroup.GET("/:id", r.GetCategoryByID)
-		categoriesGroup.PUT("", r.updateCategory)
-		categoriesGroup.DELETE("/:id", r.deleteCategory)
+		categoriesGroup.POST("/create", r.createCategory)
+		categoriesGroup.GET("/get/:id", r.GetCategoryByID)
+		categoriesGroup.PUT("/update", r.updateCategory)
+		categoriesGroup.DELETE("/delete/:id", r.deleteCategory)
 	}
 }
 
-// @Router /category [post]
+// @Router /category/create [post]
 // @Summary Create a new category
 // @Description Create a new category in the database
 // @Tags CATEGORY
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param category body entity.CreateCategoryRequest true "Category Details"
 // @Success 201 {object} status_http.Response{data=string} "Category created successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
@@ -66,12 +67,13 @@ func (h *categoryRoutes) createCategory(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Category created successfully"})
 }
 
-// @Router /category/{id} [get]
+// @Router /category/get/{id} [get]
 // @Summary Get category by ID
 // @Description Get category details by ID
 // @Tags CATEGORY
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "Category ID"
 // @Success 200 {object} status_http.Response{data=entity.Category} "Category"
 // @Failure 400 {object} status_http.Response{data=string} "Bad request data"
@@ -97,12 +99,13 @@ func (h *categoryRoutes) GetCategoryByID(c *gin.Context) {
 	c.JSON(http.StatusOK, cat)
 }
 
-// @Router /category [put]
+// @Router /category/update [put]
 // @Summary Update an existing category
 // @Description Update category details by ID
 // @Tags CATEGORY
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param category body entity.Category true "Category Details"
 // @Success 200 {object} status_http.Response{data=string} "Category updated successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad request data"
@@ -129,12 +132,13 @@ func (h *categoryRoutes) updateCategory(c *gin.Context) {
 	h.handleResponse(c, status_http.OK, "category updated successfully")
 }
 
-// @Router /category/{id} [delete]
+// @Router /category/delete/{id} [delete]
 // @Summary Delete a category by ID
 // @Description Delete a category from the database by ID
 // @Tags CATEGORY
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param id path string true "Category ID"
 // @Success 200 {object} status_http.Response{data=string} "Category deleted successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request Data"

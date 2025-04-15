@@ -2,7 +2,6 @@ package order
 
 import (
 	"context"
-	"fmt"
 	"sugurta/internal/entity"
 	"sugurta/internal/infrastructure/repository"
 	"time"
@@ -58,16 +57,15 @@ func (o *orderService) Get(ctx context.Context, params map[string]string) (*enti
 func (o *orderService) List(ctx context.Context, limit, offset uint64, filter map[string]string) (*entity.GetAllOrdersResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, o.ctxTimeout)
 	defer cancel()
-	fmt.Println(6666666666)
 	// // tracing
 	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
 	// defer span.End()
-	fmt.Println(777777)
+
 	orders, err := o.orderService.List(ctx, limit, offset, filter)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(777777, orders)
+
 	return orders, nil
 }
 

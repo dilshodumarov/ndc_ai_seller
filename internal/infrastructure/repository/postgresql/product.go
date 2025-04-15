@@ -6,6 +6,8 @@ import (
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/postgres"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 const productTableName = "product"
@@ -22,15 +24,23 @@ func NewProductRepo(db *postgres.Postgres) *productRepo {
 	}
 }
 
-func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductRequest) error {
+func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductRequest) (string,error) {
+	id:=uuid.New().String()
 	query := `
 		INSERT INTO product (
-			business_id, name, category_id, short_info, description,
+			guid,business_id, name, category_id, short_info, description,
 			cost, count, discount_cost, discount, created_at, updated_at
-		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
 	`
-
+	
+	if product.Discount > 0 {
+		product.DiscountCost = product.Cost - (product.Cost * product.Discount / 100)
+	} else {
+		product.DiscountCost = product.Cost
+	}
+	
 	_, err := p.db.Exec(ctx, query,
+		id,
 		product.BusinessID,
 		product.Name,
 		product.CategoryID,
@@ -43,12 +53,12 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 		time.Now(),
 		time.Now(),
 	)
-
 	if err != nil {
-		return p.db.Error(err)
+		fmt.Println(err)
+		return "",p.db.Error(err)
 	}
 
-	return nil
+	return id,nil
 }
 
 func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, error) {
@@ -166,37 +176,91 @@ func (p *productRepo) List(ctx context.Context, limit, offset uint64, filter map
 }
 
 func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductRequest) error {
-	query := `
-		UPDATE product
-		SET business_id=$1, name=$2, category_id=$3, short_info=$4, description=$5,
-		    cost=$6, count=$7, discount_cost=$8, discount=$9, updated_at=$10
-		WHERE id=$11
-	`
+	setParts := []string{}
+	args := []interface{}{}
+	argID := 1
 
-	res, err := p.db.Exec(ctx, query,
-		product.BusinessID,
-		product.Name,
-		product.CategoryID,
-		product.ShortInfo,
-		product.Description,
-		product.Cost,
-		product.Count,
-		product.DiscountCost,
-		product.Discount,
-		time.Now(),
-		product.ID,
-	)
+	if product.BusinessID != "" {
+		setParts = append(setParts, fmt.Sprintf("business_id=$%d", argID))
+		args = append(args, product.BusinessID)
+		argID++
+	}
+	if product.Name != "" {
+		setParts = append(setParts, fmt.Sprintf("name=$%d", argID))
+		args = append(args, product.Name)
+		argID++
+	}
+	if product.CategoryID != "" {
+		setParts = append(setParts, fmt.Sprintf("category_id=$%d", argID))
+		args = append(args, product.CategoryID)
+		argID++
+	}
+	if product.ShortInfo != "" {
+		setParts = append(setParts, fmt.Sprintf("short_info=$%d", argID))
+		args = append(args, product.ShortInfo)
+		argID++
+	}
+	if product.Description != "" {
+		setParts = append(setParts, fmt.Sprintf("description=$%d", argID))
+		args = append(args, product.Description)
+		argID++
+	}
+	if product.Cost != 0 {
+		setParts = append(setParts, fmt.Sprintf("cost=$%d", argID))
+		args = append(args, product.Cost)
+		argID++
+	}
+	if product.Count != 0 {
+		setParts = append(setParts, fmt.Sprintf("count=$%d", argID))
+		args = append(args, product.Count)
+		argID++
+	}
+	if product.Discount != 0 {
+		setParts = append(setParts, fmt.Sprintf("discount=$%d", argID))
+		args = append(args, product.Discount)
+		argID++
 
+		// discount_cost hisoblash
+		discountCost := product.Cost - (product.Cost * product.Discount / 100)
+		setParts = append(setParts, fmt.Sprintf("discount_cost=$%d", argID))
+		args = append(args, discountCost)
+		argID++
+	}
+
+	setParts = append(setParts, fmt.Sprintf("updated_at=$%d", argID))
+	args = append(args, time.Now())
+	argID++
+
+	args = append(args, product.ID) // WHERE id=$n
+
+	query := fmt.Sprintf(`UPDATE product SET %s WHERE guid=$%d`, 
+	                     joinStrings(setParts, ", "), argID)
+
+	res, err := p.db.Exec(ctx, query, args...)
 	if err != nil {
 		return p.db.Error(err)
 	}
-
 	if res.RowsAffected() == 0 {
 		return p.db.Error(fmt.Errorf("no sql rows"))
 	}
-
 	return nil
 }
+
+func joinStrings(parts []string, sep string) string {
+	return fmt.Sprintf("%s", join(parts, sep))
+}
+
+func join(s []string, sep string) string {
+	if len(s) == 0 {
+		return ""
+	}
+	result := s[0]
+	for _, str := range s[1:] {
+		result += sep + str
+	}
+	return result
+}
+
 
 func (p *productRepo) Delete(ctx context.Context, id string) error {
 	query := `DELETE FROM product WHERE id = $1`
