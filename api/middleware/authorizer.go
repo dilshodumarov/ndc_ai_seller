@@ -56,7 +56,7 @@ func AuthMiddleware(e *casbin.Enforcer, config config.Config) gin.HandlerFunc {
 		if userRole == "" {
 			token = strings.TrimPrefix(token, "Bearer ")
 
-			claims, err := helper.ParseJWT(token, config.SigningKey.SigningKey)
+			claims, err := helper.ParseJWT(token, config.JWT.Secret)
 			if err != nil {
 				userRole = "unauthorized"
 			}

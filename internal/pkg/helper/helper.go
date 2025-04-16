@@ -111,6 +111,7 @@ func GenerateJWT(userID, busnessId, role, signingKey string, timeout int) (strin
 	refreshTokenClaims := jwt.MapClaims{
 		"sub":  userID,
 		"role": role,
+		"owner_id":busnessId,
 		"exp":  time.Now().Add(time.Hour * 24 * 7).Unix(), // 7 days
 	}
 
@@ -178,7 +179,7 @@ func GetPaginationParams(c *gin.Context) (int, int) {
 	return page, limit
 }
 
-func GetBusnessIdFromToken(c *gin.Context, Config config.Config) (string, int) {
+func GetBusnessIdFromToken(c *gin.Context, Config *config.Config) (string, int) {
 	var softToken string
 	token := c.GetHeader("Authorization")
 	if token == "" {
@@ -189,7 +190,7 @@ func GetBusnessIdFromToken(c *gin.Context, Config config.Config) (string, int) {
 		softToken = token
 	}
 
-	claims, err := ParseJWT(softToken, Config.SigningKey.SigningKey)
+	claims, err := ParseJWT(softToken, Config.JWT.Secret)
 	if err != nil {
 		return "unauthorized", http.StatusUnauthorized
 	}
@@ -198,6 +199,24 @@ func GetBusnessIdFromToken(c *gin.Context, Config config.Config) (string, int) {
 }
 
 
+func GetUserIdFromToken(c *gin.Context, Config *config.Config) (string, int) {
+	var softToken string
+	token := c.GetHeader("Authorization")
+	if token == "" {
+		return "unauthorized", http.StatusUnauthorized
+	} else if strings.Contains(token, "Bearer") {
+		softToken = strings.TrimPrefix(token, "Bearer ")
+	} else {
+		softToken = token
+	}
+
+	claims, err := ParseJWT(softToken, Config.JWT.Secret)
+	if err != nil {
+		return "unauthorized", http.StatusUnauthorized
+	}
+
+	return cast.ToString(claims["sub"]), 0
+}
 func ParseJWT(tokenString string, jwtKey string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Validate the algorithm

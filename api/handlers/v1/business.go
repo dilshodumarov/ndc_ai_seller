@@ -6,6 +6,7 @@ import (
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+	"sugurta/internal/pkg/helper"
 	"sugurta/internal/usecase/business"
 
 	"net/http"
@@ -49,7 +50,7 @@ func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param business body entity.CreateBusinessRequest true "Business details"
+// @Param business body entity.CreateBusinessRequestForSwagger true "Business details"
 // @Success 201 {object} status_http.Response{data=string} "Success"
 // @Response 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -61,7 +62,11 @@ func (b *businessRoutes) CreateBusiness(c *gin.Context) {
 		b.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-
+	UserId, code := helper.GetUserIdFromToken(c, b.Config)
+	if code != 0 {
+		b.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	business.OwnerID=UserId
 	if business.Name == "" {
 		b.handleResponse(c, status_http.BadRequest, "name is required")
 	}
@@ -129,7 +134,7 @@ func (b *businessRoutes) UpdateBusiness(c *gin.Context) {
 		return
 	}
 	id := c.Param("id")
-	business.ID=id
+	business.ID = id
 	if err := b.bussnesUscase.Update(c, &business); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -173,7 +178,6 @@ func (b *businessRoutes) DeleteBusiness(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param owner_id query string false "Owner ID"
 // @Param limit query int false "Limit per page" default(10)
 // @Param page query int false "Page number" default(0)
 // @Success 200 {object} status_http.Response
@@ -181,12 +185,14 @@ func (b *businessRoutes) DeleteBusiness(c *gin.Context) {
 // @Router /business/list [get]
 func (b *businessRoutes) GetAllBusinesses(c *gin.Context) {
 	req := entity.GetAllBusinessesRequest{
-		OwnerID: c.Query("owner_id"),
 		Limit:   c.GetInt("limit"),
 		Page:    c.GetInt("page"),
 	}
-
-
+	UserId, code := helper.GetUserIdFromToken(c, b.Config)
+	if code != 0 {
+		b.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	req.OwnerID=UserId
 	businesses, err := b.bussnesUscase.List(c.Request.Context(), req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -195,8 +201,6 @@ func (b *businessRoutes) GetAllBusinesses(c *gin.Context) {
 
 	c.JSON(http.StatusOK, businesses)
 }
-
-
 
 func (h *businessRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {
 	switch code := status.Code; {

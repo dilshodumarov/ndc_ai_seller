@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/postgres"
@@ -24,21 +25,21 @@ func NewProductRepo(db *postgres.Postgres) *productRepo {
 	}
 }
 
-func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductRequest) (string,error) {
-	id:=uuid.New().String()
+func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductRequest) (string, error) {
+	id := uuid.New().String()
 	query := `
 		INSERT INTO product (
 			guid,business_id, name, category_id, short_info, description,
 			cost, count, discount_cost, discount, created_at, updated_at
 		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
 	`
-	
+
 	if product.Discount > 0 {
 		product.DiscountCost = product.Cost - (product.Cost * product.Discount / 100)
 	} else {
 		product.DiscountCost = product.Cost
 	}
-	
+
 	_, err := p.db.Exec(ctx, query,
 		id,
 		product.BusinessID,
@@ -55,10 +56,10 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 	)
 	if err != nil {
 		fmt.Println(err)
-		return "",p.db.Error(err)
+		return "", p.db.Error(err)
 	}
 
-	return id,nil
+	return id, nil
 }
 
 func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, error) {
@@ -91,35 +92,46 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 	return &product, nil
 }
 
-func (p *productRepo) List(ctx context.Context, limit, offset uint64, filter map[string]string) (*entity.GetAllProductsResponse, error) {
-	baseQuery := `
-		SELECT id, business_id, name, category_id, short_info, description,
+func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*entity.GetAllProductsResponse, error) {
+	var (
+		args      []any
+		argID     = 1
+		where     = "WHERE business_id = $1"
+		limitStmt string
+	)
+
+	args = append(args, filter.OwnerID)
+	argID++
+
+	if filter.CategoryID != "" {
+		where += fmt.Sprintf(" AND category_id = $%d", argID)
+		args = append(args, filter.CategoryID)
+		argID++
+	}
+	if filter.Search != "" {
+		where += fmt.Sprintf(` AND (name ILIKE $%d OR description ILIKE $%d OR short_info ILIKE $%d)`, argID, argID+1, argID+2)
+		searchTerm := "%" + filter.Search + "%"
+		args = append(args, searchTerm, searchTerm, searchTerm)
+		argID += 3
+	}
+
+	// Pagination
+	offset := (filter.Page - 1) * filter.Limit
+	if filter.Limit > 0 {
+		limitStmt = fmt.Sprintf(" LIMIT $%d OFFSET $%d", argID, argID+1)
+		args = append(args, filter.Limit, offset)
+		argID += 2
+	}
+
+	query := fmt.Sprintf(`
+		SELECT guid, business_id, name, category_id, short_info, description,
 		       cost, count, discount_cost, discount, created_at, updated_at
 		FROM product
-		WHERE 1=1
-	`
-	args := []any{}
-	argID := 1
+		%s
+		%s
+	`, where, limitStmt)
 
-	for key, value := range filter {
-		if key == "category_id" || key == "owner_id" {
-			baseQuery += fmt.Sprintf(" AND %s = $%d", key, argID)
-			args = append(args, value)
-			argID++
-		}
-		if key == "created_at" {
-			baseQuery += fmt.Sprintf(" AND created_at::date = $%d", argID)
-			args = append(args, value)
-			argID++
-		}
-	}
-
-	if limit > 0 {
-		baseQuery += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argID, argID+1)
-		args = append(args, limit, offset)
-	}
-
-	rows, err := p.db.Query(ctx, baseQuery, args...)
+	rows, err := p.db.Query(ctx, query, args...)
 	if err != nil {
 		return nil, p.db.Error(err)
 	}
@@ -127,7 +139,12 @@ func (p *productRepo) List(ctx context.Context, limit, offset uint64, filter map
 
 	var products entity.GetAllProductsResponse
 	for rows.Next() {
-		var product entity.Product
+		var (
+			product        entity.Product
+			discountCostDB sql.NullInt64
+			discountDB     sql.NullInt64
+		)
+
 		if err := rows.Scan(
 			&product.ID,
 			&product.BusinessID,
@@ -137,34 +154,33 @@ func (p *productRepo) List(ctx context.Context, limit, offset uint64, filter map
 			&product.Description,
 			&product.Cost,
 			&product.Count,
-			&product.DiscountCost,
-			&product.Discount,
+			&discountCostDB,
+			&discountDB,
 			&product.CreatedAt,
 			&product.UpdatedAt,
 		); err != nil {
 			return nil, p.db.Error(err)
 		}
+
+		if discountCostDB.Valid {
+			val := int(discountCostDB.Int64)
+			product.DiscountCost = val
+		}
+
+		if discountDB.Valid {
+			val := int(discountDB.Int64)
+			product.Discount = val
+		}
+
 		products.Items = append(products.Items, product)
 	}
 
-	// Count query
-	countQuery := `SELECT COUNT(*) FROM product WHERE 1=1`
-	countArgs := []any{}
-	argID = 1
-
-	for key, value := range filter {
-		if key == "category_id" || key == "owner_id" {
-			countQuery += fmt.Sprintf(" AND %s = $%d", key, argID)
-			countArgs = append(countArgs, value)
-			argID++
-		}
-		if key == "created_at" {
-			countQuery += fmt.Sprintf(" AND created_at::date = $%d", argID)
-			countArgs = append(countArgs, value)
-			argID++
-		}
+	// Count query (limit va offset args olinmaydi)
+	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM product %s`, where)
+	countArgs := args
+	if filter.Limit > 0 {
+		countArgs = args[:len(args)-2] // oxirgi limit va offset ni olib tashlaymiz
 	}
-
 	var totalCount uint64
 	err = p.db.QueryRow(ctx, countQuery, countArgs...).Scan(&totalCount)
 	if err != nil {
@@ -180,11 +196,6 @@ func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductR
 	args := []interface{}{}
 	argID := 1
 
-	if product.BusinessID != "" {
-		setParts = append(setParts, fmt.Sprintf("business_id=$%d", argID))
-		args = append(args, product.BusinessID)
-		argID++
-	}
 	if product.Name != "" {
 		setParts = append(setParts, fmt.Sprintf("name=$%d", argID))
 		args = append(args, product.Name)
@@ -233,8 +244,8 @@ func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductR
 
 	args = append(args, product.ID) // WHERE id=$n
 
-	query := fmt.Sprintf(`UPDATE product SET %s WHERE guid=$%d`, 
-	                     joinStrings(setParts, ", "), argID)
+	query := fmt.Sprintf(`UPDATE product SET %s WHERE guid=$%d`,
+		joinStrings(setParts, ", "), argID)
 
 	res, err := p.db.Exec(ctx, query, args...)
 	if err != nil {
@@ -260,7 +271,6 @@ func join(s []string, sep string) string {
 	}
 	return result
 }
-
 
 func (p *productRepo) Delete(ctx context.Context, id string) error {
 	query := `DELETE FROM product WHERE id = $1`

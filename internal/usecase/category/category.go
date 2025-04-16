@@ -1,9 +1,9 @@
 package category
 
 import (
+	"context"
 	"sugurta/internal/entity"
 	"sugurta/internal/infrastructure/repository"
-	"context"
 	"time"
 )
 
@@ -54,7 +54,7 @@ func (c *categoryService) Get(ctx context.Context, id string) (*entity.Category,
 	return category, nil
 }
 
-func (c *categoryService) List(ctx context.Context, limit uint64, offset uint64, filter map[string]string) (*entity.GetAllCategoriesResponse, error) {
+func (c *categoryService) List(ctx context.Context, filter entity.CategoryFilter) (*entity.GetAllCategoriesResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, c.ctxTimeout)
 	defer cancel()
 
@@ -62,7 +62,7 @@ func (c *categoryService) List(ctx context.Context, limit uint64, offset uint64,
 	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
 	// defer span.End()
 
-	category, err := c.categoryRepo.List(ctx, limit, offset, filter)
+	category, err := c.categoryRepo.List(ctx, filter)
 	if err != nil {
 		return nil, err
 	}

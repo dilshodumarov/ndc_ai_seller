@@ -15,6 +15,7 @@ import (
 	"sugurta/internal/pkg/otlp"
 	"sugurta/internal/pkg/policy"
 	"sugurta/internal/pkg/redis"
+	botcomments "sugurta/internal/usecase/bot_comments"
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
 	clienttype "sugurta/internal/usecase/client-type"
@@ -49,6 +50,7 @@ type App struct {
 	category   category.Category
 	order      order.Order
 	integration integration.Integration
+	BotComments botcomments.BotCommandStorage
 }
 
 func NewApp(cfg config.Config) (*App, error) {
@@ -121,6 +123,10 @@ func NewApp(cfg config.Config) (*App, error) {
 
 	orderRepo := postgresql.NewOrderRepo(db)
 	orderUseCase:=order.NewRoleService(contextTimeout,orderRepo)
+
+	botCommentsRepo := postgresql.NewBotCommandsRepo(db)
+	botCommentsUscase := botcomments.NewbotCommentsService(contextTimeout, botCommentsRepo)
+
 	fmt.Println("order repo: ", orderUseCase)
 	fmt.Println("here 3")
 
@@ -139,6 +145,7 @@ func NewApp(cfg config.Config) (*App, error) {
 		category:     categoryUseCase,
 		order:        orderUseCase,
 		integration:  intgrationUscase,
+		BotComments:   botCommentsUscase,
 		// BrokerProducer: event.NewBrokerProducer(cfg.Kafka.Brokers, cfg.Kafka.Topic),
 	}, nil
 }
@@ -177,6 +184,8 @@ func (a *App) Run() error {
 		Order:           a.order,
 		Integration:    a.integration,
 		Product:        a.product,
+		Category:       a.category,
+		BotComments:    a.BotComments,
 	})
 
 	fmt.Println("here 5")

@@ -10,6 +10,7 @@ import (
 	"sugurta/api/middleware"
 	"sugurta/internal/infrastructure/repository/redis"
 	"sugurta/internal/pkg/config"
+	botcomments "sugurta/internal/usecase/bot_comments"
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
 	clienttype "sugurta/internal/usecase/client-type"
@@ -41,6 +42,7 @@ type HandlerOption struct {
 	Category   category.Category
 	Order      order.Order
 	Integration integration.Integration
+	BotComments botcomments.BotCommandStorage
 }
 
 type BaseHandler struct {

@@ -21,7 +21,6 @@ type (
 		RMQ           RMQ
 		Redis         Redis
 		Email         EmailConfig
-		SigningKey    SigningKey
 		OTLPCollector WebAddress
 		JWT           JWT
 	}
@@ -89,9 +88,6 @@ type (
 		Port     int    `env:"EMAIL_PORT,required"`
 	}
 
-	SigningKey struct {
-		SigningKey string `env:"SIGNING_KEY"`
-	}
 
 	Redis struct {
 		Host     string

@@ -16,6 +16,17 @@ type (
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
 	}
+	CreateProductRequestForSwagger struct {
+		BusinessID   string `json:"business_id"`
+		Name         string `json:"name"`
+		CategoryID   string `json:"category_id"`
+		ShortInfo    string `json:"short_info"`
+		Description  string `json:"description"`
+		Cost         int    `json:"cost"`
+		Count        int    `json:"count"`
+		DiscountCost int    `json:"discount_cost"`
+		Discount     int    `json:"discount"`
+	}
 
 	Product struct {
 		ID           string    `json:"id"`
@@ -34,7 +45,6 @@ type (
 
 	UpdateProductRequest struct {
 		ID           string `json:"id"`
-		BusinessID   string `json:"business_id"`
 		Name         string `json:"name"`
 		CategoryID   string `json:"category_id"`
 		ShortInfo    string `json:"short_info"`
@@ -55,6 +65,14 @@ type (
 		Items []Product `json:"items"`
 		Total uint64    `json:"total"`
 	}
+	 ProductFilter struct {
+		OwnerID    string  // majburiy
+		CategoryID string  // optional
+		Search     string  // optional
+		Limit      uint64  // required
+		Page       uint64  // required
+	}
+	
 )
 
 type (
@@ -62,6 +80,9 @@ type (
 
 	CreateCategoryRequest struct {
 		BusinessID string `json:"business_id"`
+		Name       string `json:"name"`
+	}
+	CreateCategoryRequestForSwagger struct {
 		Name       string `json:"name"`
 	}
 	Category struct {
@@ -74,7 +95,6 @@ type (
 
 	UpdateCategoryRequest struct {
 		ID         string `json:"id"`
-		BusinessID string `json:"business_id"`
 		Name       string `json:"name"`
 	}
 
@@ -88,5 +108,13 @@ type (
 		Items []Category `json:"items"`
 		Total uint64     `json:"total"`
 	}
+	CategoryFilter struct {
+		BusinessID string `json:"business_id" binding:"required"` 
+		Name       string `json:"name,omitempty"`                 
+		Page       uint64 `json:"page,omitempty"`                
+		Limit      uint64 `json:"limit,omitempty"`               
+	}
+	
+	
 )
 

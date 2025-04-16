@@ -50,7 +50,7 @@ func (p *productService) Get(ctx context.Context, id string) (*entity.Product, e
 	return product, nil
 }
 
-func (p *productService) List(ctx context.Context, limit uint64, offset uint64, filter map[string]string) (*entity.GetAllProductsResponse, error) {
+func (p *productService) List(ctx context.Context, filter entity.ProductFilter) (*entity.GetAllProductsResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, p.ctxTimeout)
 	defer cancel()
 
@@ -58,7 +58,7 @@ func (p *productService) List(ctx context.Context, limit uint64, offset uint64, 
 	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
 	// defer span.End()
 
-	products, err := p.productRepo.List(ctx, limit, offset, filter)
+	products, err := p.productRepo.List(ctx, filter)
 	if err != nil {
 		return nil, err
 	}

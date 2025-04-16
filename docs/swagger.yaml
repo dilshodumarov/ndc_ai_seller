@@ -5,6 +5,39 @@ definitions:
       access_token:
         type: string
     type: object
+  entity.BotCommandRequest:
+    properties:
+      command:
+        type: string
+      integration_id:
+        type: string
+      response:
+        type: string
+    type: object
+  entity.BotCommandResponse:
+    properties:
+      command:
+        type: string
+      created_at:
+        type: string
+      guid:
+        type: string
+      integration_id:
+        type: string
+      response:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.BotCommandUpdateRequest:
+    properties:
+      command:
+        type: string
+      guid:
+        type: string
+      response:
+        type: string
+    type: object
   entity.Category:
     properties:
       business_id:
@@ -38,19 +71,15 @@ definitions:
           $ref: '#/definitions/entity.ClientType'
         type: array
     type: object
-  entity.CreateBusinessRequest:
+  entity.CreateBusinessRequestForSwagger:
     properties:
       description:
         type: string
       name:
         type: string
-      ownerID:
-        type: string
     type: object
-  entity.CreateCategoryRequest:
+  entity.CreateCategoryRequestForSwagger:
     properties:
-      business_id:
-        type: string
       name:
         type: string
     type: object
@@ -74,7 +103,7 @@ definitions:
       total_cost:
         type: integer
     type: object
-  entity.CreateProductRequest:
+  entity.CreateProductRequestForSwagger:
     properties:
       business_id:
         type: string
@@ -102,11 +131,29 @@ definitions:
     required:
     - email
     type: object
+  entity.GetAllCategoriesResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/entity.Category'
+        type: array
+      total:
+        type: integer
+    type: object
   entity.GetAllOrdersResponse:
     properties:
       items:
         items:
           $ref: '#/definitions/entity.Order'
+        type: array
+      total:
+        type: integer
+    type: object
+  entity.GetAllProductsResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/entity.Product'
         type: array
       total:
         type: integer
@@ -173,8 +220,6 @@ definitions:
         type: string
       id:
         type: string
-      integration_id:
-        type: string
       status:
         type: string
       status_chaged_time:
@@ -193,6 +238,33 @@ definitions:
       integration_id:
         type: string
       status:
+        type: string
+    type: object
+  entity.Product:
+    properties:
+      business_id:
+        type: string
+      category_id:
+        type: string
+      cost:
+        type: integer
+      count:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      discount:
+        type: integer
+      discount_cost:
+        type: integer
+      id:
+        type: string
+      name:
+        type: string
+      short_info:
+        type: string
+      updated_at:
         type: string
     type: object
   entity.RegisterRequest:
@@ -238,6 +310,13 @@ definitions:
       name:
         type: string
     type: object
+  entity.UpdateCategoryRequest:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
   entity.UpdateClientType:
     properties:
       id:
@@ -260,8 +339,6 @@ definitions:
     type: object
   entity.UpdateProductRequest:
     properties:
-      business_id:
-        type: string
       category_id:
         type: string
       cost:
@@ -687,6 +764,218 @@ paths:
       summary: Verify forgot password
       tags:
       - AUTH
+  /bot-comments/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new bot command for integration
+      parameters:
+      - description: Bot Command Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.BotCommandRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: GUID
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: string
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create bot command
+      tags:
+      - BOT_COMMENTS
+  /bot-comments/delete/{id}:
+    delete:
+      description: Delete a bot command by GUID
+      parameters:
+      - description: Command GUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Delete bot command
+      tags:
+      - BOT_COMMENTS
+  /bot-comments/get/{id}:
+    get:
+      description: Get a bot command by ID (guid)
+      parameters:
+      - description: Command GUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.BotCommandResponse'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get bot command
+      tags:
+      - BOT_COMMENTS
+  /bot-comments/list/{integration_id}:
+    get:
+      description: List all bot commands for an integration
+      parameters:
+      - description: Integration ID
+        in: path
+        name: integration_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.BotCommandResponse'
+                  type: array
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: List bot commands
+      tags:
+      - BOT_COMMENTS
+  /bot-comments/update:
+    put:
+      consumes:
+      - application/json
+      description: Update bot command fields (command, response)
+      parameters:
+      - description: Update Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.BotCommandUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update bot command
+      tags:
+      - BOT_COMMENTS
   /business/create:
     post:
       consumes:
@@ -698,7 +987,7 @@ paths:
         name: business
         required: true
         schema:
-          $ref: '#/definitions/entity.CreateBusinessRequest'
+          $ref: '#/definitions/entity.CreateBusinessRequestForSwagger'
       produces:
       - application/json
       responses:
@@ -823,10 +1112,6 @@ paths:
       - application/json
       description: Get all businesses with pagination
       parameters:
-      - description: Owner ID
-        in: query
-        name: owner_id
-        type: string
       - default: 10
         description: Limit per page
         in: query
@@ -921,7 +1206,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/entity.CreateCategoryRequest'
+          $ref: '#/definitions/entity.CreateCategoryRequestForSwagger'
       produces:
       - application/json
       responses:
@@ -1067,6 +1352,68 @@ paths:
       summary: Get category by ID
       tags:
       - CATEGORY
+  /category/list:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of categories with optional filters and pagination
+      parameters:
+      - description: Filter by Category Name
+        in: query
+        name: name
+        type: string
+      - description: 'Limit the number of results (default: 10)'
+        in: query
+        name: limit
+        type: integer
+      - description: 'Page number for pagination (default: 1)'
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of Categories
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.GetAllCategoriesResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal server error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: List categories
+      tags:
+      - CATEGORY
   /category/update:
     put:
       consumes:
@@ -1078,7 +1425,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/entity.Category'
+          $ref: '#/definitions/entity.UpdateCategoryRequest'
       produces:
       - application/json
       responses:
@@ -1787,7 +2134,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/entity.CreateProductRequest'
+          $ref: '#/definitions/entity.CreateProductRequestForSwagger'
       produces:
       - application/json
       responses:
@@ -1913,6 +2260,74 @@ paths:
       security:
       - BearerAuth: []
       summary: Get product by ID
+      tags:
+      - PRODUCT
+  /product/list:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of products with optional filters
+      parameters:
+      - description: Filter by Category ID
+        in: query
+        name: category_id
+        type: string
+      - description: Search in name, description, or short_info
+        in: query
+        name: search
+        type: string
+      - description: 'Number of products per page (default: 10)'
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: 'Page number (starts from 1, default: 1)'
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of Products
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.GetAllProductsResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal server error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: List products
       tags:
       - PRODUCT
   /product/update:

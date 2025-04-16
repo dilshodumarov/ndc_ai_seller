@@ -56,7 +56,7 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 // @Router /integration/create [post]
 func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 	var req entity.IntegrationCreate
-	bussnesId,code:=helper.GetBusnessIdFromToken(c, *i.Config)
+	bussnesId,code:=helper.GetBusnessIdFromToken(c, i.Config)
 	if code != 0 {
 		i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}

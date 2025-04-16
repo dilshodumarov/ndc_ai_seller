@@ -10,6 +10,7 @@ import (
 
 	redisrepo "sugurta/internal/infrastructure/repository/redis"
 	"sugurta/internal/pkg/config"
+	botcomments "sugurta/internal/usecase/bot_comments"
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
 	clienttype "sugurta/internal/usecase/client-type"
@@ -50,6 +51,7 @@ type RouteOption struct {
 	Category    category.Category
 	Order       order.Order
 	Integration integration.Integration
+	BotComments botcomments.BotCommandStorage
 	// Service        grpcClients.ServiceClient
 	// RefreshToken   refresh_token.RefreshToken
 	// BrokerProducer event.BrokerProducer
@@ -80,6 +82,8 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		Order:          option.Order,
 		Integration:    option.Integration,
 		Product:        option.Product,
+		Category:       option.Category,
+		BotComments:    option.BotComments,
 	}
 
 	app := gin.New()
@@ -133,8 +137,9 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		v1.NewIntegrationRoutes(apiV1Group, handleOption)
 		// v1.NewClientTypeRoutes(apiV1Group, auth, h.cfg, h.log, h.inMemory)
 		// v1.NewRoleRoutes(apiV1Group, auth, h.cfg, h.log, h.inMemory)
-		//v1.NewBusinessRoutes(apiV1Group, business, h.cfg, h.log, h.inMemory)
+	    v1.NewCategoryRoutes(apiV1Group,handleOption)
 		v1.NewProductRoutes(apiV1Group, handleOption)
+		v1.NewBotCommentsRoutes(apiV1Group,handleOption)
 	}
 
 	return app

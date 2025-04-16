@@ -2,10 +2,13 @@ package v1
 
 import (
 	"database/sql"
+	"fmt"
+	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+	"sugurta/internal/pkg/helper"
 	"sugurta/internal/usecase/category"
 
 	"net/http"
@@ -23,7 +26,7 @@ type categoryRoutes struct {
 	categoryUscase category.Category
 }
 
-func NewcategoryRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) {
+func NewCategoryRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) {
 	r := &categoryRoutes{
 		log:            option.Logger,
 		cfg:            option.Config,
@@ -35,6 +38,7 @@ func NewcategoryRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 	{
 		categoriesGroup.POST("/create", r.createCategory)
 		categoriesGroup.GET("/get/:id", r.GetCategoryByID)
+		categoriesGroup.GET("/list", r.ListCategories)
 		categoriesGroup.PUT("/update", r.updateCategory)
 		categoriesGroup.DELETE("/delete/:id", r.deleteCategory)
 	}
@@ -47,17 +51,21 @@ func NewcategoryRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param category body entity.CreateCategoryRequest true "Category Details"
+// @Param category body entity.CreateCategoryRequestForSwagger true "Category Details"
 // @Success 201 {object} status_http.Response{data=string} "Category created successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (h *categoryRoutes) createCategory(c *gin.Context) {
 	var category entity.CreateCategoryRequest
-	if err := c.ShouldBindJSON(&c); err != nil {
+	if err := c.ShouldBindJSON(&category); err != nil {
 		h.handleResponse(c, status_http.BadRequest, "invalid request data")
 		return
 	}
-
+	bussnesId, code := helper.GetBusnessIdFromToken(c, h.cfg)
+	if code != 0 {
+		h.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	category.BusinessID = bussnesId
 	err := h.categoryUscase.Create(c, &category)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -106,7 +114,7 @@ func (h *categoryRoutes) GetCategoryByID(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param category body entity.Category true "Category Details"
+// @Param category body entity.UpdateCategoryRequest true "Category Details"
 // @Success 200 {object} status_http.Response{data=string} "Category updated successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad request data"
 // @Failure 404 {object} status_http.Response{data=string} "Category Not Found"
@@ -114,13 +122,14 @@ func (h *categoryRoutes) GetCategoryByID(c *gin.Context) {
 func (h *categoryRoutes) updateCategory(c *gin.Context) {
 
 	var category entity.UpdateCategoryRequest
-	if err := c.ShouldBindJSON(&c); err != nil {
+	if err := c.ShouldBindJSON(&category); err != nil {
 		h.handleResponse(c, status_http.BadRequest, "invalid request data")
 		return
 	}
 
 	err := h.categoryUscase.Update(c, &category)
 	if err != nil {
+		fmt.Println(err)
 		if err == sql.ErrNoRows {
 			h.handleResponse(c, status_http.NotFound, "category not found")
 			return
@@ -130,6 +139,49 @@ func (h *categoryRoutes) updateCategory(c *gin.Context) {
 	}
 
 	h.handleResponse(c, status_http.OK, "category updated successfully")
+}
+
+// @Router /category/list [get]
+// @Summary List categories
+// @Description Get a list of categories with optional filters and pagination
+// @Tags CATEGORY
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param name query string false "Filter by Category Name"
+// @Param limit query integer false "Limit the number of results (default: 10)"
+// @Param page query integer false "Page number for pagination (default: 1)"
+// @Success 200 {object} status_http.Response{data=entity.GetAllCategoriesResponse} "List of Categories"
+// @Failure 400 {object} status_http.Response{data=string} "Bad request"
+// @Failure 401 {object} status_http.Response{data=string} "Unauthorized"
+// @Failure 500 {object} status_http.Response{data=string} "Internal server error"
+func (h *categoryRoutes) ListCategories(c *gin.Context) {
+	var filter entity.CategoryFilter
+
+	filter.Name = c.Query("name")
+
+	limit, _ := strconv.ParseUint(c.DefaultQuery("limit", "10"), 10, 64)
+	page, _ := strconv.ParseUint(c.DefaultQuery("page", "1"), 10, 64)
+	filter.Limit = limit
+	filter.Page = page
+
+	// Get business ID from token
+	businessID, code := helper.GetBusnessIdFromToken(c, h.cfg)
+	if code != 0 {
+		h.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+		return
+	}
+
+	filter.BusinessID = businessID
+
+	result, err := h.categoryUscase.List(c, filter)
+	if err != nil {
+
+		h.handleResponse(c, status_http.InternalServerError, "error listing categories")
+		return
+	}
+
+	h.handleResponse(c, status_http.OK, result)
 }
 
 // @Router /category/delete/{id} [delete]

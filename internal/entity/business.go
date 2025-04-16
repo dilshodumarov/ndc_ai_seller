@@ -8,6 +8,10 @@ type (
 		Name             string
 		Description      string
 	}
+	CreateBusinessRequestForSwagger struct {
+		Name             string
+		Description      string
+	}
 	StartBot struct {
 		BusinessId string
 	}

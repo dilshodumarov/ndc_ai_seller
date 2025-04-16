@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+	"sugurta/internal/pkg/helper"
 	"sugurta/internal/usecase/product"
 
 	"github.com/casbin/casbin/v2"
@@ -37,6 +39,7 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 		productGroup.POST("/create", r.createProduct)
 		productGroup.GET("/get/:id", r.getProductByID)
 		productGroup.PUT("/update", r.updateProduct)
+		productGroup.GET("/list", r.ListProducts)
 		productGroup.DELETE("/delete/:id", r.deleteProduct)
 	}
 
@@ -49,7 +52,7 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param product body entity.CreateProductRequest true "Product Details"
+// @Param product body entity.CreateProductRequestForSwagger true "Product Details"
 // @Success 201 {object} status_http.Response{data=string} "Product created successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -59,7 +62,11 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-
+	BusinessID, code := helper.GetBusnessIdFromToken(c, p.Config)
+	if code != 0 {
+		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	product.BusinessID = BusinessID
 	id, err := p.productUscase.Create(c, &product)
 	if err != nil {
 		p.handleResponse(c, status_http.InternalServerError, "error while creating product")
@@ -122,6 +129,63 @@ func (p *productRoutes) getProductByID(c *gin.Context) {
 	p.handleResponse(c, status_http.OK, product)
 }
 
+// @Router /product/list [get]
+// @Summary List products
+// @Description Get a paginated list of products with optional filters
+// @Tags PRODUCT
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param category_id query string false "Filter by Category ID"
+// @Param search query string false "Search in name, description, or short_info"
+// @Param limit query integer true "Number of products per page (default: 10)"
+// @Param page query integer true "Page number (starts from 1, default: 1)"
+// @Success 200 {object} status_http.Response{data=entity.GetAllProductsResponse} "List of Products"
+// @Failure 400 {object} status_http.Response{data=string} "Bad request"
+// @Failure 401 {object} status_http.Response{data=string} "Unauthorized"
+// @Failure 500 {object} status_http.Response{data=string} "Internal server error"
+func (p *productRoutes) ListProducts(c *gin.Context) {
+	ownerId, code := helper.GetBusnessIdFromToken(c, p.cfg)
+	if code != 0 {
+		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+		return
+	}
+
+	filter := entity.ProductFilter{
+		OwnerID:    ownerId,
+		CategoryID: c.Query("category_id"),
+		Search:     c.Query("search"),
+	}
+
+	// Default values
+	limitStr := c.DefaultQuery("limit", "10")
+	pageStr := c.DefaultQuery("page", "1")
+
+	limit, err := strconv.ParseUint(limitStr, 10, 64)
+	if err != nil || limit == 0 {
+		p.handleResponse(c, status_http.BadRequest, "Invalid limit parameter")
+		return
+	}
+
+	page, err := strconv.ParseUint(pageStr, 10, 64)
+	if err != nil || page == 0 {
+		p.handleResponse(c, status_http.BadRequest, "Invalid page parameter")
+		return
+	}
+
+	filter.Limit = limit
+	filter.Page = page
+
+	result, err := p.productUscase.List(c, filter)
+	if err != nil {
+		fmt.Println("List error:", err)
+		p.handleResponse(c, status_http.InternalServerError, "Error listing products")
+		return
+	}
+
+	p.handleResponse(c, status_http.OK, result)
+}
+
 // @Router /product/update [put]
 // @Summary Update an existing product
 // @Description Update product details by ID
@@ -148,8 +212,12 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 		return
 	}
 	if product.Discount != 0 {
+		BusinessID, code := helper.GetBusnessIdFromToken(c, p.Config)
+		if code != 0 {
+			p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+		}
 		botNotification := entity.BotNotification{
-			Guid:      product.BusinessID,
+			Guid:      BusinessID,
 			ProductId: product.ID,
 		}
 		body, err := json.Marshal(botNotification)

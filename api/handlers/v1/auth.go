@@ -284,7 +284,7 @@ func (a *authRoutes) verify(c *gin.Context) {
 	}
 
 	// Generate JWT tokens
-	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.BusinessID,userResp.RoleData.Name, a.cfg.SigningKey.SigningKey, 12) // 12 hours
+	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.BusinessID,userResp.RoleData.Name, a.cfg.JWT.Secret, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
@@ -311,14 +311,14 @@ func (a *authRoutes) refreshAccessToken(c *gin.Context) {
 	token := c.Param("token")
 
 	// Parse and validate token
-	claims, err := helper.ParseToken(token, a.cfg.SigningKey.SigningKey)
+	claims, err := helper.ParseToken(token, a.cfg.JWT.Secret)
 	if err != nil {
 		a.handleResponse(c, status_http.Forbidden, "access token expired")
 		return
 	}
 
 	// Generate new access token
-	accessToken, _, err := helper.GenerateJWT(claims.Sub, claims.BusinessId,claims.Role, a.cfg.SigningKey.SigningKey, 12) // 12 hours
+	accessToken, _, err := helper.GenerateJWT(claims.Sub, claims.BusinessId,claims.Role, a.cfg.JWT.Secret, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.BadRequest, err.Error())
 		return
@@ -376,7 +376,7 @@ func (a *authRoutes) login(c *gin.Context) {
 
 	// Generate tokens
 	
-	accessToken, refreshToken, err := helper.GenerateJWT(user.ID, user.BusinessID,user.RoleData.Name, a.cfg.SigningKey.SigningKey, 12) // 12 hours
+	accessToken, refreshToken, err := helper.GenerateJWT(user.ID, user.BusinessID,user.RoleData.Name, a.cfg.JWT.Secret, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.BadRequest, err.Error())
 		return
