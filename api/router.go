@@ -140,6 +140,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 	    v1.NewCategoryRoutes(apiV1Group,handleOption)
 		v1.NewProductRoutes(apiV1Group, handleOption)
 		v1.NewBotCommentsRoutes(apiV1Group,handleOption)
+		v1.NewWebsocketRoutes(apiV1Group,handleOption)
 	}
 
 	return app

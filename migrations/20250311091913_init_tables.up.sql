@@ -252,7 +252,7 @@ CREATE TABLE IF NOT EXISTS "order_products" (
 );
 
 
-CREATE TABLE IF NOT EXISTS bot_commands (
+CREATE TABLE IF NOT EXISTS "bot_commands" (
     "guid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "integration_id" UUID NOT NULL REFERENCES "integration"("guid") ON DELETE CASCADE,
     "command" TEXT NOT NULL, 
@@ -260,4 +260,18 @@ CREATE TABLE IF NOT EXISTS bot_commands (
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+CREATE TABLE IF NOT EXISTS "chat_history" (
+    "guid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "integration_id" UUID NOT NULL REFERENCES "integration"("guid") ON DELETE CASCADE,
+    "message" TEXT NOT NULL, 
+    "chat_id" BIGINT NOT NULL,
+    "platform_id" VARCHAR(255),
+    "ai_response" TEXT,
+    "reply_to_message_id" BIGINT,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
     

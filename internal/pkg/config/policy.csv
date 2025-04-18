@@ -29,6 +29,7 @@ p, admin,  /v1/orders/*, GET|POST|PUT|DELETE
 p, Guest,  /v1/bot-comments/*, GET|POST|PUT|DELETE
 p, admin,  /v1/bot-comments/*, GET|POST|PUT|DELETE
 
+p, unauthorized, /v1/websocket/*, GET|POST
 
 g, admin, Guest
 
