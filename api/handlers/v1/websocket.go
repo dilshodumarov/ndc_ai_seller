@@ -64,7 +64,7 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 	h.AddClient(userID, conn)
 	h.log.Info("New WebSocket client connected", zap.String("userID", userID))
 
-	// 🌟 Bu joyni qo‘shamiz — foydalanuvchidan kelgan xabarlarni o‘qish uchun
+	
 	go func() {
 		for {
 			_, msg, err := conn.ReadMessage()
@@ -77,7 +77,7 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 				break
 			}
 
-			resp, err := http.Post("http://localhost:8081/send-message", "application/json", bytes.NewBuffer(msg))
+			resp, err := http.Post("http://ai-seller-bot:8081/send-message", "application/json", bytes.NewBuffer(msg))
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 				return

@@ -83,7 +83,7 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
 			return
 		}
-		resp, err := http.Post("http://localhost:8081/notification", "application/json", bytes.NewBuffer(body))
+		resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 			return
@@ -225,7 +225,7 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
 			return
 		}
-		resp, err := http.Post("http://localhost:8081/notification", "application/json", bytes.NewBuffer(body))
+		resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 			return

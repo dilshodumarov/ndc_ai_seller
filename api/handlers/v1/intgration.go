@@ -104,9 +104,9 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
 		return
-	}
+	}	
 	if res.Itype == "bot" {
-		resp, err := http.Post("http://localhost:8081/start", "application/json", bytes.NewBuffer(body))
+		resp, err := http.Post("http://ai-seller-bot:8081/start", "application/json", bytes.NewBuffer(body))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 			return
@@ -153,7 +153,7 @@ func (i *integrationRoutes) UpdateStatus(c *gin.Context) {
 
 	if res.IntegrationType == "bot" {
 
-		botURL := "http://localhost:8081/"
+		botURL := "http://ai-seller-bot:8081/"
 		if req.Status == "active" {
 			botURL += "start"
 		} else if req.Status == "stop" {

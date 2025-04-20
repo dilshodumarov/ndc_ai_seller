@@ -85,7 +85,7 @@ type (
 		From     string `env:"EMAIL_FROM,required"`
 		Password string `env:"EMAIL_PASSWORD,required"`
 		Host     string `env:"EMAIL_HOST,required"`
-		Port     int    `env:"EMAIL_PORT,required"`
+		Port     string    `env:"EMAIL_PORT,required"`
 	}
 
 
@@ -123,24 +123,24 @@ func NewConfig() (*Config, error) {
 	config.Server.IdleTimeout = getEnv("SERVER_IDLE_TIMEOUT", "120s")
 
 	// db configuration
-	config.DB.Host = getEnv("POSTGRES_HOST", "localhost")
+	config.DB.Host = getEnv("POSTGRES_HOST", "ai-seller")
 	config.DB.Port = getEnv("POSTGRES_PORT", "5432")
-	config.DB.Name = getEnv("POSTGRES_DATABASE", "ai_seller")
-	config.DB.User = getEnv("POSTGRES_USER", "postgres")
-	config.DB.Password = getEnv("POSTGRES_PASSWORD", "1234")
+	config.DB.Name = getEnv("POSTGRES_DATABASE", "seller_db")
+	config.DB.User = getEnv("POSTGRES_USER", "ai-seller")
+	config.DB.Password = getEnv("POSTGRES_PASSWORD", "ai-seller_secret")
 	config.DB.SSLMode = getEnv("POSTGRES_SSLMODE", "disable")
 
 	config.PG.PoolMax = cast.ToInt(getEnv("POSTGRES_POOL_MAX", "1"))
 
 	// redis configuration
-	config.Redis.Host = getEnv("REDIS_HOST", "localhost")
+	config.Redis.Host = getEnv("REDIS_HOST", "ai-seller-redis")
 	config.Redis.Port = getEnv("REDIS_PORT", "6379")
 	config.Redis.Password = getEnv("REDIS_PASSWORD", "")
 	config.Redis.Name = getEnv("REDIS_DATABASE", "0")
 
-	config.Email.From = getEnv("EMAIL_FROM", "your_email")
-	config.Email.Password = getEnv("EMAIL_PASSWORD", "your_email")
-	config.Email.Port = cast.ToInt(getEnv("EMAIL_PORT", "587"))
+	config.Email.From = getEnv("EMAIL_FROM", "the.aura.fashionn@gmail.com")
+	config.Email.Password = getEnv("EMAIL_PASSWORD", "uqik mvwn qtfe wbte")
+	config.Email.Port =getEnv("EMAIL_PORT", "587")
 	config.Email.Host = getEnv("EMAIL_HOST", "smtp.gmail.com")
 
 	// config.ContentService.Host = getEnv("CONTENT_SERVICE_GRPC_HOST", "localhost")
