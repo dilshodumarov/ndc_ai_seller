@@ -96,18 +96,25 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 	var (
 		args      []any
 		argID     = 1
-		where     = "WHERE business_id = $1"
+		where     = "WHERE true"
 		limitStmt string
 	)
 
-	args = append(args, filter.OwnerID)
-	argID++
+	// Ixtiyoriy OwnerID bo‘lsa, filter qilamiz
+	if filter.OwnerID != "" {
+		where += fmt.Sprintf(" AND business_id = $%d", argID)
+		args = append(args, filter.OwnerID)
+		argID++
+	}
 
+	// Ixtiyoriy CategoryID bo‘lsa, filter qilamiz
 	if filter.CategoryID != "" {
 		where += fmt.Sprintf(" AND category_id = $%d", argID)
 		args = append(args, filter.CategoryID)
 		argID++
 	}
+
+	// Qidiruv so‘zi bo‘lsa, name/description/short_info bo‘yicha qidiramiz
 	if filter.Search != "" {
 		where += fmt.Sprintf(` AND (name ILIKE $%d OR description ILIKE $%d OR short_info ILIKE $%d)`, argID, argID+1, argID+2)
 		searchTerm := "%" + filter.Search + "%"
@@ -123,6 +130,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		argID += 2
 	}
 
+	// Mahsulotlar ro‘yxatini olish uchun query
 	query := fmt.Sprintf(`
 		SELECT guid, business_id, name, category_id, short_info, description,
 		       cost, count, discount_cost, discount, created_at, updated_at
@@ -163,24 +171,22 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		}
 
 		if discountCostDB.Valid {
-			val := int(discountCostDB.Int64)
-			product.DiscountCost = val
+			product.DiscountCost = int(discountCostDB.Int64)
 		}
-
 		if discountDB.Valid {
-			val := int(discountDB.Int64)
-			product.Discount = val
+			product.Discount = int(discountDB.Int64)
 		}
 
 		products.Items = append(products.Items, product)
 	}
 
-	// Count query (limit va offset args olinmaydi)
+	// Umumiy sonini hisoblash (limit va offsetni olib tashlaymiz)
 	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM product %s`, where)
 	countArgs := args
 	if filter.Limit > 0 {
-		countArgs = args[:len(args)-2] // oxirgi limit va offset ni olib tashlaymiz
+		countArgs = args[:len(args)-2]
 	}
+
 	var totalCount uint64
 	err = p.db.QueryRow(ctx, countQuery, countArgs...).Scan(&totalCount)
 	if err != nil {
@@ -190,6 +196,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 	products.Total = totalCount
 	return &products, nil
 }
+
 
 func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductRequest) error {
 	setParts := []string{}

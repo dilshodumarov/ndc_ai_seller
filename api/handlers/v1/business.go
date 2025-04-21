@@ -6,7 +6,6 @@ import (
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
-	"sugurta/internal/pkg/helper"
 	"sugurta/internal/usecase/business"
 
 	"net/http"
@@ -50,7 +49,7 @@ func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param business body entity.CreateBusinessRequestForSwagger true "Business details"
+// @Param business body entity.CreateBusinessRequest true "Business details"
 // @Success 201 {object} status_http.Response{data=string} "Success"
 // @Response 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -62,11 +61,11 @@ func (b *businessRoutes) CreateBusiness(c *gin.Context) {
 		b.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	UserId, code := helper.GetUserIdFromToken(c, b.Config)
-	if code != 0 {
-		b.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	}
-	business.OwnerID=UserId
+	// UserId, code := helper.GetUserIdFromToken(c, b.Config)
+	// if code != 0 {
+	// 	b.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	// }
+	//business.OwnerID=UserId
 	if business.Name == "" {
 		b.handleResponse(c, status_http.BadRequest, "name is required")
 	}
@@ -180,6 +179,7 @@ func (b *businessRoutes) DeleteBusiness(c *gin.Context) {
 // @Security BearerAuth
 // @Param limit query int false "Limit per page" default(10)
 // @Param page query int false "Page number" default(0)
+// @Param user_id query string false "UserID"
 // @Success 200 {object} status_http.Response
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 // @Router /business/list [get]
@@ -187,12 +187,15 @@ func (b *businessRoutes) GetAllBusinesses(c *gin.Context) {
 	req := entity.GetAllBusinessesRequest{
 		Limit:   c.GetInt("limit"),
 		Page:    c.GetInt("page"),
+		OwnerID: c.Query("user_id"),
 	}
-	UserId, code := helper.GetUserIdFromToken(c, b.Config)
-	if code != 0 {
-		b.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	}
-	req.OwnerID=UserId
+
+	// UserId, code := helper.GetUserIdFromToken(c, b.Config)
+	// if code != 0 {
+
+	// 	b.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	// }
+	// req.OwnerID=UserId
 	businesses, err := b.bussnesUscase.List(c.Request.Context(), req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

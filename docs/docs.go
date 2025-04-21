@@ -1038,7 +1038,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.CreateBusinessRequestForSwagger"
+                            "$ref": "#/definitions/entity.CreateBusinessRequest"
                         }
                     }
                 ],
@@ -1283,6 +1283,12 @@ const docTemplate = `{
                         "default": 0,
                         "description": "Page number",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "UserID",
+                        "name": "user_id",
                         "in": "query"
                     }
                 ],
@@ -3127,7 +3133,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.CreateProductRequestForSwagger"
+                            "$ref": "#/definitions/entity.CreateProductRequest"
                         }
                     }
                 ],
@@ -3403,6 +3409,12 @@ const docTemplate = `{
                         "name": "page",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "UserID",
+                        "name": "business_id",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -3662,13 +3674,16 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.CreateBusinessRequestForSwagger": {
+        "entity.CreateBusinessRequest": {
             "type": "object",
             "properties": {
                 "description": {
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "ownerID": {
                     "type": "string"
                 }
             }
@@ -3712,7 +3727,7 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.CreateProductRequestForSwagger": {
+        "entity.CreateProductRequest": {
             "type": "object",
             "properties": {
                 "business_id": {

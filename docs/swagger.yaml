@@ -71,11 +71,13 @@ definitions:
           $ref: '#/definitions/entity.ClientType'
         type: array
     type: object
-  entity.CreateBusinessRequestForSwagger:
+  entity.CreateBusinessRequest:
     properties:
       description:
         type: string
       name:
+        type: string
+      ownerID:
         type: string
     type: object
   entity.CreateCategoryRequestForSwagger:
@@ -103,7 +105,7 @@ definitions:
       total_cost:
         type: integer
     type: object
-  entity.CreateProductRequestForSwagger:
+  entity.CreateProductRequest:
     properties:
       business_id:
         type: string
@@ -986,7 +988,7 @@ paths:
         name: business
         required: true
         schema:
-          $ref: '#/definitions/entity.CreateBusinessRequestForSwagger'
+          $ref: '#/definitions/entity.CreateBusinessRequest'
       produces:
       - application/json
       responses:
@@ -1121,6 +1123,10 @@ paths:
         in: query
         name: page
         type: integer
+      - description: UserID
+        in: query
+        name: user_id
+        type: string
       produces:
       - application/json
       responses:
@@ -2133,7 +2139,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/entity.CreateProductRequestForSwagger'
+          $ref: '#/definitions/entity.CreateProductRequest'
       produces:
       - application/json
       responses:
@@ -2285,6 +2291,10 @@ paths:
         name: page
         required: true
         type: integer
+      - description: UserID
+        in: query
+        name: business_id
+        type: string
       produces:
       - application/json
       responses:

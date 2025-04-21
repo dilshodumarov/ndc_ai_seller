@@ -11106,3 +11106,970 @@ main.main.func1
 2025-04-21T11:54:52.598+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:14:20.655+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:14:42.849+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:14:42.849+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:14:44.057+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:15:07.427+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:15:07.427+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:16:17.065+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:16:18.707+0500	ERROR	middleware/recovery.go:31	::1 - GET /v1/business/list?limit=10&page=0 PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 32 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc000000200, {0x10b78a0, 0x2479bc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10b78a0?, 0x2479bc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+sugurta/internal/pkg/helper.GetUserIdFromToken(0xc000d1b528?, 0x0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:213 +0xcd
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses(0xc0000f8e00, 0xc000000200)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:191 +0xbe
+github.com/gin-gonic/gin.(*Context).Next(0xc000000200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc000000200)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc000000200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc000278700?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc000000200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc000000200)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc000000200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000000200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0000d6000, 0xc000000200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0000d6000, {0x13e9cb0, 0xc0001a2700}, 0xc0001eea00)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0xc0006f2a80?}, {0x13e9cb0?, 0xc0001a2700?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc00019aab0, {0x13ee378, 0xc0006f2990})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 45
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+sugurta/internal/pkg/helper.GetUserIdFromToken
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:213
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:191
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:16:18.707+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:16:52.884+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:16:52.884+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:16:54.491+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:16:55.054+0500	ERROR	middleware/recovery.go:31	::1 - GET /v1/business/list?limit=10&page=0 PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 29 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc000b9a000, {0x10b78a0, 0x2479bc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10b78a0?, 0x2479bc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+sugurta/internal/pkg/helper.GetUserIdFromToken(0x13df340?, 0x0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:213 +0xcd
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses(0xc000b62540, 0xc000b9a000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193 +0x105
+github.com/gin-gonic/gin.(*Context).Next(0xc000b9a000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc000b9a000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc000b9a000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc0001b7400?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc000b9a000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc000b9a000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc000b9a000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000b9a000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0001e0680, 0xc000b9a000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0001e0680, {0x13e9cd0, 0xc0001141c0}, 0xc00019a140)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0xc000b802d0?}, {0x13e9cd0?, 0xc0001141c0?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc000b94000, {0x13ee398, 0xc000b801e0})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 49
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+sugurta/internal/pkg/helper.GetUserIdFromToken
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:213
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:16:55.054+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:17:50.492+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:17:50.502+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:17:51.841+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:17:53.535+0500	ERROR	middleware/recovery.go:31	::1 - GET /v1/business/list?limit=10&page=0 PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 54 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc000028300, {0x10b78a0, 0x2479bc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10b78a0?, 0x2479bc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+sugurta/internal/pkg/helper.GetUserIdFromToken(0x13df360?, 0x0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:213 +0xcd
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses(0xc0006f6ac0, 0xc000028300)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193 +0x105
+github.com/gin-gonic/gin.(*Context).Next(0xc000028300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc000028300)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc000028300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc0002f2500?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc000028300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc000028300)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc000028300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000028300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0000bc680, 0xc000028300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0000bc680, {0x13e9cf0, 0xc00021aa80}, 0xc00019ab40)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0xc0006fa810?}, {0x13e9cf0?, 0xc00021aa80?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc0000005a0, {0x13ee3b8, 0xc0006fa720})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 50
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+sugurta/internal/pkg/helper.GetUserIdFromToken
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:213
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:17:53.535+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:18:29.595+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:18:29.595+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:18:31.159+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:18:33.088+0500	ERROR	middleware/recovery.go:31	::1 - GET /v1/business/list?limit=10&page=0 PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 53 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc00069c300, {0x10b78a0, 0x2479bc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10b78a0?, 0x2479bc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+sugurta/internal/pkg/helper.GetUserIdFromToken(0xc00069c300, 0x0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214 +0x167
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses(0xc000705700, 0xc00069c300)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193 +0x105
+github.com/gin-gonic/gin.(*Context).Next(0xc00069c300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc00069c300)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc00069c300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc00069c000?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc00069c300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc00069c300)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc00069c300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc00069c300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0006a4000, 0xc00069c300)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0006a4000, {0x13e9d30, 0xc0000242a0}, 0xc0000c8780)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0xc0006da030?}, {0x13e9d30?, 0xc0000242a0?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc0005fe2d0, {0x13ee3f8, 0xc000695ec0})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 49
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+sugurta/internal/pkg/helper.GetUserIdFromToken
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:18:33.088+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:20:17.623+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:20:17.623+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:20:18.917+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:20:20.351+0500	ERROR	middleware/recovery.go:31	::1 - GET /v1/business/list?limit=10&page=0 PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 51 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc000b68200, {0x10b78a0, 0x2479bc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10b78a0?, 0x2479bc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+sugurta/internal/pkg/helper.GetUserIdFromToken(0xc000b68200, 0x0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214 +0x167
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses(0xc000b6c080, 0xc000b68200)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193 +0x105
+github.com/gin-gonic/gin.(*Context).Next(0xc000b68200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc000b68200)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc000b68200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc0001b4180?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc000b68200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc000b68200)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc000b68200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000b68200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0000f81a0, 0xc000b68200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0000f81a0, {0x13e9d90, 0xc000b461c0}, 0xc0000c88c0)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0xc000b7e1b0?}, {0x13e9d90?, 0xc000b461c0?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc000b38240, {0x13ee458, 0xc000b7e0c0})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 47
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+sugurta/internal/pkg/helper.GetUserIdFromToken
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:20:20.351+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:21:34.049+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:21:34.049+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:21:35.436+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:21:36.826+0500	ERROR	middleware/recovery.go:31	::1 - GET /v1/business/list?limit=10&page=0 PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 29 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc000ba2000, {0x10b78a0, 0x2479bc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10b78a0?, 0x2479bc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+sugurta/internal/pkg/helper.GetUserIdFromToken(0xc000ba2000, 0x0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214 +0x173
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses(0xc0005ece40, 0xc000ba2000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193 +0x105
+github.com/gin-gonic/gin.(*Context).Next(0xc000ba2000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc000ba2000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc000ba2000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc000b86180?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc000ba2000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc000ba2000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc000ba2000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000ba2000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc000168680, 0xc000ba2000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc000168680, {0x13e9db0, 0xc000b9e0e0}, 0xc000120280)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0xc000b82390?}, {0x13e9db0?, 0xc000b9e0e0?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc000034090, {0x13ee478, 0xc000b822a0})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 43
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+sugurta/internal/pkg/helper.GetUserIdFromToken
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:21:36.826+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:21:52.376+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:21:52.377+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:21:53.861+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:21:55.154+0500	ERROR	middleware/recovery.go:31	::1 - GET /v1/business/list?limit=10&page=0 PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 66 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc000cc0000, {0x10b78a0, 0x2479bc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10b78a0?, 0x2479bc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+sugurta/internal/pkg/helper.GetUserIdFromToken(0xc000cc0000, 0x0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214 +0x199
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses(0xc0005feac0, 0xc000cc0000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193 +0x105
+github.com/gin-gonic/gin.(*Context).Next(0xc000cc0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc000cc0000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc000cc0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc000c8a0a0?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc000cc0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc000cc0000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc000cc0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000cc0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc000248820, 0xc000cc0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc000248820, {0x13e9df0, 0xc000cb80e0}, 0xc000cb4000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0xc000c8c390?}, {0x13e9df0?, 0xc000cb80e0?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc000cae000, {0x13ee4b8, 0xc000c8c2a0})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 27
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+sugurta/internal/pkg/helper.GetUserIdFromToken
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:193
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:21:55.154+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:22:44.512+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?limit=10&page=1 
+2025-04-21T12:26:02.920+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:26:02.930+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:26:04.773+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:26:06.837+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?limit=10&page=1 
+2025-04-21T12:26:30.602+0500	ERROR	middleware/recovery.go:31	::1 - GET /v1/business/list?limit=10&page=0 PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 30 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc000bb0000, {0x10b78a0, 0x2479bc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10b78a0?, 0x2479bc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+sugurta/internal/pkg/helper.GetUserIdFromToken(0xc000bb0000, 0x0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214 +0x199
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses(0xc000c060c0, 0xc000bb0000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:194 +0x177
+github.com/gin-gonic/gin.(*Context).Next(0xc000bb0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc000bb0000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc000bb0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc000b980c0?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc000bb0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc000bb0000)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc000bb0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000bb0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0002289c0, 0xc000bb0000)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0002289c0, {0x13e9e50, 0xc000ba80e0}, 0xc0000c8280)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0xc000c08540?}, {0x13e9e50?, 0xc000ba80e0?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc00012abd0, {0x13ee518, 0xc000c08450})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 40
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+sugurta/internal/pkg/helper.GetUserIdFromToken
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/pkg/helper/helper.go:214
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:194
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:26:30.602+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:27:50.157+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:27:50.168+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:27:51.764+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:27:53.280+0500	ERROR	v1/business.go:213	response	{"code": 401, "status": "UNAUTHORIZED", "description": "...", "data": "Unauthorized", "custom_message": ""}
+sugurta/api/handlers/v1.(*businessRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:213
+sugurta/api/handlers/v1.(*businessRoutes).GetAllBusinesses
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:197
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:27:53.286+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:28:40.815+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:28:40.826+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:28:42.199+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:28:48.438+0500	ERROR	v1/business.go:213	response	{"code": 401, "status": "UNAUTHORIZED", "description": "...", "data": "Unauthorized", "custom_message": ""}
+sugurta/api/handlers/v1.(*businessRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:213
+sugurta/api/handlers/v1.(*businessRoutes).CreateBusiness
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:68
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:28:48.446+0500	ERROR	v1/business.go:213	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: invalid input syntax for type uuid: \"unauthorized\" (SQLSTATE 22P02)", "custom_message": ""}
+sugurta/api/handlers/v1.(*businessRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:213
+sugurta/api/handlers/v1.(*businessRoutes).CreateBusiness
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/business.go:79
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:28:48.446+0500	INFO	middleware/logger.go:26	::1 - POST /v1/business/create 
+2025-04-21T12:31:55.445+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:31:58.986+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-04-21T12:33:23.023+0500	INFO	middleware/logger.go:26	::1 - POST /v1/business/create 
+2025-04-21T12:33:36.584+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0&user_id=0 
+2025-04-21T12:33:58.735+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:33:58.739+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:34:30.599+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:34:32.187+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-04-21T12:34:42.710+0500	INFO	middleware/logger.go:26	::1 - GET /v1/business/list?limit=10&page=0 
+2025-04-21T12:35:42.057+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:35:42.057+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:38:27.161+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:38:39.151+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-04-21T12:38:56.193+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?limit=10&page=1 
+2025-04-21T12:39:07.445+0500	ERROR	v1/product.go:281	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "Error listing products", "custom_message": ""}
+sugurta/api/handlers/v1.(*productRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/product.go:281
+sugurta/api/handlers/v1.(*productRoutes).ListProducts
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/product.go:183
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-21T12:39:07.446+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?limit=10&page=1&user_id=1 
+2025-04-21T12:40:15.546+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:40:19.072+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:40:32.801+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-04-21T12:41:38.575+0500	INFO	middleware/logger.go:26	::1 - POST /v1/product/create 
+2025-04-21T12:41:51.045+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?limit=10&page=1 
+2025-04-21T12:42:36.766+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:42:36.769+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:42:38.596+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:42:40.124+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:42:40.124+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-21T12:42:43.390+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-21T12:42:46.223+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-04-21T12:44:17.546+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-21T12:44:17.557+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31

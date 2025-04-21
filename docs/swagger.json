@@ -1031,7 +1031,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.CreateBusinessRequestForSwagger"
+                            "$ref": "#/definitions/entity.CreateBusinessRequest"
                         }
                     }
                 ],
@@ -1276,6 +1276,12 @@
                         "default": 0,
                         "description": "Page number",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "UserID",
+                        "name": "user_id",
                         "in": "query"
                     }
                 ],
@@ -3120,7 +3126,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.CreateProductRequestForSwagger"
+                            "$ref": "#/definitions/entity.CreateProductRequest"
                         }
                     }
                 ],
@@ -3396,6 +3402,12 @@
                         "name": "page",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "UserID",
+                        "name": "business_id",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -3655,13 +3667,16 @@
                 }
             }
         },
-        "entity.CreateBusinessRequestForSwagger": {
+        "entity.CreateBusinessRequest": {
             "type": "object",
             "properties": {
                 "description": {
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "ownerID": {
                     "type": "string"
                 }
             }
@@ -3705,7 +3720,7 @@
                 }
             }
         },
-        "entity.CreateProductRequestForSwagger": {
+        "entity.CreateProductRequest": {
             "type": "object",
             "properties": {
                 "business_id": {

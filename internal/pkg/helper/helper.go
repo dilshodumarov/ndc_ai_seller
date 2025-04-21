@@ -201,6 +201,7 @@ func GetBusnessIdFromToken(c *gin.Context, Config *config.Config) (string, int) 
 
 func GetUserIdFromToken(c *gin.Context, Config *config.Config) (string, int) {
 	var softToken string
+	fmt.Println(444444444444)
 	token := c.GetHeader("Authorization")
 	if token == "" {
 		return "unauthorized", http.StatusUnauthorized
@@ -209,21 +210,24 @@ func GetUserIdFromToken(c *gin.Context, Config *config.Config) (string, int) {
 	} else {
 		softToken = token
 	}
-
+	fmt.Println(3333333333)
+	fmt.Println("cfg: ", Config.JWT.Secret)
 	claims, err := ParseJWT(softToken, Config.JWT.Secret)
 	if err != nil {
 		return "unauthorized", http.StatusUnauthorized
 	}
-
+	fmt.Println(222222222)
 	return cast.ToString(claims["sub"]), 0
 }
 func ParseJWT(tokenString string, jwtKey string) (jwt.MapClaims, error) {
+	fmt.Println(66666)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Validate the algorithm
+		fmt.Println(7777777777)
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-
+		fmt.Println(888888888)
 		// Return the secret key
 		return []byte(jwtKey), nil
 	})
