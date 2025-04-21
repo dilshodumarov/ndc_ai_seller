@@ -1,5 +1,3 @@
-//go:build migrate
-
 package app
 
 // import (

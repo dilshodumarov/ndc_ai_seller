@@ -1,11 +1,10 @@
 package redis
 
 import (
-	"sugurta/internal/pkg/config"
 	"context"
 	"fmt"
 	"log"
-	"strconv"
+	"sugurta/internal/pkg/config"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -16,14 +15,14 @@ type RedisDB struct {
 
 // NewInMemoryStorage is redis client
 func New(cfg *config.Config) (*RedisDB, error) {
-	db, err := strconv.Atoi(cfg.Redis.Name)
-	if err != nil {
-		return nil, err
-	}
+	// db, err := strconv.Atoi(cfg.Redis.Name)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     cfg.Redis.Host + ":" + cfg.Redis.Port,
-		Password: cfg.Redis.Password,
-		DB:       db,
+		Addr:     cfg.Redis.Host+":"+cfg.Redis.Port,
+		Password: "",
+		DB:       0,
 	})
 
 	if err := rdb.Ping(context.Background()).Err(); err != nil {
