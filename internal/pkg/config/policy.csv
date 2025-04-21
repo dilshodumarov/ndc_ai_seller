@@ -3,33 +3,33 @@ p, unauthorized, /v1/auth/*, GET|POST
 
 p, unauthorized, /v1/user/*, PUT|DELETE
 p, unauthorized, /v1/user/:id, GET
-p, Guest, /v1/user/*, GET|POST|PUT|DELETE
+p, user, /v1/user/*, GET|POST|PUT|DELETE
 p, admin, /v1/user/*, GET|POST|PUT|DELETE
 
-p, Guest, /v1/product/*, GET|POST|PUT|DELETE
+p, user, /v1/product/*, GET|POST|PUT|DELETE
 p, admin, /v1/product/*, GET|POST|PUT|DELETE
 
 p, unauthorized, /v1/product/*, GET
 
-p, Guest, /v1/business/*, GET|POST|PUT|DELETE
+p, user, /v1/business/*, GET|POST|PUT|DELETE
 p, admin, /v1/basket/*, GET|POST|PUT|DELETE
 
-p, Guest,  /v1/category/*, GET|POST|PUT|DELETE
+p, user,  /v1/category/*, GET|POST|PUT|DELETE
 p, admin,  /v1/category/*, GET|POST|PUT|DELETE
 
-p, Guest,  /v1/client-type/*, GET|POST|PUT|DELETE
+p, user,  /v1/client-type/*, GET|POST|PUT|DELETE
 p, admin,  /v1/client-type/*, GET|POST|PUT|DELETE
 
-p, Guest,  /v1/integration/*, GET|POST|PUT|DELETE
+p, user,  /v1/integration/*, GET|POST|PUT|DELETE
 p, admin,  /v1/integration/*, GET|POST|PUT|DELETE
 
-p, Guest,  /v1/orders/*, GET|POST|PUT|DELETE
+p, user,  /v1/orders/*, GET|POST|PUT|DELETE
 p, admin,  /v1/orders/*, GET|POST|PUT|DELETE
 
-p, Guest,  /v1/bot-comments/*, GET|POST|PUT|DELETE
+p, user,  /v1/bot-comments/*, GET|POST|PUT|DELETE
 p, admin,  /v1/bot-comments/*, GET|POST|PUT|DELETE
 
 p, unauthorized, /v1/websocket/*, GET|POST
 
-g, admin, Guest
+g, admin, user
 
