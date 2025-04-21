@@ -46,33 +46,38 @@ func (p *userRepo) userSelectQueryPrefix() squirrel.SelectBuilder {
 
 // CreateUser -.
 func (p *userRepo) Create(ctx context.Context, u *entity.User) (*entity.User, error) {
-	data := map[string]interface{}{
-		"first_name":   u.FirstName,
-		"last_name":    u.LastName,
-		"email":        u.Email,
-		"phone_number": u.PhoneNumber,
-		"password":     u.Password,
-		"role_id":      u.RoleID,
-		"is_active":    u.IsActive,
-	}
-
-	// Build the INSERT query with RETURNING *
-	queryBuilder := p.db.Builder.
-		Insert(p.tableName).
-		SetMap(data).
-		Suffix("RETURNING id, first_name, last_name, email, phone_number, password, role_id, is_active, created_at, updated_at")
-
-	query, args, err := queryBuilder.ToSql()
+	// Avval role name bo‘yicha role guid ni olish
+	var roleID string
+	err := p.db.QueryRow(ctx, `SELECT guid FROM "role" WHERE name = $1`, u.RoleData.Name).Scan(&roleID)
 	if err != nil {
-		return nil, p.db.ErrSQLBuild(err, fmt.Sprintf("%s %s", p.tableName, "create"))
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("role not found")
+		}
+		return nil, p.db.Error(err)
 	}
 
-	// Prepare a variable to hold the returned user
+	// User yaratish uchun query
+	query := `
+		INSERT INTO "user" 
+			(first_name, last_name, email, phone_number, password, role_id, is_active)
+		VALUES 
+			($1, $2, $3, $4, $5, $6, $7)
+		RETURNING 
+			guid, first_name, last_name, email, phone_number, password, role_id, is_active, created_at, updated_at;
+	`
+
 	var insertedUser entity.User
 
-	// QueryRow to fetch the returned data
-	row := p.db.QueryRow(ctx, query, args...)
-	err = row.Scan(
+	// Userni yaratish va olingan role_id ni saqlash
+	err = p.db.QueryRow(ctx, query,
+		u.FirstName,
+		u.LastName,
+		u.Email,
+		u.PhoneNumber,
+		u.Password,
+		roleID,  // Yangi olingan role ID sini qo‘shamiz
+		u.IsActive,
+	).Scan(
 		&insertedUser.ID,
 		&insertedUser.FirstName,
 		&insertedUser.LastName,
@@ -84,12 +89,14 @@ func (p *userRepo) Create(ctx context.Context, u *entity.User) (*entity.User, er
 		&insertedUser.CreatedAt,
 		&insertedUser.UpdatedAt,
 	)
+
 	if err != nil {
 		return nil, p.db.Error(err)
 	}
 
 	return &insertedUser, nil
 }
+
 
 func (p *userRepo) Get(ctx context.Context, params map[string]string) (*entity.User, error) {
 	var (

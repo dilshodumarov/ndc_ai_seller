@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"sugurta/api/handlers"
@@ -19,7 +20,6 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"go.uber.org/zap"
 
 	"sugurta/internal/usecase/user"
@@ -106,7 +106,6 @@ func (a *authRoutes) register(c *gin.Context) {
 	}
 	fmt.Println("2")
 
-
 	// Phone number validation
 	if req.PhoneNumber != "" {
 		isValid = helper.ValidatePhoneNumber(req.PhoneNumber)
@@ -116,7 +115,6 @@ func (a *authRoutes) register(c *gin.Context) {
 		}
 	}
 	fmt.Println("3", req.Email)
-
 
 	// Check if email already exists
 	_, err = a.userUseCase.Get(context.Background(), map[string]string{
@@ -134,7 +132,6 @@ func (a *authRoutes) register(c *gin.Context) {
 	}
 	fmt.Println("4")
 
-
 	// Hash password
 	hashedPassword, err := helper.HashPassword(req.Password)
 	if err != nil {
@@ -143,20 +140,11 @@ func (a *authRoutes) register(c *gin.Context) {
 	}
 	fmt.Println("5")
 
-
 	req.Password = hashedPassword
-
-	// Store admin data temporarily
-	userData, err := json.Marshal(req)
-	if err != nil {
-		a.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
 
 	fmt.Println("6")
 
-
-	err = a.Cache.Set(c, "email_"+req.Email, string(userData), 5*time.Minute)
+	err = a.Cache.Set(c, "email_"+req.Email, req, 5*time.Minute)
 	if err != nil {
 		a.handleResponse(c, status_http.InternalServerError, err)
 		return
@@ -166,14 +154,13 @@ func (a *authRoutes) register(c *gin.Context) {
 
 	// Send verification code
 	go func() {
-		err := a.sendVerificationCode(ForgotPasswordKey, req.Email)
+		err := a.sendVerificationCode(RegisterCodeKey, req.Email)
 		if err != nil {
 			a.log.Error(fmt.Sprintf("failed to send verification code: %v", err))
 		}
 	}()
 
 	fmt.Println("8")
-
 
 	a.handleResponse(c, status_http.OK, "Verification code send to email")
 }
@@ -244,11 +231,11 @@ func (a *authRoutes) verify(c *gin.Context) {
 		a.handleResponse(c, status_http.Forbidden, err.Error())
 		return
 	}
-
-	// Unmarshal user data
+	fmt.Println("data:", string(userData))
 	var user entity.RegisterRequest
-	err = json.Unmarshal([]byte(userData), &user)
+	err = json.Unmarshal(userData, &user)
 	if err != nil {
+		fmt.Println("UNMARSHAL ERROR:", err)
 		a.handleResponse(c, status_http.Forbidden, err.Error())
 		return
 	}
@@ -261,7 +248,8 @@ func (a *authRoutes) verify(c *gin.Context) {
 	}
 
 	// Verify code
-	if req.Code != string(code) {
+	codeStr := strings.Trim(string(code), "\"")
+	if req.Code != codeStr {
 		a.handleResponse(c, status_http.Forbidden, ErrIncorrectCode)
 		return
 	}
@@ -269,14 +257,14 @@ func (a *authRoutes) verify(c *gin.Context) {
 	// Generate tokens
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-
+	roleData := entity.Role{Name: "Guest"}
 	// Create user in database
 	userResp, err := a.userUseCase.Create(ctx, &entity.User{
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
 		Email:     user.Email,
 		Password:  user.Password,
-		RoleID:    uuid.NewString(),
+		RoleData:  roleData,
 	})
 	if err != nil {
 		a.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -284,7 +272,7 @@ func (a *authRoutes) verify(c *gin.Context) {
 	}
 
 	// Generate JWT tokens
-	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.BusinessID,userResp.RoleData.Name, a.cfg.JWT.Secret, 12) // 12 hours
+	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.BusinessID, userResp.RoleData.Name, a.cfg.JWT.Secret, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
@@ -318,7 +306,7 @@ func (a *authRoutes) refreshAccessToken(c *gin.Context) {
 	}
 
 	// Generate new access token
-	accessToken, _, err := helper.GenerateJWT(claims.Sub, claims.BusinessId,claims.Role, a.cfg.JWT.Secret, 12) // 12 hours
+	accessToken, _, err := helper.GenerateJWT(claims.Sub, claims.BusinessId, claims.Role, a.cfg.JWT.Secret, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.BadRequest, err.Error())
 		return
@@ -343,13 +331,13 @@ func (a *authRoutes) login(c *gin.Context) {
 	var (
 		req entity.LoginRequest
 	)
-	
+
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		a.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -357,7 +345,7 @@ func (a *authRoutes) login(c *gin.Context) {
 	user, err := a.userUseCase.Get(ctx, map[string]string{
 		"email": req.Email,
 	})
-	
+
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			a.handleResponse(c, status_http.BadRequest, ErrWrongEmailOrPass)
@@ -375,8 +363,8 @@ func (a *authRoutes) login(c *gin.Context) {
 	}
 
 	// Generate tokens
-	
-	accessToken, refreshToken, err := helper.GenerateJWT(user.ID, user.BusinessID,user.RoleData.Name, a.cfg.JWT.Secret, 12) // 12 hours
+
+	accessToken, refreshToken, err := helper.GenerateJWT(user.ID, user.BusinessID, user.RoleData.Name, a.cfg.JWT.Secret, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.BadRequest, err.Error())
 		return
