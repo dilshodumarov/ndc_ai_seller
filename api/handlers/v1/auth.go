@@ -257,7 +257,7 @@ func (a *authRoutes) verify(c *gin.Context) {
 	// Generate tokens
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	roleData := entity.Role{Name: "Guest"}
+	roleData := entity.Role{Name: "user"}
 	// Create user in database
 	userResp, err := a.userUseCase.Create(ctx, &entity.User{
 		FirstName: user.FirstName,
