@@ -13,6 +13,7 @@ import (
 	"sugurta/internal/usecase/business"
 
 	"net/http"
+	"net/url"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
@@ -43,7 +44,9 @@ func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		business.PUT("/update/:id", r.UpdateBusiness)
 		business.DELETE("/delete/:id", r.DeleteBusiness)
 		business.GET("/list", r.GetAllBusinesses)
-		business.Any("/webhook/instagram",r.HandleInstagramWebhook)
+		business.Any("/webhook/instagram", r.HandleInstagramWebhook)
+		business.Any("/oauth/callback", r.HandleInstagramWebhook)
+		
 	}
 }
 
@@ -272,4 +275,53 @@ func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 	default:
 		c.AbortWithStatus(http.StatusMethodNotAllowed)
 	}
+}
+
+func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
+	code := c.Query("code")
+	if code == "" {
+		fmt.Println("Code not found in query params")
+		c.JSON(http.StatusBadRequest, "Code not found in query params")
+		return
+	}
+
+	// Token olish uchun ma'lumot
+	data := url.Values{}
+	data.Set("client_id", "700909965624963")                      // o'zgaruvchi qilsa ham bo'ladi
+	data.Set("client_secret", "22f5cd4d15549e880f749b1332b503fd") // xavfsizlik uchun env da saqlang
+	data.Set("grant_type", "authorization_code")
+	data.Set("redirect_uri", "https://dilshodforever.uz/v1/business/oauth/callback") // to'g'riligi muhim
+	data.Set("code", code)
+
+	// Instagram token olish endpointi
+	resp, err := http.PostForm("https://api.instagram.com/oauth/access_token", data)
+	if err != nil {
+		log.Println("Error sending token request:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to request access token")
+		return
+	}
+	defer resp.Body.Close()
+
+	// Javobni o'qish
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading token response body:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to read token response")
+		return
+	}
+
+	// Tokenni log qilish yoki JSON ga parse qilish
+	var tokenResp map[string]interface{}
+	if err := json.Unmarshal(body, &tokenResp); err != nil {
+		log.Println("Error unmarshaling token response:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to parse token response")
+		return
+	}
+
+	// Access tokenni logga chiqarish yoki saqlash (database, redis, h.k.)
+	log.Printf("Access Token Response: %+v\n", tokenResp)
+
+	// TODO: tokenResp["access_token"], tokenResp["user_id"] ni DBga saqlash mumkin
+
+	c.JSON(http.StatusOK, tokenResp)
 }
