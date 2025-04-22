@@ -96,12 +96,11 @@ func NewRouter(option *RouteOption) *gin.Engine {
     //e := casbin.NewEnforcer("internal/pkg/config/rbac.conf", "internal/pkg/config/policy.csv")
 	app.Use(middleware.AuthMiddleware(e,*handleOption.Config))
 	app.Use(cors.New(cors.Config{
-		AllowAllOrigins:  true,
+		AllowOrigins:     []string{"*"}, // Frontend domenini yozish
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "X-Request-Id"},
-		ExposeHeaders:    []string{"Link"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "Authentication"},
+		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
 	app.GET("/docs", func(ctx *gin.Context) {

@@ -272,7 +272,7 @@ func (a *authRoutes) verify(c *gin.Context) {
 	}
 
 	// Generate JWT tokens
-	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.BusinessID, userResp.RoleData.Name, a.cfg.JWT.Secret, 12) // 12 hours
+	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.BusinessID,"user", a.cfg.JWT.Secret, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
