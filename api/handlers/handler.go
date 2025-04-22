@@ -13,6 +13,7 @@ import (
 	botcomments "sugurta/internal/usecase/bot_comments"
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
+	"sugurta/internal/usecase/chat"
 	clienttype "sugurta/internal/usecase/client-type"
 	"sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/order"
@@ -43,6 +44,7 @@ type HandlerOption struct {
 	Order      order.Order
 	Integration integration.Integration
 	BotComments botcomments.BotCommandStorage
+	Chat        chat.Chat
 }
 
 type BaseHandler struct {

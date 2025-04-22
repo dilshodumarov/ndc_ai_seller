@@ -17,6 +17,7 @@ import (
 	botcomments "sugurta/internal/usecase/bot_comments"
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
+	"sugurta/internal/usecase/chat"
 	clienttype "sugurta/internal/usecase/client-type"
 	integration "sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/order"
@@ -50,6 +51,7 @@ type App struct {
 	order       order.Order
 	integration integration.Integration
 	BotComments botcomments.BotCommandStorage
+	Chat        chat.Chat
 }
 
 func NewApp(cfg config.Config) (*App, error) {
@@ -126,6 +128,9 @@ func NewApp(cfg config.Config) (*App, error) {
 	botCommentsRepo := postgresql.NewBotCommandsRepo(db)
 	botCommentsUscase := botcomments.NewbotCommentsService(contextTimeout, botCommentsRepo)
 
+	ChatRepo := postgresql.NewChatRepo(db)
+	ChatUscase := chat.NewChatService(contextTimeout, ChatRepo)
+
 	fmt.Println("order repo: ", orderUseCase)
 	fmt.Println("here 3")
 
@@ -145,6 +150,7 @@ func NewApp(cfg config.Config) (*App, error) {
 		order:       orderUseCase,
 		integration: intgrationUscase,
 		BotComments: botCommentsUscase,
+		Chat:         ChatUscase,
 		// BrokerProducer: event.NewBrokerProducer(cfg.Kafka.Brokers, cfg.Kafka.Topic),
 	}, nil
 }
@@ -185,6 +191,7 @@ func (a *App) Run() error {
 		Product:     a.product,
 		Category:    a.category,
 		BotComments: a.BotComments,
+		Chat:        a.Chat,
 	})
 
 	fmt.Println("here 5")

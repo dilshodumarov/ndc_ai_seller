@@ -2,11 +2,14 @@ package v1
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"sugurta/api/handlers"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+	"sugurta/internal/usecase/chat"
 	"sync"
 
 	"github.com/casbin/casbin/v2"
@@ -22,6 +25,7 @@ type websocketRoutes struct {
 	enforcer *casbin.CachedEnforcer
 	clients  map[string]*websocket.Conn
 	mu       sync.Mutex
+	ChatRepo chat.Chat
 }
 
 func NewWebsocketRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) {
@@ -29,6 +33,7 @@ func NewWebsocketRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpt
 		log:      option.Logger,
 		cfg:      option.Config,
 		enforcer: option.Enforcer,
+		ChatRepo: option.Chat,
 		clients:  make(map[string]*websocket.Conn),
 	}
 
@@ -76,8 +81,8 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 				conn.Close()
 				break
 			}
-
-			resp, err := http.Post("http://ai-seller-bot:8081/send-message", "application/json", bytes.NewBuffer(msg))
+			fmt.Println("message: ", string(msg))
+			resp, err := http.Post("http://localhost:8081/send-message", "application/json", bytes.NewBuffer(msg))
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 				return
@@ -91,7 +96,7 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bot start" + BotResp.Message})
 				return
 			}
-			//h.log.Info("Received message from frontend", zap.String("message", chat.Message))
+			h.log.Info("Message send succesfully", zap.String("message",string(msg)))
 
 			// optional: DB ga saqlash, boshqa foydalanuvchiga yuborish, logger, AI javob, va hokazo
 			
@@ -140,6 +145,10 @@ func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "WebSocket send error"})
 		return
 	}
-
+	err=h.ChatRepo.Create(context.TODO(),&msg)
+	if err != nil {
+		h.log.Error("Failed create chat history", zap.Error(err))
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"message": "Message sent successfully"})
 }

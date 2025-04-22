@@ -2,6 +2,10 @@ package v1
 
 import (
 	"database/sql"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
@@ -39,6 +43,7 @@ func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		business.PUT("/update/:id", r.UpdateBusiness)
 		business.DELETE("/delete/:id", r.DeleteBusiness)
 		business.GET("/list", r.GetAllBusinesses)
+		business.Any("/webhook/instagram",r.HandleInstagramWebhook)
 	}
 }
 
@@ -225,4 +230,46 @@ func (h *businessRoutes) handleResponse(c *gin.Context, status status_http.Statu
 		Data:          data,
 		CustomMessage: status.CustomMessage,
 	})
+}
+
+func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
+	switch c.Request.Method {
+	case http.MethodGet:
+		// Facebook/Instagram webhook verification
+		challenge := c.Query("hub.challenge")
+		verificationToken := c.Query("hub.verify_token")
+
+		if verificationToken == "your_verification_token" {
+			c.String(http.StatusOK, challenge)
+		} else {
+			fmt.Println("Baortttt")
+			c.AbortWithStatus(http.StatusForbidden)
+		}
+	case http.MethodPost:
+		// Body o'qiladi
+		body, err := io.ReadAll(c.Request.Body)
+		if err != nil {
+			log.Println("Error reading webhook body:", err)
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+		defer c.Request.Body.Close()
+
+		// JSON body unmarshal
+		var event map[string]interface{}
+		if err := json.Unmarshal(body, &event); err != nil {
+			log.Println("Error parsing webhook event:", err)
+			c.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+
+		// Webhook event log
+		log.Printf("Instagram Event Received: %+v\n", event)
+
+		// TODO: Bu yerda xabarlarni saqlash, userga yuborish, notifikatsiya qilish va h.k.
+
+		c.Status(http.StatusOK)
+	default:
+		c.AbortWithStatus(http.StatusMethodNotAllowed)
+	}
 }

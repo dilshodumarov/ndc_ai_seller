@@ -25,12 +25,12 @@ func NewChatRepo(db *postgres.Postgres) *ChatRepo {
 func (p *ChatRepo) Create(ctx context.Context, h *entity.ChatHistory) error {
 	query := fmt.Sprintf(`
 		INSERT INTO %s (
-			integration_id, message, chat_id, platform_id, ai_response, reply_to_message_id
+			business_id, message, chat_id, platform_id, ai_response, reply_to_message_id
 		) VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING guid, created_at, updated_at`, p.tableName)
 
 	err := p.db.QueryRow(ctx, query,
-		h.IntegrationID,
+		h.BusinessId,
 		h.Message,
 		h.ChatID,
 		h.PlatformID,
@@ -47,12 +47,12 @@ func (p *ChatRepo) Create(ctx context.Context, h *entity.ChatHistory) error {
 
 func (p *ChatRepo) Get(ctx context.Context, guid string) (*entity.ChatHistory, error) {
 	query := fmt.Sprintf(`
-		SELECT guid, integration_id, message, chat_id, platform_id, ai_response, reply_to_message_id, created_at, updated_at
+		SELECT guid, business_id, message, chat_id, platform_id, ai_response, reply_to_message_id, created_at, updated_at
 		FROM %s WHERE guid = $1`, p.tableName)
 
 	var h entity.ChatHistory
 	err := p.db.QueryRow(ctx, query, guid).Scan(
-		&h.GUID, &h.IntegrationID, &h.Message, &h.ChatID,
+		&h.GUID, &h.BusinessId, &h.Message, &h.ChatID,
 		&h.PlatformID, &h.AIResponse, &h.ReplyToMessageID,
 		&h.CreatedAt, &h.UpdatedAt,
 	)
@@ -66,7 +66,7 @@ func (p *ChatRepo) Get(ctx context.Context, guid string) (*entity.ChatHistory, e
 
 func (p *ChatRepo) List(ctx context.Context, chatID int64) ([]*entity.ChatHistory, error) {
 	query := fmt.Sprintf(`
-		SELECT guid, integration_id, message, chat_id, platform_id, ai_response, reply_to_message_id, created_at, updated_at
+		SELECT guid, business_id, message, chat_id, platform_id, ai_response, reply_to_message_id, created_at, updated_at
 		FROM %s WHERE chat_id = $1 ORDER BY created_at DESC`, p.tableName)
 
 	rows, err := p.db.Query(ctx, query, chatID)
@@ -79,7 +79,7 @@ func (p *ChatRepo) List(ctx context.Context, chatID int64) ([]*entity.ChatHistor
 	for rows.Next() {
 		var h entity.ChatHistory
 		if err := rows.Scan(
-			&h.GUID, &h.IntegrationID, &h.Message, &h.ChatID,
+			&h.GUID, &h.BusinessId, &h.Message, &h.ChatID,
 			&h.PlatformID, &h.AIResponse, &h.ReplyToMessageID,
 			&h.CreatedAt, &h.UpdatedAt,
 		); err != nil {

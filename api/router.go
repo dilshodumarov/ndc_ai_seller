@@ -13,6 +13,7 @@ import (
 	botcomments "sugurta/internal/usecase/bot_comments"
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/category"
+	"sugurta/internal/usecase/chat"
 	clienttype "sugurta/internal/usecase/client-type"
 	integration "sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/order"
@@ -52,6 +53,7 @@ type RouteOption struct {
 	Order       order.Order
 	Integration integration.Integration
 	BotComments botcomments.BotCommandStorage
+	Chat        chat.Chat
 	// Service        grpcClients.ServiceClient
 	// RefreshToken   refresh_token.RefreshToken
 	// BrokerProducer event.BrokerProducer
@@ -83,6 +85,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		Product:     option.Product,
 		Category:    option.Category,
 		BotComments: option.BotComments,
+		Chat:        option.Chat,
 	}
 
 	app := gin.New()
@@ -98,19 +101,10 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		AllowCredentials: true,
 	}))
 
-	// app.Use(func(c *gin.Context) {
-	// 	if c.Request.Method == "OPTIONS" {
-	// 		c.AbortWithStatus(204)
-	// 		return
-	// 	}
-	// 	c.Next()
-	// })
-
-
 	app.Use(middleware.Logger(option.Logger))
 	app.Use(middleware.Recovery(option.Logger))
-
-	e := casbin.NewEnforcer("/config/rbac.conf", "/config/policy.csv")
+	e := casbin.NewEnforcer("internal/pkg/config/rbac.conf", "internal/pkg/config/policy.csv")
+	//e := casbin.NewEnforcer("/config/rbac.conf", "/config/policy.csv")
 	app.Use(middleware.AuthMiddleware(e, *handleOption.Config))
 
 	app.GET("/docs", func(ctx *gin.Context) {
