@@ -76,33 +76,42 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		ContextTimeout: option.ContextTimeout,
 		Cache:          option.Cache,
 		// Enforcer:       option.Enforcer,
-		User:           option.User,
-		Business:       option.Business,
-		Order:          option.Order,
-		Integration:    option.Integration,
-		Product:        option.Product,
-		Category:       option.Category,
-		BotComments:    option.BotComments,
+		User:        option.User,
+		Business:    option.Business,
+		Order:       option.Order,
+		Integration: option.Integration,
+		Product:     option.Product,
+		Category:    option.Category,
+		BotComments: option.BotComments,
 	}
 
 	app := gin.New()
 
 	app.Use(gin.Logger(), gin.Recovery())
 
-	// Options
+	
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "Authentication"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
+
+	app.Use(func(c *gin.Context) {
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	})
+
+
 	app.Use(middleware.Logger(option.Logger))
 	app.Use(middleware.Recovery(option.Logger))
+
 	e := casbin.NewEnforcer("/config/rbac.conf", "/config/policy.csv")
-    //e := casbin.NewEnforcer("internal/pkg/config/rbac.conf", "internal/pkg/config/policy.csv")
-	app.Use(middleware.AuthMiddleware(e,*handleOption.Config))
-	app.Use(cors.New(cors.Config{
-		AllowAllOrigins:  true,
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "X-Request-Id"},
-		ExposeHeaders:    []string{"Link"},
-		AllowCredentials: true,
-		MaxAge:           300, // Maximum value not ignored by any of major browsers
-	}))
+	app.Use(middleware.AuthMiddleware(e, *handleOption.Config))
 
 	app.GET("/docs", func(ctx *gin.Context) {
 		htmlContent, err := scalar.ApiReferenceHTML(&scalar.Options{
@@ -137,10 +146,10 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		v1.NewIntegrationRoutes(apiV1Group, handleOption)
 		// v1.NewClientTypeRoutes(apiV1Group, auth, h.cfg, h.log, h.inMemory)
 		// v1.NewRoleRoutes(apiV1Group, auth, h.cfg, h.log, h.inMemory)
-	    v1.NewCategoryRoutes(apiV1Group,handleOption)
+		v1.NewCategoryRoutes(apiV1Group, handleOption)
 		v1.NewProductRoutes(apiV1Group, handleOption)
-		v1.NewBotCommentsRoutes(apiV1Group,handleOption)
-		v1.NewWebsocketRoutes(apiV1Group,handleOption)
+		v1.NewBotCommentsRoutes(apiV1Group, handleOption)
+		v1.NewWebsocketRoutes(apiV1Group, handleOption)
 	}
 
 	return app
