@@ -45,7 +45,7 @@ func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		business.DELETE("/delete/:id", r.DeleteBusiness)
 		business.GET("/list", r.GetAllBusinesses)
 		business.Any("/webhook/instagram", r.HandleInstagramWebhook)
-		business.Any("/oauth/callback", r.HandleInstagramWebhook)
+		business.Any("/oauth/callback", r.HandleInstagramCallback)
 		
 	}
 }
