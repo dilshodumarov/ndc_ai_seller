@@ -12553,3 +12553,540 @@ net/http.(*conn).serve
 2025-04-22T11:31:32.245+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-23T09:08:44.261+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-23T09:08:50.188+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-04-23T09:08:50.189+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-04-23T09:08:50.189+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-04-23T09:08:50.357+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-04-23T09:09:43.310+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/forgot-password 
+2025-04-23T09:10:44.164+0500	ERROR	v1/auth.go:561	response	{"code": 403, "status": "FORBIDDEN", "description": "...", "data": "incorrect verification code", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:561
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:456
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-23T09:10:44.164+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/verify-forgot-password 
+2025-04-23T09:14:19.131+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-23T09:14:19.131+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-23T09:14:20.236+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-23T09:14:22.559+0500	ERROR	v1/auth.go:562	response	{"code": 403, "status": "FORBIDDEN", "description": "...", "data": "verification code has expired", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:562
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:450
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-23T09:14:22.559+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/verify-forgot-password 
+2025-04-23T09:14:35.899+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/forgot-password 
+2025-04-23T09:14:56.554+0500	ERROR	v1/auth.go:562	response	{"code": 403, "status": "FORBIDDEN", "description": "...", "data": "incorrect verification code", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:562
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:457
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-23T09:14:56.555+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/verify-forgot-password 
+2025-04-23T09:15:44.327+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-23T09:15:44.327+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-23T09:15:45.610+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-23T09:15:49.660+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/forgot-password 
+2025-04-23T09:16:18.306+0500	ERROR	middleware/recovery.go:31	::1 - POST /v1/auth/verify-forgot-password PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 49 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc00027c400, {0x10bac60, 0x247fbc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10bac60?, 0x247fbc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+github.com/Masterminds/squirrel.(*updateData).ToSql(0xc000ba9098)
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:143 +0xa58
+github.com/Masterminds/squirrel.UpdateBuilder.ToSql({{0x13f8538, 0xc00103f1f0}})
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:196 +0xfd
+sugurta/internal/infrastructure/repository/postgresql.(*userRepo).UpdatePassword(0xc000568150, {0x13f2800, 0xc00103eee0}, 0xc0010155a0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/infrastructure/repository/postgresql/user.go:285 +0x39c
+sugurta/internal/usecase/user.(*userService).UpdatePassword(0xc000568168, {0x13f2b50?, 0xc00027c400?}, 0xc0010155a0)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/usecase/user/user.go:127 +0x74
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword(0xc0005f0a40, 0xc00027c400)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:469 +0x243
+github.com/gin-gonic/gin.(*Context).Next(0xc00027c400)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc00027c400)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc00027c400)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc000124240?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc00027c400)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc00027c400)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc00027c400)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc00027c400)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0001221a0, 0xc00027c400)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0001221a0, {0x13ee090, 0xc0010310a0}, 0xc0010483c0)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0x13e9d08?}, {0x13ee090?, 0xc0010310a0?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc0005d6360, {0x13f2758, 0xc00017e810})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 45
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+github.com/Masterminds/squirrel.(*updateData).ToSql
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:143
+github.com/Masterminds/squirrel.UpdateBuilder.ToSql
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:196
+sugurta/internal/infrastructure/repository/postgresql.(*userRepo).UpdatePassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/infrastructure/repository/postgresql/user.go:285
+sugurta/internal/usecase/user.(*userService).UpdatePassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/usecase/user/user.go:127
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:469
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-23T09:16:18.306+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/verify-forgot-password 
+2025-04-23T09:17:55.519+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-23T09:17:55.520+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-23T09:17:57.150+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-23T09:17:59.982+0500	ERROR	v1/auth.go:563	response	{"code": 403, "status": "FORBIDDEN", "description": "...", "data": "verification code has expired", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:563
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:450
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-23T09:17:59.982+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/verify-forgot-password 
+2025-04-23T09:18:04.652+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/forgot-password 
+2025-04-23T09:18:22.982+0500	ERROR	middleware/recovery.go:31	::1 - POST /v1/auth/verify-forgot-password PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 29 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc0005f4200, {0x10bac60, 0x247fbc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10bac60?, 0x247fbc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+github.com/Masterminds/squirrel.(*updateData).ToSql(0xc000057048)
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:143 +0xa58
+github.com/Masterminds/squirrel.UpdateBuilder.ToSql({{0x13f85d8, 0xc001122e70}})
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:196 +0xfd
+sugurta/internal/infrastructure/repository/postgresql.(*userRepo).UpdatePassword(0xc00027c1e0, {0x13f28a0, 0xc001122b60}, 0xc00111c760)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/infrastructure/repository/postgresql/user.go:285 +0x39c
+sugurta/internal/usecase/user.(*userService).UpdatePassword(0xc00027c1f8, {0x13f2bf0?, 0xc0005f4200?}, 0xc00111c760)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/usecase/user/user.go:127 +0x74
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword(0xc0002399c0, 0xc0005f4200)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:469 +0x2c6
+github.com/gin-gonic/gin.(*Context).Next(0xc0005f4200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc0005f4200)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc0005f4200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc0005f4000?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc0005f4200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc0005f4200)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc0005f4200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc0005f4200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc000702680, 0xc0005f4200)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc000702680, {0x13ee130, 0xc001124540}, 0xc000176780)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0x13e9da8?}, {0x13ee130?, 0xc001124540?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc00012a990, {0x13f27f8, 0xc000025a10})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 55
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+github.com/Masterminds/squirrel.(*updateData).ToSql
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:143
+github.com/Masterminds/squirrel.UpdateBuilder.ToSql
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:196
+sugurta/internal/infrastructure/repository/postgresql.(*userRepo).UpdatePassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/infrastructure/repository/postgresql/user.go:285
+sugurta/internal/usecase/user.(*userService).UpdatePassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/usecase/user/user.go:127
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:469
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-23T09:18:22.982+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/verify-forgot-password 
+2025-04-23T09:19:52.165+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-23T09:19:52.165+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-23T09:19:53.662+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-23T09:19:56.485+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/forgot-password 
+2025-04-23T09:20:16.280+0500	ERROR	middleware/recovery.go:31	::1 - POST /v1/auth/verify-forgot-password PANIC DETECTED: runtime error: invalid memory address or nil pointer dereference
+goroutine 57 [running]:
+runtime/debug.Stack()
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/debug/stack.go:26 +0x5e
+sugurta/api/middleware.buildPanicMessage(0xc000016800, {0x10bac60, 0x247fbc0})
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:21 +0x4b4
+sugurta/api.NewRouter.Recovery.func3.1()
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31 +0x47
+panic({0x10bac60?, 0x247fbc0?})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785 +0x132
+github.com/Masterminds/squirrel.(*updateData).ToSql(0xc000c41038)
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:143 +0xa58
+github.com/Masterminds/squirrel.UpdateBuilder.ToSql({{0x13f8618, 0xc000c490a0}})
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:196 +0xfd
+sugurta/internal/infrastructure/repository/postgresql.(*userRepo).UpdatePassword(0xc0001fc0c0, {0x13f28e0, 0xc000c48d90}, 0xc000c46700)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/infrastructure/repository/postgresql/user.go:286 +0x3df
+sugurta/internal/usecase/user.(*userService).UpdatePassword(0xc0001fc0d8, {0x13f2c30?, 0xc000016800?}, 0xc000c46700)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/usecase/user/user.go:127 +0x74
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword(0xc00075fc00, 0xc000016800)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:469 +0x2c6
+github.com/gin-gonic/gin.(*Context).Next(0xc000016800)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.AuthMiddleware.func4(0xc000016800)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104 +0x43d
+github.com/gin-gonic/gin.(*Context).Next(0xc000016800)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Recovery.func3(0xc000266880?)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40 +0x48
+github.com/gin-gonic/gin.(*Context).Next(0xc000016800)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185 +0x2b
+sugurta/api.NewRouter.Logger.func2(0xc000016800)
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25 +0x25
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc000016800)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102 +0x6f
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc000016800)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249 +0xe5
+github.com/gin-gonic/gin.(*Context).Next(...)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc0000f8d00, 0xc000016800)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633 +0x892
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc0000f8d00, {0x13ee170, 0xc00012cd20}, 0xc000177540)
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589 +0x1b2
+net/http.serverHandler.ServeHTTP({0x13e9de8?}, {0x13ee170?, 0xc00012cd20?}, 0x6?)
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210 +0x8e
+net/http.(*conn).serve(0xc00012abd0, {0x13f2838, 0xc000c28090})
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092 +0x5d0
+created by net/http.(*Server).Serve in goroutine 53
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3360 +0x485
+
+
+sugurta/api.NewRouter.Recovery.func3.1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:31
+runtime.gopanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:785
+runtime.panicmem
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/panic.go:262
+runtime.sigpanic
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/runtime/signal_unix.go:917
+github.com/Masterminds/squirrel.(*updateData).ToSql
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:143
+github.com/Masterminds/squirrel.UpdateBuilder.ToSql
+	/home/dilshod/go/pkg/mod/github.com/!masterminds/squirrel@v1.5.4/update.go:196
+sugurta/internal/infrastructure/repository/postgresql.(*userRepo).UpdatePassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/infrastructure/repository/postgresql/user.go:286
+sugurta/internal/usecase/user.(*userService).UpdatePassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/internal/usecase/user/user.go:127
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:469
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-23T09:20:16.281+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/verify-forgot-password 
+2025-04-23T09:21:23.211+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-23T09:21:23.222+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-23T09:21:24.668+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-23T09:21:28.245+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/forgot-password 
+2025-04-23T09:21:45.842+0500	ERROR	v1/auth.go:563	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: syntax error at or near \"user\" (SQLSTATE 42601)", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:563
+sugurta/api/handlers/v1.(*authRoutes).verifyForgotPassword
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:475
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-04-23T09:21:45.842+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/verify-forgot-password 
+2025-04-23T09:22:16.357+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-23T09:22:16.357+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-04-23T09:22:17.606+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-04-23T09:22:21.762+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/forgot-password 
+2025-04-23T09:22:37.854+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/verify-forgot-password 
+2025-04-23T09:23:03.262+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-04-23T09:23:26.587+0500	INFO	app/main.go:40	api gateway service stops
+2025-04-23T09:23:26.587+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31

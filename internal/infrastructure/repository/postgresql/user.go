@@ -274,25 +274,18 @@ func (p *userRepo) Update(ctx context.Context, user *entity.User) error {
 }
 
 func (p *userRepo) UpdatePassword(ctx context.Context, user *entity.UpdatePasswordRequest) error {
-	clauses := map[string]any{
-		"password":   user.Password,
-		"updated_at": time.Now().UTC(),
-	}
-	sqlStr, args, err := p.db.Sq.Builder.
-		Update(p.tableName).
-		SetMap(clauses).
-		Where(p.db.Sq.Equal("email", user.Email)).
-		ToSql()
-	if err != nil {
-		return p.db.ErrSQLBuild(err, p.tableName+" update")
-	}
+	query := `
+		UPDATE "user"
+		SET password = $1, updated_at = $2
+		WHERE email = $3
+	`
 
-	commandTag, err := p.db.Exec(ctx, sqlStr, args...)
+	result, err := p.db.Pool.Exec(ctx, query, user.Password, time.Now().UTC(), user.Email)
 	if err != nil {
 		return p.db.Error(err)
 	}
 
-	if commandTag.RowsAffected() == 0 {
+	if result.RowsAffected() == 0 {
 		return p.db.Error(fmt.Errorf("no sql rows"))
 	}
 

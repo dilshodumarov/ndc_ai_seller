@@ -452,28 +452,30 @@ func (a *authRoutes) verifyForgotPassword(c *gin.Context) {
 	}
 
 	// Verify code
-	if req.Code != string(code) {
+	codeStr := strings.Trim(string(code), "\"")
+	if req.Code != codeStr {
 		a.handleResponse(c, status_http.Forbidden, ErrIncorrectCode)
 		return
 	}
-
+	fmt.Println(1111111)
 	// Hash new password
 	hashedPassword, err := helper.HashPassword(req.NewPassword)
 	if err != nil {
 		a.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
-
+	fmt.Println(222222222)
 	// Update password
 	err = a.userUseCase.UpdatePassword(c, &entity.UpdatePasswordRequest{
 		Email:    req.Email,
 		Password: hashedPassword,
 	})
 	if err != nil {
+		fmt.Println(3333333333)
 		a.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
-
+	fmt.Println(44444444444)
 	// Success response
 	a.handleResponse(c, status_http.OK, "Password successfully updated!")
 }
