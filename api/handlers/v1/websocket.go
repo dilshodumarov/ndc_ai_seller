@@ -82,7 +82,7 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 				break
 			}
 			fmt.Println("message: ", string(msg))
-			resp, err := http.Post("http://localhost:8081/send-message", "application/json", bytes.NewBuffer(msg))
+			resp, err := http.Post("http://ai-seller-bot:8081/send-message", "application/json", bytes.NewBuffer(msg))
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 				return
