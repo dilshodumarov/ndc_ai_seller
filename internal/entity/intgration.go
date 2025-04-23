@@ -3,13 +3,12 @@ package entity
 import "time"
 
 type IntegrationCreate struct {
-	OwnerID          string
+	BusinessId          string
 	IntegrationToken string
 	IntegrationType  string
 }
 
 type IntegrationCreateForSwagger struct {
-	OwnerID          string
 	IntegrationToken string
 	IntegrationType  string
 }
@@ -27,13 +26,13 @@ type IntegrationUpdateStatus struct {
 
 type IntegrationUpdateStatusResponse struct {
 	IntegrationType string
-	OwnerID         string
+	BusinessId         string
 	IntegrationToken string
 }
 
 
 type IntegrationRequest struct {
-	OwnerID string
+	BusinessId string
 }
 
 type IntegrationGetResponse struct {

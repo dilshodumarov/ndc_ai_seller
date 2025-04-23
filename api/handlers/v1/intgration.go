@@ -8,7 +8,6 @@ import (
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
-	"sugurta/internal/pkg/helper"
 	integration "sugurta/internal/usecase/intgration"
 
 	"github.com/casbin/casbin/v2"
@@ -37,8 +36,8 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 		integration.POST("/create", r.CreateIntegration)
 		integration.PUT("/update", r.UpdateIntegration)
 		integration.DELETE("/delete/:id", r.DeleteIntegration)
-		integration.GET("/owner/:owner_id", r.GetIntegrationByOwnerID)
-		integration.PUT("/status",r.UpdateStatus)
+		integration.GET("/owner/:owner_id", r.GetIntegrationByBusinessId)
+		integration.PUT("/status", r.UpdateStatus)
 	}
 }
 
@@ -49,23 +48,23 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param integration body entity.IntegrationCreateForSwagger true "Integration data"
+// @Param integration body entity.IntegrationCreate true "Integration data"
 // @Success 201 {object} status_http.Response{data=string} "Created"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
 // @Router /integration/create [post]
 func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 	var req entity.IntegrationCreate
-	bussnesId,code:=helper.GetBusnessIdFromToken(c, i.Config)
-	if code != 0 {
-		i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	}
+	// bussnesId,code:=helper.GetBusnessIdFromToken(c, i.Config)
+	// if code != 0 {
+	// 	i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	// }
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		i.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	req.OwnerID=bussnesId
+	//req.BusinessId=bussnesId
 	if err := i.integrationUsecase.Create(c, &req); err != nil {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
@@ -104,7 +103,7 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
 		return
-	}	
+	}
 	if res.Itype == "bot" {
 		resp, err := http.Post("http://ai-seller-bot:8081/start", "application/json", bytes.NewBuffer(body))
 		if err != nil {
@@ -164,7 +163,7 @@ func (i *integrationRoutes) UpdateStatus(c *gin.Context) {
 		}
 
 		botReq := entity.BotIntegration{
-			Guid:  res.OwnerID,
+			Guid:  res.BusinessId,
 			Token: res.IntegrationToken,
 		}
 		if req.Status == "stop" {
@@ -224,7 +223,7 @@ func (i *integrationRoutes) DeleteIntegration(c *gin.Context) {
 	i.handleResponse(c, status_http.OK, "Integration deleted successfully")
 }
 
-// GetIntegrationByOwnerID godoc
+// GetIntegrationByBusinessId godoc
 // @Summary Get integration by owner ID
 // @Description Retrieve integration data by owner ID
 // @Tags INTEGRATION
@@ -236,13 +235,13 @@ func (i *integrationRoutes) DeleteIntegration(c *gin.Context) {
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
 // @Router /integration/owner/{owner_id} [get]
-func (i *integrationRoutes) GetIntegrationByOwnerID(c *gin.Context) {
+func (i *integrationRoutes) GetIntegrationByBusinessId(c *gin.Context) {
 	ownerID := c.Param("owner_id")
 	if ownerID == "" {
 		i.handleResponse(c, status_http.BadRequest, "owner_id is required")
 		return
 	}
-	req := &entity.IntegrationRequest{OwnerID: ownerID}
+	req := &entity.IntegrationRequest{BusinessId: ownerID}
 	resp, err := i.integrationUsecase.GetByOwnerID(c, req)
 	if err != nil {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -250,8 +249,6 @@ func (i *integrationRoutes) GetIntegrationByOwnerID(c *gin.Context) {
 	}
 	i.handleResponse(c, status_http.OK, resp)
 }
-
-
 
 // UpdateIntegrationStatus godoc
 // @Summary Update integration status
@@ -272,32 +269,30 @@ func (i *integrationRoutes) SendTelegramCode(c *gin.Context) {
 		return
 	}
 
-		botURL := "http://ai-seller-bot:8081/telegram/send-code"
+	botURL := "http://ai-seller-bot:8081/telegram/send-code"
 
+	body, err := json.Marshal(req)
+	if err != nil {
+		i.handleResponse(c, status_http.InternalServerError, "Failed to marshal bot request: "+err.Error())
+		return
+	}
 
+	resp, err := http.Post(botURL, "application/json", bytes.NewBuffer(body))
+	if err != nil {
+		i.handleResponse(c, status_http.InternalServerError, "Failed to send request to bot: "+err.Error())
+		return
+	}
+	defer resp.Body.Close()
 
-		body, err := json.Marshal(req)
-		if err != nil {
-			i.handleResponse(c, status_http.InternalServerError, "Failed to marshal bot request: "+err.Error())
-			return
-		}
-
-		resp, err := http.Post(botURL, "application/json", bytes.NewBuffer(body))
-		if err != nil {
-			i.handleResponse(c, status_http.InternalServerError, "Failed to send request to bot: "+err.Error())
-			return
-		}
-		defer resp.Body.Close()
-
-		var botResp entity.BotIntegrationResponse
-		if err := json.NewDecoder(resp.Body).Decode(&botResp); err != nil {
-			i.handleResponse(c, status_http.InternalServerError, "Failed to decode bot response: "+err.Error())
-			return
-		}
-		if botResp.Code != 0 {
-			i.handleResponse(c, status_http.InternalServerError, "Bot error: "+botResp.Message)
-			return
-		}
+	var botResp entity.BotIntegrationResponse
+	if err := json.NewDecoder(resp.Body).Decode(&botResp); err != nil {
+		i.handleResponse(c, status_http.InternalServerError, "Failed to decode bot response: "+err.Error())
+		return
+	}
+	if botResp.Code != 0 {
+		i.handleResponse(c, status_http.InternalServerError, "Bot error: "+botResp.Message)
+		return
+	}
 
 	i.handleResponse(c, status_http.OK, "Integration updated successfully")
 }

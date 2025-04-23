@@ -29,7 +29,7 @@ func (r *integrationRepo) Create(ctx context.Context, req *entity.IntegrationCre
 	`, r.tableName)
 
 	_, err := r.db.Exec(ctx, query,
-		req.OwnerID,
+		req.BusinessId,
 		req.IntegrationToken,
 		req.IntegrationType,
 		"active",
@@ -78,7 +78,7 @@ func (r *integrationRepo) UpdateStatus(ctx context.Context, req *entity.Integrat
 	var resp entity.IntegrationUpdateStatusResponse
 	err := r.db.QueryRow(ctx, query, req.Status, req.Status, req.ID).Scan(
 		&resp.IntegrationType,
-		&resp.OwnerID,
+		&resp.BusinessId,
 		&resp.IntegrationToken,
 	)
 	if err != nil {
@@ -116,7 +116,7 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 		res       entity.IntegrationGetResponse
 	)
 
-	err := r.db.QueryRow(ctx, query, req.OwnerID).Scan(
+	err := r.db.QueryRow(ctx, query, req.BusinessId).Scan(
 		&res.Guid,
 		&res.IntegrationToken,
 		&res.IntegrationType,
