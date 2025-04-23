@@ -71,6 +71,15 @@ definitions:
           $ref: '#/definitions/entity.ClientType'
         type: array
     type: object
+  entity.CodeInput:
+    properties:
+      code:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+    type: object
   entity.CreateBusinessRequest:
     properties:
       description:
@@ -240,6 +249,11 @@ definitions:
       integration_id:
         type: string
       status:
+        type: string
+    type: object
+  entity.PhoneNumber:
+    properties:
+      phone:
         type: string
     type: object
   entity.Product:
@@ -2377,6 +2391,76 @@ paths:
       summary: Update an existing product
       tags:
       - PRODUCT
+  /telegram/send-code:
+    post:
+      consumes:
+      - application/json
+      description: Sends a phone number to the Python backend to receive a code
+      parameters:
+      - description: Phone number
+        in: body
+        name: phone
+        required: true
+        schema:
+          $ref: '#/definitions/entity.PhoneNumber'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Send phone number to Telegram bot
+      tags:
+      - TELEGRAM
+  /telegram/verify:
+    post:
+      consumes:
+      - application/json
+      description: Verifies the code (and optional password) received from the user
+      parameters:
+      - description: Verification input
+        in: body
+        name: verify
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CodeInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Verify Telegram code
+      tags:
+      - TELEGRAM
 securityDefinitions:
   BearerAuth:
     in: header

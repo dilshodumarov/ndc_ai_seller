@@ -251,6 +251,57 @@ func (i *integrationRoutes) GetIntegrationByOwnerID(c *gin.Context) {
 	i.handleResponse(c, status_http.OK, resp)
 }
 
+
+
+// UpdateIntegrationStatus godoc
+// @Summary Update integration status
+// @Description Update integration status using ID
+// @Tags INTEGRATION
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param integration body entity.IntegrationUpdateStatus true "Update integration status"
+// @Success 200 {object} status_http.Response{data=string} "Updated"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
+// @Router /integration/status [put]
+func (i *integrationRoutes) SendTelegramCode(c *gin.Context) {
+	var req entity.PhoneNumber
+	if err := c.ShouldBindJSON(&req); err != nil {
+		i.handleResponse(c, status_http.BadRequest, err.Error())
+		return
+	}
+
+		botURL := "http://ai-seller-bot:8081/telegram/send-code"
+
+
+
+		body, err := json.Marshal(req)
+		if err != nil {
+			i.handleResponse(c, status_http.InternalServerError, "Failed to marshal bot request: "+err.Error())
+			return
+		}
+
+		resp, err := http.Post(botURL, "application/json", bytes.NewBuffer(body))
+		if err != nil {
+			i.handleResponse(c, status_http.InternalServerError, "Failed to send request to bot: "+err.Error())
+			return
+		}
+		defer resp.Body.Close()
+
+		var botResp entity.BotIntegrationResponse
+		if err := json.NewDecoder(resp.Body).Decode(&botResp); err != nil {
+			i.handleResponse(c, status_http.InternalServerError, "Failed to decode bot response: "+err.Error())
+			return
+		}
+		if botResp.Code != 0 {
+			i.handleResponse(c, status_http.InternalServerError, "Bot error: "+botResp.Message)
+			return
+		}
+
+	i.handleResponse(c, status_http.OK, "Integration updated successfully")
+}
+
 func (h *integrationRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {
 	switch code := status.Code; {
 	case code < 400:

@@ -64,3 +64,32 @@ type BotIntegrationResponse struct {
 	Code    int
 	Message string
 }
+
+
+
+
+
+type PhoneNumber struct {
+	Phone string `json:"phone"`
+}
+
+type CodeInput struct {
+	Phone    string `json:"phone"`
+	Code     string `json:"code"`
+	Password string `json:"password,omitempty"`
+}
+
+type MessageRequest struct {
+	Phone  string `json:"phone"`
+	UserID string  `json:"user_id"`
+	Text   string `json:"text"`
+}
+
+
+type MessageResponse struct {
+	Phone  string `json:"phone"`
+	Fromid string `json:"fromid"` // `fromid` nomini to'g'ri qilib o'zgartirdim
+	Text   string `json:"text"`
+	Code   int `json:"code"`  // "Code" ni string sifatida o'zgartirdim
+	Message string `json:"message"` // Add a message field for better logging
+}
