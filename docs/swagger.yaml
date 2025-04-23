@@ -169,13 +169,13 @@ definitions:
       total:
         type: integer
     type: object
-  entity.IntegrationCreateForSwagger:
+  entity.IntegrationCreate:
     properties:
+      businessId:
+        type: string
       integrationToken:
         type: string
       integrationType:
-        type: string
-      ownerID:
         type: string
     type: object
   entity.IntegrationGetResponse:
@@ -1717,7 +1717,7 @@ paths:
         name: integration
         required: true
         schema:
-          $ref: '#/definitions/entity.IntegrationCreateForSwagger'
+          $ref: '#/definitions/entity.IntegrationCreate'
       produces:
       - application/json
       responses:

@@ -2349,7 +2349,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.IntegrationCreateForSwagger"
+                            "$ref": "#/definitions/entity.IntegrationCreate"
                         }
                     }
                 ],
@@ -3934,16 +3934,16 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.IntegrationCreateForSwagger": {
+        "entity.IntegrationCreate": {
             "type": "object",
             "properties": {
+                "businessId": {
+                    "type": "string"
+                },
                 "integrationToken": {
                     "type": "string"
                 },
                 "integrationType": {
-                    "type": "string"
-                },
-                "ownerID": {
                     "type": "string"
                 }
             }
