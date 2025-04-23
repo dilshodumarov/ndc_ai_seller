@@ -36,7 +36,7 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 		integration.POST("/create", r.CreateIntegration)
 		integration.PUT("/update", r.UpdateIntegration)
 		integration.DELETE("/delete/:id", r.DeleteIntegration)
-		integration.GET("/owner/:owner_id", r.GetIntegrationByBusinessId)
+		integration.GET("/owner/:business_id", r.GetIntegrationByBusinessId)
 		integration.PUT("/status", r.UpdateStatus)
 	}
 }
@@ -230,15 +230,15 @@ func (i *integrationRoutes) DeleteIntegration(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param owner_id path string true "Owner ID"
+// @Param business_id path string true "Owner ID"
 // @Success 200 {object} status_http.Response{data=entity.IntegrationGetResponse} "OK"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
-// @Router /integration/owner/{owner_id} [get]
+// @Router /integration/owner/{business_id} [get]
 func (i *integrationRoutes) GetIntegrationByBusinessId(c *gin.Context) {
-	ownerID := c.Param("owner_id")
+	ownerID := c.Param("business_id")
 	if ownerID == "" {
-		i.handleResponse(c, status_http.BadRequest, "owner_id is required")
+		i.handleResponse(c, status_http.BadRequest, "business_id is required")
 		return
 	}
 	req := &entity.IntegrationRequest{BusinessId: ownerID}

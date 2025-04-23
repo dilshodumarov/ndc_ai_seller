@@ -1799,7 +1799,7 @@ paths:
       summary: Delete integration
       tags:
       - INTEGRATION
-  /integration/owner/{owner_id}:
+  /integration/owner/{business_id}:
     get:
       consumes:
       - application/json
@@ -1807,7 +1807,7 @@ paths:
       parameters:
       - description: Owner ID
         in: path
-        name: owner_id
+        name: business_id
         required: true
         type: string
       produces:

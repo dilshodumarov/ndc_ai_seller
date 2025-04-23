@@ -2496,7 +2496,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/integration/owner/{owner_id}": {
+        "/integration/owner/{business_id}": {
             "get": {
                 "security": [
                     {
@@ -2518,7 +2518,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Owner ID",
-                        "name": "owner_id",
+                        "name": "business_id",
                         "in": "path",
                         "required": true
                     }
