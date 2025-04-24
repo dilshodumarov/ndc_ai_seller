@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/minio/minio-go/v7"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -54,6 +55,7 @@ type RouteOption struct {
 	Integration integration.Integration
 	BotComments botcomments.BotCommandStorage
 	Chat        chat.Chat
+	Minio       *minio.Client
 	// Service        grpcClients.ServiceClient
 	// RefreshToken   refresh_token.RefreshToken
 	// BrokerProducer event.BrokerProducer
@@ -86,6 +88,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		Category:    option.Category,
 		BotComments: option.BotComments,
 		Chat:        option.Chat,
+		Minio:       option.Minio,
 	}
 
 	app := gin.New()
@@ -145,6 +148,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		v1.NewBotCommentsRoutes(apiV1Group, handleOption)
 		v1.NewWebsocketRoutes(apiV1Group, handleOption)
 		v1.NewTelegramRoutes(apiV1Group,handleOption)
+		v1.NewMinioRoutes(apiV1Group,handleOption)
 	}
 
 	return app

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/casbin/casbin/v2"
+	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
 
@@ -45,6 +46,7 @@ type HandlerOption struct {
 	Integration integration.Integration
 	BotComments botcomments.BotCommandStorage
 	Chat        chat.Chat
+	Minio       *minio.Client
 }
 
 type BaseHandler struct {

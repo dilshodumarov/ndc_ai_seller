@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/casbin/casbin/v2"
+	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
 
 	"net/http"
@@ -52,6 +54,7 @@ type App struct {
 	integration integration.Integration
 	BotComments botcomments.BotCommandStorage
 	Chat        chat.Chat
+	Minio       *minio.Client
 }
 
 func NewApp(cfg config.Config) (*App, error) {
@@ -94,7 +97,10 @@ func NewApp(cfg config.Config) (*App, error) {
 	var (
 		contextTimeout time.Duration
 	)
-
+	minioClient, err := minio.New("minio:9000", &minio.Options{
+		Creds:  credentials.NewStaticV4("dilshod", "umarov05@", ""),
+		Secure: false,
+	})
 	// context timeout initialization
 	contextTimeout, err = time.ParseDuration(cfg.Context.Timeout)
 	if err != nil {
@@ -150,7 +156,8 @@ func NewApp(cfg config.Config) (*App, error) {
 		order:       orderUseCase,
 		integration: intgrationUscase,
 		BotComments: botCommentsUscase,
-		Chat:         ChatUscase,
+		Chat:        ChatUscase,
+		Minio:       minioClient,
 		// BrokerProducer: event.NewBrokerProducer(cfg.Kafka.Brokers, cfg.Kafka.Topic),
 	}, nil
 }
@@ -192,6 +199,7 @@ func (a *App) Run() error {
 		Category:    a.category,
 		BotComments: a.BotComments,
 		Chat:        a.Chat,
+		Minio:       a.Minio,
 	})
 
 	fmt.Println("here 5")
