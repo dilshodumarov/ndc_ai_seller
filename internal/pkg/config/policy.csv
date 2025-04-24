@@ -16,6 +16,8 @@ p, admin, /v1/business/*, GET|POST|PUT|DELETE
 p, unauthorized, /v1/business/webhook/*, GET|POST|PUT|DELETE
 p, unauthorized, /v1/business/oauth/*, GET|POST|PUT|DELETE
 
+p, unauthorized, /v1/minio/*, GET|POST|PUT|DELETE
+
 p, user, /v1/telegram/*, GET|POST|PUT|DELETE
 p, admin, /v1/telegram/*, GET|POST|PUT|DELETE
 
