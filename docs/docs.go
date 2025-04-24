@@ -2755,6 +2755,48 @@ const docTemplate = `{
                 }
             }
         },
+        "/minio/media": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Upload a media file",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "media"
+                ],
+                "summary": "uploadFile",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "UploadMediaForm",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {}
+                    }
+                }
+            }
+        },
         "/orders/create": {
             "post": {
                 "security": [
