@@ -145,7 +145,7 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Param id path string true "Order ID"
-// @Param order body entity.OrderUpdate true "Order Data"
+// @Param order body entity.OrderUpdateForSwagger true "Order Data"
 // @Success 200 {object} status_http.Response
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"

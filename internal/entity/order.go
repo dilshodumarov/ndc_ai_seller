@@ -53,6 +53,11 @@ type (
 		LocationURL   string `json:"location_url"`
 		PaymentMethod string `json:"payment_method"`
 	}
+	OrderUpdateForSwagger struct {
+		Status        string `json:"status"`
+		LocationURL   string `json:"location_url"`
+		PaymentMethod string `json:"payment_method"`
+	}
 
 	GetAllOrdersResponse struct {
 		Items []Order `json:"items"`

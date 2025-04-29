@@ -3124,7 +3124,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.OrderUpdate"
+                            "$ref": "#/definitions/entity.OrderUpdateForSwagger"
                         }
                     }
                 ],
@@ -4174,12 +4174,9 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.OrderUpdate": {
+        "entity.OrderUpdateForSwagger": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
-                },
                 "location_url": {
                     "type": "string"
                 },

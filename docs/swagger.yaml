@@ -284,10 +284,8 @@ definitions:
         description: order_products.price
         type: number
     type: object
-  entity.OrderUpdate:
+  entity.OrderUpdateForSwagger:
     properties:
-      id:
-        type: string
       location_url:
         type: string
       payment_method:
@@ -2202,7 +2200,7 @@ paths:
         name: order
         required: true
         schema:
-          $ref: '#/definitions/entity.OrderUpdate'
+          $ref: '#/definitions/entity.OrderUpdateForSwagger'
       produces:
       - application/json
       responses:
