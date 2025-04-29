@@ -2,7 +2,6 @@ package v1
 
 import (
 	"strconv"
-	"strings"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
@@ -86,7 +85,7 @@ func (r *OrderRoutes) createOrder(c *gin.Context) {
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (r *OrderRoutes) getOrder(c *gin.Context) {
 	id := c.Param("id")
-	order, err := r.OrderUseCase.Get(c, map[string]string{"id": id})
+	order, err := r.OrderUseCase.Get(c, id)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
@@ -103,48 +102,39 @@ func (r *OrderRoutes) getOrder(c *gin.Context) {
 // @Security BearerAuth
 // @Param limit query int false "Limit" default(10)
 // @Param offset query int false "Offset" default(0)
-// @Param filter query string false "Filter by id, client_id, integration_id, status"
+// @Param client_id query string false "Client ID"
+// @Param business_id query string false "Business ID"
+// @Param status query string false "Status"
+// @Param payment_method query string false "Payment Method"
 // @Success 200 {object} entity.GetAllOrdersResponse
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (r *OrderRoutes) listOrders(c *gin.Context) {
+	limitStr := c.DefaultQuery("limit", "10")
+	offsetStr := c.DefaultQuery("offset", "0")
 
-	// Extract limit and offset from the query parameters
-	limit := c.DefaultQuery("limit", "10")
-	offset := c.DefaultQuery("offset", "0")
-	filterQuery := c.DefaultQuery("filter", "")
-
-	// Convert limit and offset to integers (or use defaults)
-	limitInt, err := strconv.Atoi(limit)
+	limit, err := strconv.Atoi(limitStr)
 	if err != nil {
-		limitInt = 10 // default value
+		limit = 10
 	}
-
-	offsetInt, err := strconv.Atoi(offset)
+	offset, err := strconv.Atoi(offsetStr)
 	if err != nil {
-		offsetInt = 0 // default value
+		offset = 0
 	}
 
-	// Convert filter query into a map (assuming filters are passed as comma-separated key-value pairs)
-	filter := make(map[string]string)
-	if filterQuery != "" {
-		for _, pair := range strings.Split(filterQuery, ",") {
-			parts := strings.Split(pair, "=")
-			if len(parts) == 2 {
-				filter[parts[0]] = parts[1]
-			}
-		}
+	filter := &entity.OrderFilter{
+		ClientID:      c.Query("client_id"),
+		BusinessID:    c.Query("business_id"),
+		Status:        c.Query("status"),
+		PaymentMethod: c.Query("payment_method"),
 	}
 
-	// Call the List method with the constructed filter map
-
-	orders, err := r.OrderUseCase.List(c, uint64(limitInt), uint64(offsetInt), filter)
+	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
-
 		return
 	}
 
-	r.handleResponse(c, status_http.OK, orders)
+	r.handleResponse(c, status_http.OK, result)
 }
 
 // @Router /orders/update/{id} [put]
@@ -161,15 +151,14 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (r *OrderRoutes) updateOrder(c *gin.Context) {
 	id := c.Param("id")
-	var order entity.Order
-	if err := c.ShouldBindJSON(&order); err != nil {
+	var req entity.OrderUpdate
+	if err := c.ShouldBindJSON(&req); err != nil {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
 
-	order.ID = id
-	err := r.OrderUseCase.Update(c, &order)
-	if err != nil {
+	req.ID = id
+	if err := r.OrderUseCase.Update(c, &req); err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}

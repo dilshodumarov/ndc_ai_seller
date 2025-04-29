@@ -69,6 +69,7 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 	// product.BusinessID = BusinessID
 	id, err := p.productUscase.Create(c, &product)
 	if err != nil {
+		fmt.Println(err)
 		p.handleResponse(c, status_http.InternalServerError, "error while creating product")
 		return
 	}

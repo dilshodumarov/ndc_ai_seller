@@ -1439,7 +1439,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.CreateCategoryRequestForSwagger"
+                            "$ref": "#/definitions/entity.CreateCategoryRequest"
                         }
                     }
                 ],
@@ -1742,6 +1742,12 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Page number for pagination (default: 1)",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Business ID",
+                        "name": "business_id",
                         "in": "query"
                     }
                 ],
@@ -3035,8 +3041,26 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Filter by id, client_id, integration_id, status",
-                        "name": "filter",
+                        "description": "Client ID",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Business ID",
+                        "name": "business_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment Method",
+                        "name": "payment_method",
                         "in": "query"
                     }
                 ],
@@ -3852,9 +3876,12 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.CreateCategoryRequestForSwagger": {
+        "entity.CreateCategoryRequest": {
             "type": "object",
             "properties": {
+                "business_id": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 }
@@ -3871,6 +3898,20 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.CreateOrderProduct": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "product_id": {
+                    "type": "string"
+                }
+            }
+        },
         "entity.CreateOrderRequest": {
             "type": "object",
             "properties": {
@@ -3880,14 +3921,23 @@ const docTemplate = `{
                 "client_id": {
                     "type": "string"
                 },
-                "integration_id": {
+                "location_url": {
                     "type": "string"
+                },
+                "payment_method": {
+                    "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.CreateOrderProduct"
+                    }
                 },
                 "status": {
                     "type": "string"
                 },
-                "total_cost": {
-                    "type": "integer"
+                "total_price": {
+                    "type": "number"
                 }
             }
         },
@@ -3914,6 +3964,9 @@ const docTemplate = `{
                 },
                 "discount_cost": {
                     "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -4058,42 +4111,79 @@ const docTemplate = `{
         "entity.Order": {
             "type": "object",
             "properties": {
-                "business_id": {
+                "businessID": {
                     "type": "string"
                 },
-                "client_id": {
+                "clientID": {
                     "type": "string"
                 },
-                "created_at": {
+                "createdAt": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
+                "locationURL": {
+                    "type": "string"
+                },
+                "paymentMethod": {
+                    "type": "string"
+                },
+                "products": {
+                    "description": "\u003c--- Products field qo‘shamiz",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.OrderProduct"
+                    }
+                },
                 "status": {
                     "type": "string"
                 },
-                "status_chaged_time": {
+                "statusChangedTime": {
                     "type": "string"
                 },
-                "total_cost": {
+                "totalPrice": {
+                    "type": "number"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.OrderProduct": {
+            "type": "object",
+            "properties": {
+                "cost": {
                     "type": "integer"
                 },
-                "updated_at": {
+                "count": {
+                    "type": "integer"
+                },
+                "imageURL": {
                     "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "productID": {
+                    "type": "string"
+                },
+                "productTotalPrice": {
+                    "description": "order_products.price",
+                    "type": "number"
                 }
             }
         },
         "entity.OrderUpdate": {
             "type": "object",
             "properties": {
-                "client_id": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "string"
                 },
-                "integration_id": {
+                "location_url": {
+                    "type": "string"
+                },
+                "payment_method": {
                     "type": "string"
                 },
                 "status": {
@@ -4137,6 +4227,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "id": {
+                    "type": "string"
+                },
+                "image_url": {
                     "type": "string"
                 },
                 "name": {
@@ -4276,6 +4369,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "id": {
+                    "type": "string"
+                },
+                "image_url": {
                     "type": "string"
                 },
                 "name": {

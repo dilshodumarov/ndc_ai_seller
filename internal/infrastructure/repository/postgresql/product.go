@@ -29,9 +29,9 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 	id := uuid.New().String()
 	query := `
 		INSERT INTO product (
-			guid,business_id, name, category_id, short_info, description,
+			guid,business_id, image_url,name, category_id, short_info, description,
 			cost, count, discount_cost, discount, created_at, updated_at
-		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
 	`
 
 	if product.Discount > 0 {
@@ -43,6 +43,7 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 	_, err := p.db.Exec(ctx, query,
 		id,
 		product.BusinessID,
+		product.Image_url,
 		product.Name,
 		product.CategoryID,
 		product.ShortInfo,
@@ -64,7 +65,7 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 
 func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, error) {
 	query := `
-		SELECT id, business_id, name, category_id, short_info, description,
+		SELECT id, business_id, image_url,name, category_id, short_info, description,
 		       cost, count, discount_cost, discount, created_at, updated_at
 		FROM product
 		WHERE id = $1
@@ -74,6 +75,7 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 	err := p.db.QueryRow(ctx, query, id).Scan(
 		&product.ID,
 		&product.BusinessID,
+		&product.Image_url,
 		&product.Name,
 		&product.CategoryID,
 		&product.ShortInfo,
@@ -132,7 +134,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 
 	// Mahsulotlar ro‘yxatini olish uchun query
 	query := fmt.Sprintf(`
-		SELECT guid, business_id, name, category_id, short_info, description,
+		SELECT guid, business_id, image_url,name, category_id, short_info, description,
 		       cost, count, discount_cost, discount, created_at, updated_at
 		FROM product
 		%s
@@ -156,6 +158,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		if err := rows.Scan(
 			&product.ID,
 			&product.BusinessID,
+			&product.Image_url,
 			&product.Name,
 			&product.CategoryID,
 			&product.ShortInfo,
@@ -231,6 +234,11 @@ func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductR
 	if product.Count != 0 {
 		setParts = append(setParts, fmt.Sprintf("count=$%d", argID))
 		args = append(args, product.Count)
+		argID++
+	}
+	if product.Image_url != "" {
+		setParts = append(setParts, fmt.Sprintf("image_url=$%d", argID))
+		args = append(args, product.Image_url)
 		argID++
 	}
 	if product.Discount != 0 {

@@ -46,9 +46,9 @@ func (r *categoryRepo) Get(ctx context.Context, id string) (*entity.Category, er
 	var category entity.Category
 
 	query := `
-		SELECT id, name, business_id, created_at, updated_at
+		SELECT guid, name, business_id, created_at, updated_at
 		FROM category
-		WHERE id = $1
+		WHERE guid = $1
 	`
 	row := r.db.QueryRow(ctx, query, id)
 	err := row.Scan(
@@ -70,17 +70,22 @@ func (r *categoryRepo) List(ctx context.Context, filter entity.CategoryFilter) (
 	var (
 		categories  []entity.Category
 		args        []interface{}
-		whereClause = " WHERE business_id = $1"
+		whereClause = " WHERE true"
 	)
-	args = append(args, filter.BusinessID)
-	argIndex := 2
-
+	argIndex := 1
+	
+	if filter.BusinessID != "" {
+		whereClause += fmt.Sprintf(" AND business_id = $%d", argIndex)
+		args = append(args, filter.BusinessID)
+		argIndex++
+	}
+	
 	if filter.Name != "" {
 		whereClause += fmt.Sprintf(" AND name ILIKE $%d", argIndex)
 		args = append(args, "%"+filter.Name+"%")
 		argIndex++
 	}
-
+	
 	// Default values
 	if filter.Page == 0 {
 		filter.Page = 1
@@ -89,22 +94,22 @@ func (r *categoryRepo) List(ctx context.Context, filter entity.CategoryFilter) (
 		filter.Limit = 10
 	}
 	offset := (filter.Page - 1) * filter.Limit
-
+	
 	baseQuery := `
-		SELECT id, name, business_id, created_at, updated_at
+		SELECT guid, name, business_id, created_at, updated_at
 		FROM category
 	`
 	countQuery := `SELECT COUNT(*) FROM category`
-
+	
 	limitOffset := fmt.Sprintf(" LIMIT %d OFFSET %d", filter.Limit, offset)
-
+	
 	finalQuery := baseQuery + whereClause + limitOffset
 	rows, err := r.db.Query(ctx, finalQuery, args...)
 	if err != nil {
 		return nil, r.db.Error(err)
 	}
 	defer rows.Close()
-
+	
 	categories = make([]entity.Category, 0)
 	for rows.Next() {
 		var category entity.Category
@@ -120,7 +125,7 @@ func (r *categoryRepo) List(ctx context.Context, filter entity.CategoryFilter) (
 		}
 		categories = append(categories, category)
 	}
-
+	
 	// Count query
 	countQueryFinal := countQuery + whereClause
 	var totalCount uint64
@@ -128,20 +133,19 @@ func (r *categoryRepo) List(ctx context.Context, filter entity.CategoryFilter) (
 	if err != nil {
 		return nil, r.db.Error(err)
 	}
-
+	
 	return &entity.GetAllCategoriesResponse{
 		Items: categories,
 		Total: totalCount,
 	}, nil
-}
-
+}	
 
 // Update -.
 func (r *categoryRepo) Update(ctx context.Context, category *entity.UpdateCategoryRequest) error {
 	query := `
 		UPDATE category
 		SET name = $1, updated_at = $2
-		WHERE id = $3
+		WHERE guid = $3
 	`
 	res, err := r.db.Exec(ctx, query, category.Name, time.Now(), category.ID)
 	if err != nil {
@@ -155,7 +159,7 @@ func (r *categoryRepo) Update(ctx context.Context, category *entity.UpdateCatego
 
 // Delete -.
 func (r *categoryRepo) Delete(ctx context.Context, id string) error {
-	query := `DELETE FROM category WHERE id = $1`
+	query := `DELETE FROM category WHERE guid = $1`
 	res, err := r.db.Exec(ctx, query, id)
 	if err != nil {
 		return r.db.Error(err)

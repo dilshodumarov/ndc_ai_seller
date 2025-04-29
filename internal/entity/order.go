@@ -2,51 +2,73 @@ package entity
 
 import "time"
 
-type (
-	// Attribute
 
-	Attribute struct {
-		ID         string    `json:"id"`
-		Name       string    `json:"name"`
-		CategoryID string    `json:"category_id"`
-		CreatedAt  time.Time `json:"created_at"`
-		UpdatedAt  time.Time `json:"updated_at"`
-	}
-)
 
 type (
-	//Order
+	// Order
 
 	CreateOrderRequest struct {
-		BusinessID    string `json:"business_id"`
-		ClientID      string `json:"client_id"`
-		IntegrationID string `json:"integration_id"`
-		Status        string `json:"status"`
-		TotalCost     int    `json:"total_cost"`
-	}
-	Order struct {
-		ID                string    `json:"id"`
-		BusinessID        string    `json:"business_id"`
-		ClientID          string    `json:"client_id"`
-		Status            string    `json:"status"`
-		StatusChangedTime *time.Time    `json:"status_chaged_time"`
-		TotalCost         int       `json:"total_cost"`
-		CreatedAt         time.Time `json:"created_at"`
-		UpdatedAt         time.Time `json:"updated_at"`
+		ClientID      string               `json:"client_id"`
+		BusinessID    string               `json:"business_id"`
+		LocationURL   string               `json:"location_url"`
+		Status        string               `json:"status"`
+		TotalPrice    float64              `json:"total_price"`
+		PaymentMethod string               `json:"payment_method"`
+		Products      []CreateOrderProduct `json:"products"`
 	}
 
+	CreateOrderProduct struct {
+		ProductID string  `json:"product_id"`
+		Count     int     `json:"count"`
+		Price     float64 `json:"price"`
+	}
+
+	Order struct {
+		ID                string
+		ClientID          string
+		BusinessID        string
+		LocationURL       string
+		Status            string
+		TotalPrice        float64
+		PaymentMethod     string
+		StatusChangedTime *time.Time
+		CreatedAt         time.Time
+		UpdatedAt         time.Time
+		Products          []OrderProduct // <--- Products field qo‘shamiz
+	}
+	
+	OrderProduct struct {
+		ProductID        string
+		Name             string
+		ImageURL         string
+		Cost             int
+		Count            int
+		ProductTotalPrice float64 // order_products.price
+	}
+	
+
 	OrderUpdate struct {
-		ID                string    `json:"id"`
-		ClientID          string    `json:"client_id"`
-		IntegrationID     string    `json:"integration_id"`
-		Status            string    `json:"status"`
+		ID            string `json:"id"`
+		Status        string `json:"status"`
+		LocationURL   string `json:"location_url"`
+		PaymentMethod string `json:"payment_method"`
 	}
 
 	GetAllOrdersResponse struct {
 		Items []Order `json:"items"`
 		Total uint64  `json:"total"`
 	}
+
+	OrderFilter struct {
+		ID            string
+		ClientID      string
+		BusinessID    string
+		Status        string
+		PaymentMethod string
+	}
+	
 )
+
 
 type (
 	// OrderProducts

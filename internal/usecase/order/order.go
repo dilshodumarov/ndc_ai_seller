@@ -24,10 +24,6 @@ func (o *orderService) Create(ctx context.Context, order *entity.CreateOrderRequ
 	ctx, cancel := context.WithTimeout(ctx, o.ctxTimeout)
 	defer cancel()
 
-	// // tracing
-	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
-	// defer span.End()
-
 	id, err := o.orderService.Create(ctx, order)
 	if err != nil {
 		return "", err
@@ -36,16 +32,11 @@ func (o *orderService) Create(ctx context.Context, order *entity.CreateOrderRequ
 	return id, nil
 }
 
-// GetOrder -.
-func (o *orderService) Get(ctx context.Context, params map[string]string) (*entity.Order, error) {
+func (o *orderService) Get(ctx context.Context, id string) (*entity.Order, error) {
 	ctx, cancel := context.WithTimeout(ctx, o.ctxTimeout)
 	defer cancel()
 
-	// // tracing
-	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
-	// defer span.End()
-
-	order, err := o.orderService.Get(ctx, params)
+	order, err := o.orderService.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -53,15 +44,11 @@ func (o *orderService) Get(ctx context.Context, params map[string]string) (*enti
 	return order, nil
 }
 
-// ListOrders -.
-func (o *orderService) List(ctx context.Context, limit, offset uint64, filter map[string]string) (*entity.GetAllOrdersResponse, error) {
+func (o *orderService) List(ctx context.Context, filter *entity.OrderFilter, limit, offset uint64) (*entity.GetAllOrdersResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, o.ctxTimeout)
 	defer cancel()
-	// // tracing
-	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
-	// defer span.End()
 
-	orders, err := o.orderService.List(ctx, limit, offset, filter)
+	orders, err := o.orderService.List(ctx, filter, limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -69,26 +56,16 @@ func (o *orderService) List(ctx context.Context, limit, offset uint64, filter ma
 	return orders, nil
 }
 
-// UpdateOrder -.
-func (o *orderService) Update(ctx context.Context, order *entity.Order) error {
+func (o *orderService) Update(ctx context.Context, order *entity.OrderUpdate) error {
 	ctx, cancel := context.WithTimeout(ctx, o.ctxTimeout)
 	defer cancel()
-
-	// // tracing
-	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
-	// defer span.End()
 
 	return o.orderService.Update(ctx, order)
 }
 
-// DeleteOrder -.
 func (o *orderService) Delete(ctx context.Context, id string) error {
 	ctx, cancel := context.WithTimeout(ctx, o.ctxTimeout)
 	defer cancel()
-
-	// // tracing
-	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
-	// defer span.End()
 
 	return o.orderService.Delete(ctx, id)
 }

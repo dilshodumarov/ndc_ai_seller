@@ -26,91 +26,126 @@ func NewOrderRepo(db *postgres.Postgres) *OrderRepo {
 	}
 }
 
-// CreateOrder -.
+
 func (r *OrderRepo) Create(ctx context.Context, o *entity.CreateOrderRequest) (id string, err error) {
 	query := fmt.Sprintf(`
-		INSERT INTO %s (client_id, integration_id, status, status_changed_time, total_cost, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
-		RETURNING id
+		INSERT INTO %s (client_id,  business_id, location_url, status, total_price, payment_method, status_changed_time, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
+		RETURNING guid
 	`, r.tableName)
 
 	now := time.Now().UTC()
 	err = r.db.QueryRow(
 		ctx, query,
-		o.ClientID, o.IntegrationID, o.Status, now, o.TotalCost, now, now,
+		o.ClientID,
+		o.BusinessID,
+		o.LocationURL,
+		o.Status,
+		o.TotalPrice,
+		o.PaymentMethod,
+		now,
 	).Scan(&id)
 
 	if err != nil {
-		return "", fmt.Errorf("OrderRepo - CreateOrder - r.db.QueryRow: %w", err)
+		return "", fmt.Errorf("OrderRepo - Create - insert order: %w", err)
+	}
+
+	// Insert Order Products
+	for _, p := range o.Products {
+		productQuery := `
+			INSERT INTO order_products (order_id, product_id, count, price, created_at, updated_at)
+			VALUES ($1, $2, $3, $4, NOW(), NOW())
+		`
+		_, err := r.db.Exec(ctx, productQuery, id, p.ProductID, p.Count, p.Price)
+		if err != nil {
+			return "", fmt.Errorf("OrderRepo - Create - insert order product: %w", err)
+		}
 	}
 
 	return id, nil
 }
 
-// GetOrder -.
-func (r *OrderRepo) Get(ctx context.Context, params map[string]string) (*entity.Order, error) {
-	var o entity.Order
 
-	whereClause := ""
-	args := []interface{}{}
-	argPos := 1
-	for key, value := range params {
-		if whereClause == "" {
-			whereClause = fmt.Sprintf(`WHERE %s = $%d`, key, argPos)
-		} else {
-			whereClause += fmt.Sprintf(` AND %s = $%d`, key, argPos)
-		}
-		args = append(args, value)
-		argPos++
-	}
+func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
+	query := `
+		SELECT 
+			o.guid, o.client_id, o.business_id, o.location_url, o.status, o.total_price, 
+			o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
+			p.guid, p.name, p.image_url, p.cost,
+			op.count, op.price
+		FROM "order" o
+		LEFT JOIN order_products op ON o.guid = op.order_id
+		LEFT JOIN product p ON p.guid = op.product_id
+		WHERE o.guid = $1
+	`
 
-	query := fmt.Sprintf(`
-		SELECT id, client_id, status, status_changed_time,  created_at, updated_at
-		FROM %s %s
-		LIMIT 1
-	`, r.tableName, whereClause)
-
-	row := r.db.QueryRow(ctx, query, args...)
-	err := row.Scan(
-		&o.ID,
-		&o.ClientID,
-		&o.Status,
-		&o.StatusChangedTime,
-		&o.CreatedAt,
-		&o.UpdatedAt,
-	)
+	rows, err := r.db.Query(ctx, query, id)
 	if err != nil {
-		return nil, fmt.Errorf("OrderRepo - GetOrder - r.db.QueryRow: %w", err)
+		return nil, fmt.Errorf("OrderRepo - Get - query order with products: %w", err)
+	}
+	defer rows.Close()
+
+	var order *entity.Order
+	products := make([]entity.OrderProduct, 0)
+
+	for rows.Next() {
+		var (
+			o                     entity.Order
+			product               entity.OrderProduct
+			nullStatusChangedTime sql.NullTime
+		)
+
+		err = rows.Scan(
+			&o.ID, &o.ClientID, &o.BusinessID, &o.LocationURL, &o.Status, &o.TotalPrice,
+			&o.PaymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,
+			&product.ProductID, &product.Name, &product.ImageURL, &product.Cost,
+			&product.Count, &product.ProductTotalPrice,
+		)
+		products=append(products, product)
+		if err != nil {
+			return nil, fmt.Errorf("OrderRepo - Get - scan row: %w", err)
+		}
+
+		if order == nil {
+			order = &o
+			if nullStatusChangedTime.Valid {
+				order.StatusChangedTime = &nullStatusChangedTime.Time
+			}
+		}
+
+		
 	}
 
-	return &o, nil
+	if order == nil {
+		return nil, fmt.Errorf("OrderRepo - Get - no order found with id: %s", id)
+	}
+
+	order.Products = products
+
+	return order, nil
 }
 
-// ListOrders -.
-func (r *OrderRepo) List(ctx context.Context, limit, offset uint64, filter map[string]string) (*entity.GetAllOrdersResponse, error) {
-	var orders []entity.Order
-	var args []interface{}
-	query := `SELECT guid, client_id, status, status_changed_time,  created_at, updated_at FROM "order"`
-	whereClauses := ""
-	argPos := 1
 
-	for key, value := range filter {
-		if key == "id" || key == "client_id" || key == "status" {
-			if whereClauses == "" {
-				whereClauses = fmt.Sprintf(` WHERE %s = $%d`, key, argPos)
-			} else {
-				whereClauses += fmt.Sprintf(` AND %s = $%d`, key, argPos)
-			}
-			args = append(args, value)
-			argPos++
-		}
-	}
+
+func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit, offset uint64) (*entity.GetAllOrdersResponse, error) {
+	where, args := buildWhereClause(filter)
+
+	query := fmt.Sprintf(`
+		SELECT 
+			o.guid, o.client_id, o.business_id, o.location_url, o.status, o.total_price, 
+			o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
+			p.guid, p.name, p.image_url, p.cost,
+			op.count, op.price
+		    FROM %s o
+			INNER JOIN order_products op ON o.guid = op.order_id
+			INNER JOIN product p ON p.guid = op.product_id
+			%s
+		ORDER BY o.created_at DESC
+	`, r.tableName, where)
 
 	if limit > 0 {
-		query += whereClauses + fmt.Sprintf(` LIMIT $%d OFFSET $%d`, argPos, argPos+1)
+		query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", len(args)+1, len(args)+2)
 		args = append(args, limit, offset)
-	} else {
-		query += whereClauses
 	}
 
 	rows, err := r.db.Query(ctx, query, args...)
@@ -119,32 +154,64 @@ func (r *OrderRepo) List(ctx context.Context, limit, offset uint64, filter map[s
 	}
 	defer rows.Close()
 
-	for rows.Next() {
-		var o entity.Order
-		var nullStatusChangedTime sql.NullTime
+	orderMap := make(map[string]*entity.Order) // Orderlarni ID orqali grouping qilish
+	var orderIDs []string                      // Tartib saqlash uchun
 
-		err = rows.Scan(
-			&o.ID,
-			&o.ClientID,
-			&o.Status,
+	for rows.Next() {
+		var (
+			order                  entity.Order
+			product                entity.OrderProduct
+			nullStatusChangedTime  sql.NullTime
+		)
+
+		err := rows.Scan(
+			&order.ID,
+			&order.ClientID,
+			&order.BusinessID,
+			&order.LocationURL,
+			&order.Status,
+			&order.TotalPrice,
+			&order.PaymentMethod,
 			&nullStatusChangedTime,
-			&o.CreatedAt,
-			&o.UpdatedAt,
+			&order.CreatedAt,
+			&order.UpdatedAt,
+			&product.ProductID,
+			&product.Name,
+			&product.ImageURL,
+			&product.Cost,
+			&product.Count,
+			&product.ProductTotalPrice,
 		)
 		if err != nil {
 			return nil, r.db.Error(err)
 		}
 
-		if nullStatusChangedTime.Valid {
-			o.StatusChangedTime = &nullStatusChangedTime.Time
+		if existingOrder, ok := orderMap[order.ID]; ok {
+			// Agar order oldin mavjud bo'lsa, products listiga qo'shamiz
+			if product.ProductID != "" {
+				existingOrder.Products = append(existingOrder.Products, product)
+			}
 		} else {
-			o.StatusChangedTime = nil
+			// Yangi order bo'lsa, mapga qo'shamiz
+			if nullStatusChangedTime.Valid {
+				order.StatusChangedTime = &nullStatusChangedTime.Time
+			}
+			if product.ProductID != "" {
+				order.Products = append(order.Products, product)
+			}
+			orderMap[order.ID] = &order
+			orderIDs = append(orderIDs, order.ID)
 		}
-
-		orders = append(orders, o)
 	}
 
-	countQuery := `SELECT COUNT(*) FROM "order"` + whereClauses
+	// map dan slice qilish
+	var orders []entity.Order
+	for _, id := range orderIDs {
+		orders = append(orders, *orderMap[id])
+	}
+
+	// Count uchun alohida query (bu JOIN qilingan emas!)
+	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM %s %s`, r.tableName, where)
 	var totalCount uint64
 	err = r.db.QueryRow(ctx, countQuery, args[:len(args)-(2*boolToInt(limit > 0))]...).Scan(&totalCount)
 	if err != nil {
@@ -157,70 +224,108 @@ func (r *OrderRepo) List(ctx context.Context, limit, offset uint64, filter map[s
 	}, nil
 }
 
+
+// Update - Update Order
+func (r *OrderRepo) Update(ctx context.Context, o *entity.OrderUpdate) error {
+	var updates []string
+	var args []interface{}
+	argPos := 1
+
+	if o.Status != "" {
+		updates = append(updates, fmt.Sprintf("status = $%d", argPos))
+		args = append(args, o.Status)
+		argPos++
+	}
+	if o.LocationURL != "" {
+		updates = append(updates, fmt.Sprintf("location_url = $%d", argPos))
+		args = append(args, o.LocationURL)
+		argPos++
+	}
+	if o.PaymentMethod != "" {
+		updates = append(updates, fmt.Sprintf("payment_method = $%d", argPos))
+		args = append(args, o.PaymentMethod)
+		argPos++
+	}
+
+	updates = append(updates, fmt.Sprintf("updated_at = $%d", argPos))
+	args = append(args, time.Now().UTC())
+	argPos++
+
+	if len(updates) == 0 {
+		return nil
+	}
+
+	query := fmt.Sprintf(`
+		UPDATE %s SET %s WHERE guid = $%d
+	`, r.tableName, strings.Join(updates, ", "), argPos)
+
+	args = append(args, o.ID)
+	cmd, err := r.db.Exec(ctx, query, args...)
+	if err != nil {
+		return r.db.Error(err)
+	}
+	if cmd.RowsAffected() == 0 {
+		return fmt.Errorf("OrderRepo - Update - no rows affected")
+	}
+
+	return nil
+}
+
+// Delete - Delete Order
+func (r *OrderRepo) Delete(ctx context.Context, id string) error {
+	query := fmt.Sprintf(`DELETE FROM %s WHERE guid = $1`, r.tableName)
+	cmd, err := r.db.Exec(ctx, query, id)
+	if err != nil {
+		return r.db.Error(err)
+	}
+	if cmd.RowsAffected() == 0 {
+		return fmt.Errorf("OrderRepo - Delete - no rows deleted")
+	}
+	return nil
+}
+
+// Helper function to build where clause
+func buildWhereClause(filter *entity.OrderFilter) (string, []interface{}) {
+	var where []string
+	var args []interface{}
+	argPos := 1
+
+	if filter.ID != "" {
+		where = append(where, fmt.Sprintf(`guid = $%d`, argPos))
+		args = append(args, filter.ID)
+		argPos++
+	}
+	if filter.ClientID != "" {
+		where = append(where, fmt.Sprintf(`client_id = $%d`, argPos))
+		args = append(args, filter.ClientID)
+		argPos++
+	}
+	if filter.BusinessID != "" {
+		where = append(where, fmt.Sprintf(`business_id = $%d`, argPos))
+		args = append(args, filter.BusinessID)
+		argPos++
+	}
+	if filter.Status != "" {
+		where = append(where, fmt.Sprintf(`status = $%d`, argPos))
+		args = append(args, filter.Status)
+		argPos++
+	}
+	if filter.PaymentMethod != "" {
+		where = append(where, fmt.Sprintf(`payment_method = $%d`, argPos))
+		args = append(args, filter.PaymentMethod)
+		argPos++
+	}
+
+	if len(where) > 0 {
+		return "WHERE " + strings.Join(where, " AND "), args
+	}
+	return "", args
+}
+
+
 func boolToInt(b bool) int {
 	if b {
 		return 1
 	}
 	return 0
-}
-
-// UpdateOrder -.
-func (r *OrderRepo) Update(ctx context.Context, o *entity.Order) error {
-	// Dinamik filterlar uchun
-	var updateFields []string
-	var args []interface{}
-	argPos := 1
-
-	// client_id, integration_id va boshqa atributlar uchun update qilish
-	if o.ClientID != "" {
-		updateFields = append(updateFields, fmt.Sprintf("client_id = $%d", argPos))
-		args = append(args, o.ClientID)
-		argPos++
-	}
-
-
-	if o.Status != "" {
-		updateFields = append(updateFields, fmt.Sprintf("status = $%d", argPos))
-		args = append(args, o.Status)
-		argPos++
-	}
-
-	// updated_at maydoni har doim yangilanishi kerak
-	updateFields = append(updateFields, fmt.Sprintf("updated_at = $%d", argPos))
-	args = append(args, time.Now().UTC())
-	argPos++
-
-	// IDni oxirgi argument sifatida qo'shish
-	updateFieldsStr := strings.Join(updateFields, ", ")
-	args = append(args, o.ID)
-
-	// SQL so'rovini yaratish
-	query := fmt.Sprintf(`UPDATE %s SET %s WHERE id = $%d`, r.tableName, updateFieldsStr, argPos)
-	commandTag, err := r.db.Exec(ctx, query, args...)
-	if err != nil {
-		return r.db.Error(err)
-	}
-
-	// Hech qanday satr yangilanmasa
-	if commandTag.RowsAffected() == 0 {
-		return r.db.Error(fmt.Errorf("no sql rows affected"))
-	}
-
-	return nil
-}
-
-// DeleteOrder -.
-func (r *OrderRepo) Delete(ctx context.Context, id string) error {
-	query := fmt.Sprintf(`DELETE FROM %s WHERE id = $1`, r.tableName)
-
-	commandTag, err := r.db.Exec(ctx, query, id)
-	if err != nil {
-		return r.db.Error(err)
-	}
-
-	if commandTag.RowsAffected() == 0 {
-		return r.db.Error(fmt.Errorf("no sql rows"))
-	}
-
-	return nil
 }

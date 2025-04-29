@@ -8,7 +8,6 @@ import (
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
-	"sugurta/internal/pkg/helper"
 	"sugurta/internal/usecase/category"
 
 	"net/http"
@@ -51,7 +50,7 @@ func NewCategoryRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param category body entity.CreateCategoryRequestForSwagger true "Category Details"
+// @Param category body entity.CreateCategoryRequest true "Category Details"
 // @Success 201 {object} status_http.Response{data=string} "Category created successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -61,11 +60,7 @@ func (h *categoryRoutes) createCategory(c *gin.Context) {
 		h.handleResponse(c, status_http.BadRequest, "invalid request data")
 		return
 	}
-	bussnesId, code := helper.GetBusnessIdFromToken(c, h.cfg)
-	if code != 0 {
-		h.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	}
-	category.BusinessID = bussnesId
+
 	err := h.categoryUscase.Create(c, &category)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -151,6 +146,7 @@ func (h *categoryRoutes) updateCategory(c *gin.Context) {
 // @Param name query string false "Filter by Category Name"
 // @Param limit query integer false "Limit the number of results (default: 10)"
 // @Param page query integer false "Page number for pagination (default: 1)"
+// @Param business_id query string false "Business ID"
 // @Success 200 {object} status_http.Response{data=entity.GetAllCategoriesResponse} "List of Categories"
 // @Failure 400 {object} status_http.Response{data=string} "Bad request"
 // @Failure 401 {object} status_http.Response{data=string} "Unauthorized"
@@ -159,6 +155,7 @@ func (h *categoryRoutes) ListCategories(c *gin.Context) {
 	var filter entity.CategoryFilter
 
 	filter.Name = c.Query("name")
+	filter.BusinessID = c.Query("business_id")
 
 	limit, _ := strconv.ParseUint(c.DefaultQuery("limit", "10"), 10, 64)
 	page, _ := strconv.ParseUint(c.DefaultQuery("page", "1"), 10, 64)
@@ -166,17 +163,17 @@ func (h *categoryRoutes) ListCategories(c *gin.Context) {
 	filter.Page = page
 
 	// Get business ID from token
-	businessID, code := helper.GetBusnessIdFromToken(c, h.cfg)
-	if code != 0 {
-		h.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-		return
-	}
+	// businessID, code := helper.GetBusnessIdFromToken(c, h.cfg)
+	// if code != 0 {
+	// 	h.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	// 	return
+	// }
 
-	filter.BusinessID = businessID
+	//filter.BusinessID = businessID
 
 	result, err := h.categoryUscase.List(c, filter)
 	if err != nil {
-
+		fmt.Println(err)
 		h.handleResponse(c, status_http.InternalServerError, "error listing categories")
 		return
 	}
@@ -209,6 +206,7 @@ func (h *categoryRoutes) deleteCategory(c *gin.Context) {
 			h.handleResponse(c, status_http.NotFound, "category not found")
 			return
 		}
+		fmt.Println(err)
 		h.handleResponse(c, status_http.InternalServerError, "error deleting category")
 		return
 	}

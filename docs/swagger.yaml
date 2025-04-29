@@ -89,8 +89,10 @@ definitions:
       ownerID:
         type: string
     type: object
-  entity.CreateCategoryRequestForSwagger:
+  entity.CreateCategoryRequest:
     properties:
+      business_id:
+        type: string
       name:
         type: string
     type: object
@@ -101,18 +103,33 @@ definitions:
     required:
     - name
     type: object
+  entity.CreateOrderProduct:
+    properties:
+      count:
+        type: integer
+      price:
+        type: number
+      product_id:
+        type: string
+    type: object
   entity.CreateOrderRequest:
     properties:
       business_id:
         type: string
       client_id:
         type: string
-      integration_id:
+      location_url:
         type: string
+      payment_method:
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/entity.CreateOrderProduct'
+        type: array
       status:
         type: string
-      total_cost:
-        type: integer
+      total_price:
+        type: number
     type: object
   entity.CreateProductRequest:
     properties:
@@ -130,6 +147,8 @@ definitions:
         type: integer
       discount_cost:
         type: integer
+      image_url:
+        type: string
       name:
         type: string
       short_info:
@@ -223,30 +242,55 @@ definitions:
     type: object
   entity.Order:
     properties:
-      business_id:
+      businessID:
         type: string
-      client_id:
+      clientID:
         type: string
-      created_at:
+      createdAt:
         type: string
       id:
         type: string
+      locationURL:
+        type: string
+      paymentMethod:
+        type: string
+      products:
+        description: <--- Products field qo‘shamiz
+        items:
+          $ref: '#/definitions/entity.OrderProduct'
+        type: array
       status:
         type: string
-      status_chaged_time:
+      statusChangedTime:
         type: string
-      total_cost:
+      totalPrice:
+        type: number
+      updatedAt:
+        type: string
+    type: object
+  entity.OrderProduct:
+    properties:
+      cost:
         type: integer
-      updated_at:
+      count:
+        type: integer
+      imageURL:
         type: string
+      name:
+        type: string
+      productID:
+        type: string
+      productTotalPrice:
+        description: order_products.price
+        type: number
     type: object
   entity.OrderUpdate:
     properties:
-      client_id:
-        type: string
       id:
         type: string
-      integration_id:
+      location_url:
+        type: string
+      payment_method:
         type: string
       status:
         type: string
@@ -275,6 +319,8 @@ definitions:
       discount_cost:
         type: integer
       id:
+        type: string
+      image_url:
         type: string
       name:
         type: string
@@ -368,6 +414,8 @@ definitions:
       discount_cost:
         type: integer
       id:
+        type: string
+      image_url:
         type: string
       name:
         type: string
@@ -1225,7 +1273,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/entity.CreateCategoryRequestForSwagger'
+          $ref: '#/definitions/entity.CreateCategoryRequest'
       produces:
       - application/json
       responses:
@@ -1389,6 +1437,10 @@ paths:
         in: query
         name: page
         type: integer
+      - description: Business ID
+        in: query
+        name: business_id
+        type: string
       produces:
       - application/json
       responses:
@@ -2097,9 +2149,21 @@ paths:
         in: query
         name: offset
         type: integer
-      - description: Filter by id, client_id, integration_id, status
+      - description: Client ID
         in: query
-        name: filter
+        name: client_id
+        type: string
+      - description: Business ID
+        in: query
+        name: business_id
+        type: string
+      - description: Status
+        in: query
+        name: status
+        type: string
+      - description: Payment Method
+        in: query
+        name: payment_method
         type: string
       produces:
       - application/json

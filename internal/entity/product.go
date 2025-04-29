@@ -15,6 +15,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
+		Image_url    string
 	}
 	CreateProductRequestForSwagger struct {
 		BusinessID   string `json:"business_id"`
@@ -26,6 +27,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
+		Image_url    string
 	}
 
 	Product struct {
@@ -41,6 +43,7 @@ type (
 		Discount     int       `json:"discount"`
 		CreatedAt    time.Time `json:"created_at"`
 		UpdatedAt    time.Time `json:"updated_at"`
+		Image_url    string
 	}
 
 	UpdateProductRequest struct {
@@ -53,6 +56,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
+		Image_url    string
 	}
 
 	GetAllProductsRequest struct {
