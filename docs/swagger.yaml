@@ -71,6 +71,8 @@ definitions:
     type: object
   entity.CodeInput:
     properties:
+      bussnes_id:
+        type: string
       code:
         type: string
       password:
@@ -2508,6 +2510,76 @@ paths:
       security:
       - BearerAuth: []
       summary: Send phone number to Telegram bot
+      tags:
+      - TELEGRAM
+  /telegram/start-session:
+    post:
+      consumes:
+      - application/json
+      description: Starts a new Telegram session for the given business ID
+      parameters:
+      - description: Start session request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/entity.PhoneNumber'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Session started
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Start Telegram session
+      tags:
+      - TELEGRAM
+  /telegram/stop-session:
+    post:
+      consumes:
+      - application/json
+      description: Stops the Telegram session for the given business ID
+      parameters:
+      - description: Stop session request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/entity.PhoneNumber'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Session stopped
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Stop Telegram session
       tags:
       - TELEGRAM
   /telegram/verify:

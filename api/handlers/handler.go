@@ -20,6 +20,7 @@ import (
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
+	"sugurta/internal/usecase/telegram"
 	"sugurta/internal/usecase/user"
 )
 
@@ -47,6 +48,7 @@ type HandlerOption struct {
 	BotComments botcomments.BotCommandStorage
 	Chat        chat.Chat
 	Minio       *minio.Client
+	Telegram    telegram.TelegramAccount
 }
 
 type BaseHandler struct {

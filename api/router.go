@@ -20,6 +20,7 @@ import (
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
+	"sugurta/internal/usecase/telegram"
 	"sugurta/internal/usecase/user"
 
 	"github.com/casbin/casbin"
@@ -56,6 +57,7 @@ type RouteOption struct {
 	BotComments botcomments.BotCommandStorage
 	Chat        chat.Chat
 	Minio       *minio.Client
+	Telegram    telegram.TelegramAccount
 	// Service        grpcClients.ServiceClient
 	// RefreshToken   refresh_token.RefreshToken
 	// BrokerProducer event.BrokerProducer
@@ -89,6 +91,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		BotComments: option.BotComments,
 		Chat:        option.Chat,
 		Minio:       option.Minio,
+		Telegram:    option.Telegram,
 	}
 
 	app := gin.New()

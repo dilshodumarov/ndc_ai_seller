@@ -68,15 +68,7 @@ type BotIntegrationResponse struct {
 
 
 
-type PhoneNumber struct {
-	Phone string `json:"phone"`
-}
 
-type CodeInput struct {
-	Phone    string `json:"phone"`
-	Code     string `json:"code"`
-	Password string `json:"password,omitempty"`
-}
 
 type MessageRequest struct {
 	Phone  string `json:"phone"`

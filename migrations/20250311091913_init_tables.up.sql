@@ -158,7 +158,7 @@ CREATE TABLE IF NOT EXISTS "chat_history" (
 
 CREATE TABLE IF NOT EXISTS "telegram_accaunt" (
     "guid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    "number" VARCHAR(50) NOT NULL,
+    "number" VARCHAR(50) UNIQUE NOT NULL,
     "business_id" UUID REFERENCES "business"("guid"),
     "status" VARCHAR(10) DEFAULT 'active',
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

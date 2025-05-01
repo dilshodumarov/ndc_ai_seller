@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/casbin/casbin/v2"
-	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
 	"go.uber.org/zap"
 
 	"net/http"
@@ -25,6 +25,7 @@ import (
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
+	"sugurta/internal/usecase/telegram"
 	"sugurta/internal/usecase/user"
 
 	"sugurta/api"
@@ -55,6 +56,7 @@ type App struct {
 	BotComments botcomments.BotCommandStorage
 	Chat        chat.Chat
 	Minio       *minio.Client
+	Telegram     telegram.TelegramAccount
 }
 
 func NewApp(cfg config.Config) (*App, error) {
@@ -137,6 +139,10 @@ func NewApp(cfg config.Config) (*App, error) {
 	ChatRepo := postgresql.NewChatRepo(db)
 	ChatUscase := chat.NewChatService(contextTimeout, ChatRepo)
 
+	TelegramRepo := postgresql.NewTelegramRepo(db)
+	TelegramUscase := telegram.NewTelegramService(contextTimeout, TelegramRepo)
+	
+
 	fmt.Println("order repo: ", orderUseCase)
 	fmt.Println("here 3")
 
@@ -158,6 +164,7 @@ func NewApp(cfg config.Config) (*App, error) {
 		BotComments: botCommentsUscase,
 		Chat:        ChatUscase,
 		Minio:       minioClient,
+		Telegram:    TelegramUscase,
 		// BrokerProducer: event.NewBrokerProducer(cfg.Kafka.Brokers, cfg.Kafka.Topic),
 	}, nil
 }
@@ -200,6 +207,7 @@ func (a *App) Run() error {
 		BotComments: a.BotComments,
 		Chat:        a.Chat,
 		Minio:       a.Minio,
+		Telegram:    a.Telegram,
 	})
 
 	fmt.Println("here 5")

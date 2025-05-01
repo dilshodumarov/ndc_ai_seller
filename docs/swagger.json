@@ -3676,6 +3676,114 @@
                 }
             }
         },
+        "/telegram/start-session": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Starts a new Telegram session for the given business ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "TELEGRAM"
+                ],
+                "summary": "Start Telegram session",
+                "parameters": [
+                    {
+                        "description": "Start session request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.PhoneNumber"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session started",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/telegram/stop-session": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Stops the Telegram session for the given business ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "TELEGRAM"
+                ],
+                "summary": "Stop Telegram session",
+                "parameters": [
+                    {
+                        "description": "Stop session request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.PhoneNumber"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session stopped",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/telegram/verify": {
             "post": {
                 "security": [
@@ -3842,6 +3950,9 @@
         "entity.CodeInput": {
             "type": "object",
             "properties": {
+                "bussnes_id": {
+                    "type": "string"
+                },
                 "code": {
                     "type": "string"
                 },
