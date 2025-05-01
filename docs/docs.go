@@ -1743,12 +1743,6 @@ const docTemplate = `{
                         "description": "Page number for pagination (default: 1)",
                         "name": "page",
                         "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Business ID",
-                        "name": "business_id",
-                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -3559,7 +3553,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/product/update": {
+        "/product/update/{id}": {
             "put": {
                 "security": [
                     {
@@ -3579,12 +3573,19 @@ const docTemplate = `{
                 "summary": "Update an existing product",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Product Details",
                         "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.UpdateProductRequest"
+                            "$ref": "#/definitions/entity.UpdateProductRequestForSwagger"
                         }
                     }
                 ],
@@ -3800,9 +3801,6 @@ const docTemplate = `{
         "entity.Category": {
             "type": "object",
             "properties": {
-                "business_id": {
-                    "type": "string"
-                },
                 "created_at": {
                     "type": "string"
                 },
@@ -3879,9 +3877,6 @@ const docTemplate = `{
         "entity.CreateCategoryRequest": {
             "type": "object",
             "properties": {
-                "business_id": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 }
@@ -4344,7 +4339,7 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.UpdateProductRequest": {
+        "entity.UpdateProductRequestForSwagger": {
             "type": "object",
             "properties": {
                 "category_id": {
@@ -4364,9 +4359,6 @@ const docTemplate = `{
                 },
                 "discount_cost": {
                     "type": "integer"
-                },
-                "id": {
-                    "type": "string"
                 },
                 "image_url": {
                     "type": "string"

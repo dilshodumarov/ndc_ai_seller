@@ -38,7 +38,7 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 	{
 		productGroup.POST("/create", r.createProduct)
 		productGroup.GET("/get/:id", r.getProductByID)
-		productGroup.PUT("/update", r.updateProduct)
+		productGroup.PUT("/update/:id", r.updateProduct)
 		productGroup.GET("/list", r.ListProducts)
 		productGroup.DELETE("/delete/:id", r.deleteProduct)
 	}
@@ -123,6 +123,7 @@ func (p *productRoutes) getProductByID(c *gin.Context) {
 
 	product, err := p.productUscase.Get(c, id)
 	if err != nil {
+		fmt.Println(err)
 		p.handleResponse(c, status_http.InternalServerError, "error getting product")
 		return
 	}
@@ -188,25 +189,26 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 	p.handleResponse(c, status_http.OK, result)
 }
 
-// @Router /product/update [put]
+// @Router /product/update/{id} [put]
 // @Summary Update an existing product
 // @Description Update product details by ID
 // @Tags PRODUCT
 // @Accept json
 // @Produce json
+// @Param id path string true "Product ID"
 // @Security BearerAuth
-// @Param product body entity.UpdateProductRequest true "Product Details"
+// @Param product body entity.UpdateProductRequestForSwagger true "Product Details"
 // @Failure 400 {object} status_http.Response{data=string} "Product updated successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (p *productRoutes) updateProduct(c *gin.Context) {
 	var product entity.UpdateProductRequest
-
+	id:=c.Param("id")
 	if err := c.ShouldBindJSON(&product); err != nil {
 		p.handleResponse(c, status_http.BadRequest, "invalid request")
 		return
 	}
-
+	product.ID=id
 	err := p.productUscase.Update(c, &product)
 	if err != nil {
 		fmt.Println(err)

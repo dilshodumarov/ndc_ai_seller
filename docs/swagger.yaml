@@ -40,8 +40,6 @@ definitions:
     type: object
   entity.Category:
     properties:
-      business_id:
-        type: string
       created_at:
         type: string
       id:
@@ -91,8 +89,6 @@ definitions:
     type: object
   entity.CreateCategoryRequest:
     properties:
-      business_id:
-        type: string
       name:
         type: string
     type: object
@@ -397,7 +393,7 @@ definitions:
     - email
     - password
     type: object
-  entity.UpdateProductRequest:
+  entity.UpdateProductRequestForSwagger:
     properties:
       category_id:
         type: string
@@ -411,8 +407,6 @@ definitions:
         type: integer
       discount_cost:
         type: integer
-      id:
-        type: string
       image_url:
         type: string
       name:
@@ -1435,10 +1429,6 @@ paths:
         in: query
         name: page
         type: integer
-      - description: Business ID
-        in: query
-        name: business_id
-        type: string
       produces:
       - application/json
       responses:
@@ -2442,18 +2432,23 @@ paths:
       summary: List products
       tags:
       - PRODUCT
-  /product/update:
+  /product/update/{id}:
     put:
       consumes:
       - application/json
       description: Update product details by ID
       parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Product Details
         in: body
         name: product
         required: true
         schema:
-          $ref: '#/definitions/entity.UpdateProductRequest'
+          $ref: '#/definitions/entity.UpdateProductRequestForSwagger'
       produces:
       - application/json
       responses:

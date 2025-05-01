@@ -30,11 +30,11 @@ func NewCategoryRepo(db *postgres.Postgres) *categoryRepo {
 // Create -.
 func (r *categoryRepo) Create(ctx context.Context, category *entity.CreateCategoryRequest) error {
 	query := `
-		INSERT INTO category (name, business_id, created_at, updated_at)
-		VALUES ($1, $2, $3, $4)
+		INSERT INTO category (name,  created_at, updated_at)
+		VALUES ($1, $2, $3)
 	`
 	now := time.Now()
-	_, err := r.db.Exec(ctx, query, category.Name, category.BusinessID, now, now)
+	_, err := r.db.Exec(ctx, query, category.Name, now, now)
 	if err != nil {
 		return r.db.Error(err)
 	}
@@ -46,7 +46,7 @@ func (r *categoryRepo) Get(ctx context.Context, id string) (*entity.Category, er
 	var category entity.Category
 
 	query := `
-		SELECT guid, name, business_id, created_at, updated_at
+		SELECT guid, name, created_at, updated_at
 		FROM category
 		WHERE guid = $1
 	`
@@ -54,7 +54,6 @@ func (r *categoryRepo) Get(ctx context.Context, id string) (*entity.Category, er
 	err := row.Scan(
 		&category.ID,
 		&category.Name,
-		&category.BusinessID,
 		&category.CreatedAt,
 		&category.UpdatedAt,
 	)
@@ -74,11 +73,6 @@ func (r *categoryRepo) List(ctx context.Context, filter entity.CategoryFilter) (
 	)
 	argIndex := 1
 	
-	if filter.BusinessID != "" {
-		whereClause += fmt.Sprintf(" AND business_id = $%d", argIndex)
-		args = append(args, filter.BusinessID)
-		argIndex++
-	}
 	
 	if filter.Name != "" {
 		whereClause += fmt.Sprintf(" AND name ILIKE $%d", argIndex)
@@ -96,7 +90,7 @@ func (r *categoryRepo) List(ctx context.Context, filter entity.CategoryFilter) (
 	offset := (filter.Page - 1) * filter.Limit
 	
 	baseQuery := `
-		SELECT guid, name, business_id, created_at, updated_at
+		SELECT guid, name,  created_at, updated_at
 		FROM category
 	`
 	countQuery := `SELECT COUNT(*) FROM category`
@@ -116,7 +110,6 @@ func (r *categoryRepo) List(ctx context.Context, filter entity.CategoryFilter) (
 		err = rows.Scan(
 			&category.ID,
 			&category.Name,
-			&category.BusinessID,
 			&category.CreatedAt,
 			&category.UpdatedAt,
 		)

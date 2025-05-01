@@ -146,7 +146,6 @@ func (h *categoryRoutes) updateCategory(c *gin.Context) {
 // @Param name query string false "Filter by Category Name"
 // @Param limit query integer false "Limit the number of results (default: 10)"
 // @Param page query integer false "Page number for pagination (default: 1)"
-// @Param business_id query string false "Business ID"
 // @Success 200 {object} status_http.Response{data=entity.GetAllCategoriesResponse} "List of Categories"
 // @Failure 400 {object} status_http.Response{data=string} "Bad request"
 // @Failure 401 {object} status_http.Response{data=string} "Unauthorized"
@@ -155,8 +154,6 @@ func (h *categoryRoutes) ListCategories(c *gin.Context) {
 	var filter entity.CategoryFilter
 
 	filter.Name = c.Query("name")
-	filter.BusinessID = c.Query("business_id")
-
 	limit, _ := strconv.ParseUint(c.DefaultQuery("limit", "10"), 10, 64)
 	page, _ := strconv.ParseUint(c.DefaultQuery("page", "1"), 10, 64)
 	filter.Limit = limit

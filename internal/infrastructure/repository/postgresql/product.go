@@ -65,10 +65,10 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 
 func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, error) {
 	query := `
-		SELECT id, business_id, image_url,name, category_id, short_info, description,
+		SELECT guid, business_id, image_url,name, category_id, short_info, description,
 		       cost, count, discount_cost, discount, created_at, updated_at
 		FROM product
-		WHERE id = $1
+		WHERE guid = $1
 	`
 
 	var product entity.Product
@@ -288,7 +288,7 @@ func join(s []string, sep string) string {
 }
 
 func (p *productRepo) Delete(ctx context.Context, id string) error {
-	query := `DELETE FROM product WHERE id = $1`
+	query := `DELETE FROM product WHERE guid = $1`
 
 	res, err := p.db.Exec(ctx, query, id)
 	if err != nil {
