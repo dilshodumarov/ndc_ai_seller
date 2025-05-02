@@ -104,3 +104,29 @@ type Clinet struct {
 }
 
 // Role represents a user role in the system
+
+
+type ClientFilter struct {
+	Name  string `json:"name"`  // ILIKE bo‘yicha qidiriladi
+	Phone string `json:"phone"` // ILIKE bo‘yicha qidiriladi
+	Limit int    `json:"limit"`
+	Page  int    `json:"page"`
+}
+
+type Client struct {
+	ID         string
+	PlatformID string
+	FirstName  string
+	ChatID     int64
+	BusinessID string
+	Phone      string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+}
+
+type ListClients struct{
+	Clients  []Client
+	Count     int
+	Page      int
+	Limit     int
+}

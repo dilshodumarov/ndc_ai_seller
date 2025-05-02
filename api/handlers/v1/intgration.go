@@ -95,6 +95,7 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
+	if req.Token!=""{
 	BotStart := entity.BotIntegration{
 		Token: req.Token,
 		Guid:  res.GUID,
@@ -122,6 +123,7 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 		i.handleResponse(c, status_http.OK, "Integration updated successfully")
 		return
 	}
+}
 	i.handleResponse(c, status_http.OK, "Integration updated successfully")
 }
 

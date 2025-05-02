@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
@@ -130,6 +131,7 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 
 	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
 	if err != nil {
+		fmt.Println(err)
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}

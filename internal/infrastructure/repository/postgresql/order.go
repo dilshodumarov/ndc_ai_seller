@@ -128,7 +128,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 
 
 func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit, offset uint64) (*entity.GetAllOrdersResponse, error) {
-	where, args := buildWhereClause(filter)
+	where, args := buildWhereClause(filter,"o")
 
 	query := fmt.Sprintf(`
 		SELECT 
@@ -210,8 +210,9 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		orders = append(orders, *orderMap[id])
 	}
 
+	countWhere, _ := buildWhereClause(filter, "")
 	// Count uchun alohida query (bu JOIN qilingan emas!)
-	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM %s %s`, r.tableName, where)
+	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM %s %s`, r.tableName, countWhere)
 	var totalCount uint64
 	err = r.db.QueryRow(ctx, countQuery, args[:len(args)-(2*boolToInt(limit > 0))]...).Scan(&totalCount)
 	if err != nil {
@@ -285,33 +286,40 @@ func (r *OrderRepo) Delete(ctx context.Context, id string) error {
 }
 
 // Helper function to build where clause
-func buildWhereClause(filter *entity.OrderFilter) (string, []interface{}) {
+func buildWhereClause(filter *entity.OrderFilter, alias string) (string, []interface{}) {
 	var where []string
 	var args []interface{}
 	argPos := 1
 
+	col := func(name string) string {
+		if alias != "" {
+			return fmt.Sprintf("%s.%s", alias, name)
+		}
+		return name
+	}
+
 	if filter.ID != "" {
-		where = append(where, fmt.Sprintf(`guid = $%d`, argPos))
+		where = append(where, fmt.Sprintf(`%s = $%d`, col("guid"), argPos))
 		args = append(args, filter.ID)
 		argPos++
 	}
 	if filter.ClientID != "" {
-		where = append(where, fmt.Sprintf(`client_id = $%d`, argPos))
+		where = append(where, fmt.Sprintf(`%s = $%d`, col("client_id"), argPos))
 		args = append(args, filter.ClientID)
 		argPos++
 	}
 	if filter.BusinessID != "" {
-		where = append(where, fmt.Sprintf(`business_id = $%d`, argPos))
+		where = append(where, fmt.Sprintf(`%s = $%d`, col("business_id"), argPos))
 		args = append(args, filter.BusinessID)
 		argPos++
 	}
 	if filter.Status != "" {
-		where = append(where, fmt.Sprintf(`status = $%d`, argPos))
+		where = append(where, fmt.Sprintf(`%s = $%d`, col("status"), argPos))
 		args = append(args, filter.Status)
 		argPos++
 	}
 	if filter.PaymentMethod != "" {
-		where = append(where, fmt.Sprintf(`payment_method = $%d`, argPos))
+		where = append(where, fmt.Sprintf(`%s = $%d`, col("payment_method"), argPos))
 		args = append(args, filter.PaymentMethod)
 		argPos++
 	}
@@ -321,6 +329,7 @@ func buildWhereClause(filter *entity.OrderFilter) (string, []interface{}) {
 	}
 	return "", args
 }
+
 
 
 func boolToInt(b bool) int {

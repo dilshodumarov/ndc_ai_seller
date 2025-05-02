@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -64,6 +65,7 @@ func NewAuthRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) 
 
 	authGroup := apiV1Group.Group("/auth")
 	{
+
 		authGroup.POST("/register", r.register)
 		authGroup.POST("/verify", r.verify)
 		authGroup.POST("/refresh-token/:token", r.refreshAccessToken)
@@ -72,6 +74,9 @@ func NewAuthRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) 
 		authGroup.POST("/verify-forgot-password", r.verifyForgotPassword)
 		authGroup.DELETE("/delete/:id", r.deleteAccount)
 		authGroup.POST("/update-password", r.updatePassword)
+		authGroup.GET("/clients/list", r.ListClients)
+		authGroup.GET("/clients/:id", r.GetClientByID)
+
 	}
 }
 
@@ -272,7 +277,7 @@ func (a *authRoutes) verify(c *gin.Context) {
 	}
 
 	// Generate JWT tokens
-	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.BusinessID,"user", a.cfg.JWT.Secret, 12) // 12 hours
+	accessToken, refreshToken, err := helper.GenerateJWT(userResp.ID, userResp.BusinessID, "user", a.cfg.JWT.Secret, 12) // 12 hours
 	if err != nil {
 		a.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
@@ -553,6 +558,78 @@ func (a *authRoutes) deleteAccount(c *gin.Context) {
 
 	// Success response
 	a.handleResponse(c, status_http.OK, "Successfully deleted")
+}
+
+// @Router /auth/clients/list [get]
+// @Summary Get list of clients
+// @Description Get a list of clients with optional filtering by name and phone, and pagination
+// @Security BearerAuth
+// @Tags AUTH
+// @Accept json
+// @Produce json
+// @Param name query string false "Filter by name"
+// @Param phone query string false "Filter by phone"
+// @Param limit query int false "Limit the number of clients" default(10)
+// @Param page query int false "Page number for pagination" default(1)
+// @Success 200 {array} entity.Client "Success"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+func (r *authRoutes) ListClients(c *gin.Context) {
+
+	filter := entity.ClientFilter{
+		Name:  c.DefaultQuery("name", ""),
+		Phone: c.DefaultQuery("phone", ""),
+	}
+
+	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	if err != nil {
+		limit = 10 
+	}
+
+	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+	if err != nil {
+		page = 1 
+	}
+
+	filter.Limit = limit
+	filter.Page = page
+
+	clients, err := r.userUseCase.ListClients(c, filter)
+	if err != nil {
+
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	r.handleResponse(c, status_http.OK, clients)
+}
+
+// @Router /auth/clients/{id} [get]
+// @Summary Get client by ID
+// @Description Retrieve a single client by its unique identifier (GUID)
+// @Security BearerAuth
+// @Tags AUTH
+// @Accept json
+// @Produce json
+// @Param id path string true "Client ID (GUID)"
+// @Success 200 {object} entity.Client "Success"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 404 {object} status_http.Response{data=string} "Client Not Found"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+func (r *authRoutes) GetClientByID(c *gin.Context) {
+	id := c.Param("id")
+
+	client, err := r.userUseCase.GetClientByID(c, id)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			r.handleResponse(c, status_http.NotFound, err.Error())
+			return
+		}
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	r.handleResponse(c, status_http.OK, client)
 }
 
 // handleResponse handles the HTTP response

@@ -82,8 +82,11 @@ func (p *businessRepo) List(ctx context.Context, req entity.GetAllBusinessesRequ
 	}
 
 	offset := (req.Page - 1) * req.Limit
-	args := []interface{}{}
-	query := fmt.Sprintf(
+
+	filterArgs := []interface{}{}
+	queryArgs := []interface{}{}
+
+	baseQuery := fmt.Sprintf(
 		"SELECT guid, owner_id, name, description, created_at, updated_at FROM %s WHERE deleted_at IS NULL",
 		p.tableName,
 	)
@@ -94,36 +97,28 @@ func (p *businessRepo) List(ctx context.Context, req entity.GetAllBusinessesRequ
 
 	// Filtering
 	if req.OwnerID != "" {
-		query += " AND owner_id = $" + fmt.Sprint(len(args)+1)
-		countQuery += " AND owner_id = $" + fmt.Sprint(len(args)+1)
-		args = append(args, req.OwnerID)
+		baseQuery += " AND owner_id = $" + fmt.Sprint(len(filterArgs)+1)
+		countQuery += " AND owner_id = $" + fmt.Sprint(len(filterArgs)+1)
+		filterArgs = append(filterArgs, req.OwnerID)
 	}
 
-	// LIMIT va OFFSET qo‘shamiz (argumentlar soniga qarab)
-	query += " LIMIT $" + fmt.Sprint(len(args)+1)
-	args = append(args, req.Limit)
+	// Add limit and offset after filters
+	queryArgs = append(queryArgs, filterArgs...) // copy filters first
+	baseQuery += " LIMIT $" + fmt.Sprint(len(queryArgs)+1)
+	queryArgs = append(queryArgs, req.Limit)
 
-	query += " OFFSET $" + fmt.Sprint(len(args)+1)
-	args = append(args, offset)
+	baseQuery += " OFFSET $" + fmt.Sprint(len(queryArgs)+1)
+	queryArgs = append(queryArgs, offset)
 
 	// Total count
 	var total int
-	if len(args) > 2 {
-		// OwnerID bilan
-		err := p.db.QueryRow(ctx, countQuery, args[0]).Scan(&total)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get total count: %w", err)
-		}
-	} else {
-		// OwnerID yo‘q
-		err := p.db.QueryRow(ctx, countQuery).Scan(&total)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get total count: %w", err)
-		}
+	err := p.db.QueryRow(ctx, countQuery, filterArgs...).Scan(&total)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get total count: %w", err)
 	}
 
 	// Query bajarish
-	rows, err := p.db.Query(ctx, query, args...)
+	rows, err := p.db.Query(ctx, baseQuery, queryArgs...)
 	if err != nil {
 		return nil, p.db.Error(err)
 	}
@@ -147,6 +142,7 @@ func (p *businessRepo) List(ctx context.Context, req entity.GetAllBusinessesRequ
 	businesses.Total = total
 	return &businesses, nil
 }
+
 
 
 

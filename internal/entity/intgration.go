@@ -13,9 +13,11 @@ type IntegrationCreateForSwagger struct {
 	IntegrationType  string
 }
 type IntegrationUpdate struct {
-	ID    string
-	Token string
-	Status string
+	ID                string
+	Token             string
+	PromptText        string
+	TokenLimit        int
+	IntelligenceLevel int
 }
 
 type IntegrationUpdateStatus struct {
@@ -42,6 +44,9 @@ type IntegrationGetResponse struct {
 	Status           string
 	StartedAt        time.Time
 	StoppedAt        time.Time 
+	PromptText        string
+	TokenLimit        int
+	IntelligenceLevel int
 }
 
 type IntegrationUpdateResponse struct {

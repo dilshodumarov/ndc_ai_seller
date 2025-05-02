@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
@@ -46,7 +47,7 @@ func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		business.GET("/list", r.GetAllBusinesses)
 		business.Any("/webhook/instagram", r.HandleInstagramWebhook)
 		business.Any("/oauth/callback", r.HandleInstagramCallback)
-		
+
 	}
 }
 
@@ -192,12 +193,26 @@ func (b *businessRoutes) DeleteBusiness(c *gin.Context) {
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 // @Router /business/list [get]
 func (b *businessRoutes) GetAllBusinesses(c *gin.Context) {
+	limitStr := c.Query("limit")
+	pageStr := c.Query("page")
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		limit = 10 // default value
+	}
+
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		page = 1 // default value
+	}
+
 	req := entity.GetAllBusinessesRequest{
-		Limit:   c.GetInt("limit"),
-		Page:    c.GetInt("page"),
+		Limit:   limit,
+		Page:    page,
 		OwnerID: c.Query("user_id"),
 	}
 
+	fmt.Println(req)
 	// UserId, code := helper.GetUserIdFromToken(c, b.Config)
 	// if code != 0 {
 

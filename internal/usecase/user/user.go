@@ -197,3 +197,37 @@ func (u *userService) Delete(ctx context.Context, id string) error {
 
 	return u.userRepo.Delete(ctx, id)
 }
+
+
+func (u *userService) ListClients(ctx context.Context, filter entity.ClientFilter) (*entity.ListClients, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
+	defer cancel()
+
+	// // tracing
+	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
+	// defer span.End()
+
+	user, err := u.userRepo.ListClients(ctx,filter)
+	if err != nil {
+		// a.log.Error(fmt.Sprintf("GetUserByID - error getting user by id: %v", err))
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (u *userService) GetClientByID(ctx context.Context, id string) (*entity.Client, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
+	defer cancel()
+
+	// // tracing
+	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
+	// defer span.End()
+
+	user, err := u.userRepo.GetClientByID(ctx,id)
+	if err != nil {
+		// a.log.Error(fmt.Sprintf("GetUserByID - error getting user by id: %v", err))
+		return nil, err
+	}
+	return user, nil
+}

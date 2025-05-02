@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/postgres"
 )
@@ -42,15 +43,44 @@ func (r *integrationRepo) Create(ctx context.Context, req *entity.IntegrationCre
 }
 
 func (r *integrationRepo) Update(ctx context.Context, req *entity.IntegrationUpdate) (*entity.IntegrationUpdateResponse, error) {
+	setClauses := []string{"updated_at = CURRENT_TIMESTAMP"}
+	args := []interface{}{}
+	argPos := 1
+
+	if req.Token != "" {
+		setClauses = append(setClauses, fmt.Sprintf("integration_token = $%d", argPos))
+		args = append(args, req.Token)
+		argPos++
+	}
+	if req.PromptText != "" {
+		setClauses = append(setClauses, fmt.Sprintf("prompt_text = $%d", argPos))
+		args = append(args, req.PromptText)
+		argPos++
+	}
+	if req.TokenLimit != 0 {
+		setClauses = append(setClauses, fmt.Sprintf("token_limit = $%d", argPos))
+		args = append(args, req.TokenLimit)
+		argPos++
+	}
+	if req.IntelligenceLevel != 0 {
+		setClauses = append(setClauses, fmt.Sprintf("intelligence_level = $%d", argPos))
+		args = append(args, req.IntelligenceLevel)
+		argPos++
+	}
+
+	// Har doim kerak: guid va deleted_at IS NULL
+	setClause := strings.Join(setClauses, ", ")
+	args = append(args, req.ID)
+
 	query := fmt.Sprintf(`
 		UPDATE %s 
-		SET integration_token = $1, updated_at = CURRENT_TIMESTAMP 
-		WHERE guid = $2 AND deleted_at IS NULL
-		RETURNING integration_type,owner_id
-	`, r.tableName)
+		SET %s
+		WHERE guid = $%d AND deleted_at IS NULL
+		RETURNING integration_type, owner_id
+	`, r.tableName, setClause, argPos)
 
 	var integration entity.IntegrationUpdateResponse
-	err := r.db.QueryRow(ctx, query, req.Token, req.ID).Scan(&integration.Itype, &integration.GUID)
+	err := r.db.QueryRow(ctx, query, args...).Scan(&integration.Itype, &integration.GUID)
 	if err != nil {
 		return nil, r.db.Error(err)
 	}
@@ -105,7 +135,8 @@ func (r *integrationRepo) Delete(ctx context.Context, id string) error {
 
 func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.IntegrationRequest) (*entity.IntegrationGetResponse, error) {
 	query := fmt.Sprintf(`
-		SELECT guid,integration_token, integration_type, status, started_at, stoped_at 
+		SELECT guid, integration_token, integration_type, status, started_at, stoped_at,
+		       prompt_text, token_limit, intelligence_level
 		FROM %s 
 		WHERE owner_id = $1 AND deleted_at IS NULL
 	`, r.tableName)
@@ -113,6 +144,7 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 	var (
 		startedAt sql.NullTime
 		stoppedAt sql.NullTime
+		prompt    sql.NullString
 		res       entity.IntegrationGetResponse
 	)
 
@@ -123,17 +155,22 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 		&res.Status,
 		&startedAt,
 		&stoppedAt,
+		&prompt,
+		&res.TokenLimit,
+		&res.IntelligenceLevel,
 	)
 	if err != nil {
 		return nil, r.db.Error(err)
 	}
 
-	
 	if startedAt.Valid {
 		res.StartedAt = startedAt.Time
 	}
 	if stoppedAt.Valid {
 		res.StoppedAt = stoppedAt.Time
+	}
+	if prompt.Valid {
+		res.PromptText = prompt.String
 	}
 
 	return &res, nil

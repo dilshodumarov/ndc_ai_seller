@@ -12,4 +12,6 @@ type User interface {
 	Update(ctx context.Context, investor *entity.User) error
 	UpdatePassword(ctx context.Context, investor *entity.UpdatePasswordRequest) error
 	Delete(ctx context.Context, guid string) error
+	ListClients(ctx context.Context, filter entity.ClientFilter) (*entity.ListClients, error)
+	GetClientByID(ctx context.Context, id string) (*entity.Client, error)
 }

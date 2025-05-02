@@ -49,6 +49,25 @@ definitions:
       updated_at:
         type: string
     type: object
+  entity.Client:
+    properties:
+      businessID:
+        type: string
+      chatID:
+        type: integer
+      createdAt:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: string
+      phone:
+        type: string
+      platformID:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   entity.ClientType:
     properties:
       created_at:
@@ -203,21 +222,31 @@ definitions:
         type: string
       integrationType:
         type: string
+      intelligenceLevel:
+        type: integer
+      promptText:
+        type: string
       startedAt:
         type: string
       status:
         type: string
       stoppedAt:
         type: string
+      tokenLimit:
+        type: integer
     type: object
   entity.IntegrationUpdate:
     properties:
       id:
         type: string
-      status:
+      intelligenceLevel:
+        type: integer
+      promptText:
         type: string
       token:
         type: string
+      tokenLimit:
+        type: integer
     type: object
   entity.IntegrationUpdateStatus:
     properties:
@@ -483,6 +512,113 @@ info:
   title: Go Clean Template API
   version: "1.0"
 paths:
+  /auth/clients/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single client by its unique identifier (GUID)
+      parameters:
+      - description: Client ID (GUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/entity.Client'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: Client Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get client by ID
+      tags:
+      - AUTH
+  /auth/clients/list:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of clients with optional filtering by name and phone,
+        and pagination
+      parameters:
+      - description: Filter by name
+        in: query
+        name: name
+        type: string
+      - description: Filter by phone
+        in: query
+        name: phone
+        type: string
+      - default: 10
+        description: Limit the number of clients
+        in: query
+        name: limit
+        type: integer
+      - default: 1
+        description: Page number for pagination
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/entity.Client'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get list of clients
+      tags:
+      - AUTH
   /auth/delete/{id}:
     delete:
       consumes:
