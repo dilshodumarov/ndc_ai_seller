@@ -969,10 +969,6 @@ paths:
         in: query
         name: role_id
         type: string
-      - description: Filter by creation date (YYYY-MM-DD)
-        in: query
-        name: created_at
-        type: string
       - default: 10
         description: Limit the number of users
         in: query

@@ -643,7 +643,6 @@ func (r *authRoutes) GetClientByID(c *gin.Context) {
 // @Produce json
 // @Param is_active query bool false "Filter by active status"
 // @Param role_id query string false "Filter by role ID"
-// @Param created_at query string false "Filter by creation date (YYYY-MM-DD)"
 // @Param limit query int false "Limit the number of users" default(10)
 // @Param page query int false "Page number for pagination" default(1)
 // @Success 200 {array} entity.User "List of users"
@@ -665,8 +664,6 @@ func (r *authRoutes) ListUsers(c *gin.Context) {
 	}
 
 	filter.RoleID = c.Query("role_id")
-
-	filter.CreatedAt = c.Query("created_at")
 
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	if err != nil || limit < 1 {

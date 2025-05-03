@@ -708,12 +708,6 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
-                        "type": "string",
-                        "description": "Filter by creation date (YYYY-MM-DD)",
-                        "name": "created_at",
-                        "in": "query"
-                    },
-                    {
                         "type": "integer",
                         "default": 10,
                         "description": "Limit the number of users",

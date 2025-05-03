@@ -415,24 +415,26 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 		}
 		clients = append(clients, c)
 	}
-
-	// Umumiy sonni olish uchun COUNT qo'shamiz
-	countQuery := `
+		countQuery := `
 		SELECT COUNT(*)
 		FROM client
 		WHERE 1=1
 	`
 	argsCount := []interface{}{}
+	countArgIdx := 1
+
 	if filter.Name != "" {
-		countQuery += fmt.Sprintf(" AND first_name ILIKE $%d", argIdx)
+		countQuery += fmt.Sprintf(" AND first_name ILIKE $%d", countArgIdx)
 		argsCount = append(argsCount, "%"+filter.Name+"%")
-		argIdx++
+		countArgIdx++
 	}
 
 	if filter.Phone != "" {
-		countQuery += fmt.Sprintf(" AND phone ILIKE $%d", argIdx)
+		countQuery += fmt.Sprintf(" AND phone ILIKE $%d", countArgIdx)
 		argsCount = append(argsCount, "%"+filter.Phone+"%")
+		countArgIdx++
 	}
+
 
 	var totalCount int
 	err = r.db.QueryRow(ctx, countQuery, argsCount...).Scan(&totalCount)
