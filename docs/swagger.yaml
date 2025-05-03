@@ -390,6 +390,27 @@ definitions:
       updated_at:
         type: string
     type: object
+  entity.SendMessageResponse:
+    properties:
+      ai_response:
+        type: string
+      business_id:
+        type: string
+      chatid:
+        type: integer
+      from:
+        type: string
+      message:
+        type: string
+      message_id:
+        type: integer
+      platform:
+        type: string
+      reply_to_message_id:
+        type: integer
+      timestamp:
+        type: string
+    type: object
   entity.UpdateBusinessRequestForSwagger:
     properties:
       description:
@@ -879,6 +900,119 @@ paths:
       security:
       - BearerAuth: []
       summary: Update password
+      tags:
+      - AUTH
+  /auth/users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a single user by their unique identifier (GUID)
+      operationId: get-user-by-id
+      parameters:
+      - description: User ID (GUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/entity.User'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: User Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get user by ID
+      tags:
+      - AUTH
+  /auth/users/list:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of users with optional filtering by is_active, role_id,
+        created_at, and pagination
+      operationId: list-users
+      parameters:
+      - description: Filter by active status
+        in: query
+        name: is_active
+        type: boolean
+      - description: Filter by role ID
+        in: query
+        name: role_id
+        type: string
+      - description: Filter by creation date (YYYY-MM-DD)
+        in: query
+        name: created_at
+        type: string
+      - default: 10
+        description: Limit the number of users
+        in: query
+        name: limit
+        type: integer
+      - default: 1
+        description: Page number for pagination
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of users
+          schema:
+            items:
+              $ref: '#/definitions/entity.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get list of users
       tags:
       - AUTH
   /auth/verify:
@@ -1667,6 +1801,65 @@ paths:
       summary: Update an existing category
       tags:
       - CATEGORY
+  /chat/list/{chatid}/{bussnesid}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve chat messages (user or AI) by a given Chat ID and Business
+        ID
+      parameters:
+      - description: Chat ID
+        in: path
+        name: chatid
+        required: true
+        type: integer
+      - description: Business ID
+        in: path
+        name: bussnesid
+        required: true
+        type: string
+      - description: 'Maximum number of chat messages to return. If 0 or not provided,
+          all messages will be returned. Default: 100'
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Chat history list
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.SendMessageResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get list of chat history by ChatID and BusinessID
+      tags:
+      - CHAT
   /client-type/create:
     post:
       consumes:

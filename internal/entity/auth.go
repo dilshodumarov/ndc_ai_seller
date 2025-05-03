@@ -21,7 +21,7 @@ type (
 		Email        string    `json:"email"`
 		PhoneNumber  string    `json:"phone_number"`
 		Password     string    `json:"-"`
-		IsActive     bool      `json:"is_active"`
+		IsActive     *bool      `json:"is_active"`
 		RoleID       string    `json:"role_id"`
 		RoleData     Role      `json:"role_data"`
 		CreatedAt    time.Time `json:"created_at"`
@@ -30,6 +30,14 @@ type (
 		RefreshToken string    `json:"refresh_token,omitempty"`
 		BusinessID  string    `json:"business_id,omitempty"`
 	}
+	UserFilter struct {
+		IsActive  *bool
+		RoleID    string
+		CreatedAt string
+		Offset    uint64
+		Limit     uint64
+	}
+	
 
 	ListUsers struct {
 		Items []User `json:"itmes"`

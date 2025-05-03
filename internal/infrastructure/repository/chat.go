@@ -8,7 +8,7 @@ import (
 type Chat interface {
 	Create(ctx context.Context, h *entity.ChatHistory) error
 	Get(ctx context.Context, guid string) (*entity.ChatHistory, error)
-	List(ctx context.Context, chatID int64) ([]*entity.ChatHistory, error)
+	List(ctx context.Context, req *entity.ListChatHistoryRequest) ([]*entity.SendMessageResponse, error)
 	Update(ctx context.Context, h *entity.ChatHistory) error
 	Delete(ctx context.Context, guid string) error
 }

@@ -9,7 +9,6 @@ import (
 	"sugurta/internal/pkg/postgres"
 	"time"
 
-	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx"
 )
 
@@ -29,21 +28,6 @@ func NewUserRepo(db *postgres.Postgres) *userRepo {
 		tableName: userTableName,
 		db:        db,
 	}
-}
-func (p *userRepo) userSelectQueryPrefix() squirrel.SelectBuilder {
-	return p.db.Builder.
-		Select(
-			"'guid'",
-			"'first_name'",
-			"'last_name'",
-			"'email'",
-			"'phone_number'",
-			"'password'",
-			"'role_id'",
-			"'is_active'",
-			"'created_at'",
-			"'updated_at'",
-		).From(p.tableName)
 }
 
 // CreateUser -.
@@ -70,14 +54,13 @@ func (p *userRepo) Create(ctx context.Context, u *entity.User) (*entity.User, er
 
 	var insertedUser entity.User
 
-	// Userni yaratish va olingan role_id ni saqlash
 	err = p.db.QueryRow(ctx, query,
 		u.FirstName,
 		u.LastName,
 		u.Email,
 		u.PhoneNumber,
 		u.Password,
-		roleID, // Yangi olingan role ID sini qo‘shamiz
+		roleID,
 		u.IsActive,
 	).Scan(
 		&insertedUser.ID,
@@ -181,44 +164,101 @@ func (p *userRepo) Get(ctx context.Context, params map[string]string) (*entity.U
 	return &user, nil
 }
 
-func (p *userRepo) List(ctx context.Context, limit, offset uint64, filter map[string]string) ([]*entity.User, error) {
-	// ctx, span := otlp.Start(ctx, userServiceName, userSpanRepoPrefix+"List")
-	// defer span.End()
+func (p *userRepo) List(ctx context.Context, filter entity.UserFilter) ([]*entity.User, error) {
+	var users []*entity.User
 
-	var (
-		users []*entity.User
-	)
-	queryBuilder := p.userSelectQueryPrefix()
+	// Asosiy so'rov
+	query := `
+		SELECT guid, first_name, last_name, email, phone_number, password, role_id, is_active, created_at, updated_at
+		FROM "user"
+		WHERE 1=1
+	`
+	args := []interface{}{}
+	argIdx := 1
 
-	if limit != 0 {
-		queryBuilder = queryBuilder.Limit(limit).Offset(offset)
+	// Filtrlash parametrlariga qo'shish
+	if filter.IsActive != nil {
+		query += fmt.Sprintf(" AND is_active = $%d", argIdx)
+		args = append(args, *filter.IsActive)
+		argIdx++
 	}
 
-	for key, value := range filter {
-		if key == "is_active" || key == "role_id" {
-			queryBuilder = queryBuilder.Where(p.db.Sq.Equal(key, value))
-			continue
-		}
-		if key == "created_at" {
-			queryBuilder = queryBuilder.Where("created_at=?", value)
-			continue
-		}
+	if filter.RoleID != "" {
+		query += fmt.Sprintf(" AND role_id = $%d", argIdx)
+		args = append(args, filter.RoleID)
+		argIdx++
 	}
 
-	query, args, err := queryBuilder.ToSql()
-	if err != nil {
-		return nil, p.db.ErrSQLBuild(err, fmt.Sprintf("%s %s", p.tableName, "list"))
+	if filter.CreatedAt != "" {
+		query += fmt.Sprintf(" AND created_at = $%d", argIdx)
+		args = append(args, filter.CreatedAt)
+		argIdx++
 	}
 
+	// Pagination
+	limit := filter.Limit
+	if limit <= 0 {
+		limit = 10
+	}
+	page := filter.Offset
+	if page <= 0 {
+		page = 1
+	}
+	offset := (page - 1) * limit
+
+	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIdx, argIdx+1)
+	args = append(args, limit, offset)
+
+	// So'rovni bajarish
 	rows, err := p.db.Query(ctx, query, args...)
 	if err != nil {
 		return nil, p.db.Error(err)
 	}
 	defer rows.Close()
+
+	// Natijalarni yig'ish
 	users = make([]*entity.User, 0)
 	for rows.Next() {
 		var user entity.User
-		if err = rows.Scan(
+		if err := rows.Scan(
+			&user.ID,
+			&user.FirstName,
+			&user.LastName,
+			&user.Email,
+			&user.PhoneNumber,
+			&user.Password,
+			&user.RoleID,
+			&user.IsActive,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		); err != nil {
+			return nil, p.db.Error(err)
+		}
+		users = append(users, &user)
+	}
+
+	return users, nil
+}
+
+func (p *userRepo) GetByIDs(ctx context.Context, id string) ([]*entity.User, error) {
+
+	query := `
+		SELECT 
+			guid, first_name, last_name, email, phone_number, password, role_id, is_active, created_at, updated_at
+		FROM "user"
+		WHERE guid =$1
+	`
+
+	rows, err := p.db.Query(ctx, query, id)
+	if err != nil {
+		return nil, p.db.Error(err)
+	}
+	defer rows.Close()
+
+	var users []*entity.User
+	for rows.Next() {
+		var user entity.User
+		if err := rows.Scan(
 			&user.ID,
 			&user.FirstName,
 			&user.LastName,
@@ -348,11 +388,9 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 	}
 	offset := (page - 1) * limit
 
-	// Pagination uchun LIMIT va OFFSET qo'shish
 	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIdx, argIdx+1)
 	args = append(args, limit, offset)
 
-	// So'rovni bajarish
 	rows, err := r.db.Query(ctx, query, args...)
 	if err != nil {
 		return nil, r.db.Error(err)

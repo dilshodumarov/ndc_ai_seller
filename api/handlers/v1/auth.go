@@ -76,6 +76,8 @@ func NewAuthRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) 
 		authGroup.POST("/update-password", r.updatePassword)
 		authGroup.GET("/clients/list", r.ListClients)
 		authGroup.GET("/clients/:id", r.GetClientByID)
+		authGroup.GET("/users/:id", r.GetUserByID)
+		authGroup.GET("/users/list", r.ListUsers)
 
 	}
 }
@@ -583,12 +585,12 @@ func (r *authRoutes) ListClients(c *gin.Context) {
 
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	if err != nil {
-		limit = 10 
+		limit = 10
 	}
 
 	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
 	if err != nil {
-		page = 1 
+		page = 1
 	}
 
 	filter.Limit = limit
@@ -631,6 +633,98 @@ func (r *authRoutes) GetClientByID(c *gin.Context) {
 
 	r.handleResponse(c, status_http.OK, client)
 }
+
+// @Router /auth/users/list [get]
+// @Summary Get list of users
+// @Description Get a list of users with optional filtering by is_active, role_id, created_at, and pagination
+// @Security BearerAuth
+// @Tags AUTH
+// @Accept json
+// @Produce json
+// @Param is_active query bool false "Filter by active status"
+// @Param role_id query string false "Filter by role ID"
+// @Param created_at query string false "Filter by creation date (YYYY-MM-DD)"
+// @Param limit query int false "Limit the number of users" default(10)
+// @Param page query int false "Page number for pagination" default(1)
+// @Success 200 {array} entity.User "List of users"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @ID list-users
+func (r *authRoutes) ListUsers(c *gin.Context) {
+	var filter entity.UserFilter
+
+	// is_active ni bool ga parse qilish
+	isActiveStr := c.Query("is_active")
+	if isActiveStr != "" {
+		isActive, err := strconv.ParseBool(isActiveStr)
+		if err != nil {
+			r.handleResponse(c, status_http.BadRequest, "Invalid is_active value")
+			return
+		}
+		filter.IsActive = &isActive
+	}
+
+	filter.RoleID = c.Query("role_id")
+
+	filter.CreatedAt = c.Query("created_at")
+
+	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+	filter.Limit = uint64(limit)
+
+	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+	filter.Offset = uint64(page)
+
+	
+	users, err := r.userUseCase.List(c, filter)
+	if err != nil {
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	r.handleResponse(c, status_http.OK, users)
+}
+
+
+// @Router /auth/users/{id} [get]
+// @Summary Get user by ID
+// @Description Retrieve a single user by their unique identifier (GUID)
+// @Security BearerAuth
+// @Tags AUTH
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID (GUID)"
+// @Success 200 {object} entity.User "Success"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 404 {object} status_http.Response{data=string} "User Not Found"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @ID get-user-by-id
+func (r *authRoutes) GetUserByID(c *gin.Context) {
+	id := c.Param("id")
+
+	users, err := r.userUseCase.GetByIDs(c, id)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			r.handleResponse(c, status_http.NotFound, err.Error())
+			return
+		}
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	if len(users) == 0 {
+		r.handleResponse(c, status_http.NotFound, "user not found")
+		return
+	}
+
+	r.handleResponse(c, status_http.OK, users[0])
+}
+
 
 // handleResponse handles the HTTP response
 func (h *authRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {

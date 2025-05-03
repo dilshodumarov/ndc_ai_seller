@@ -86,8 +86,7 @@ func (u *userService) Get(ctx context.Context, params map[string]string) (*entit
 	return admin, nil
 }
 
-// GetUserByEmail gets a user by email
-func (u *userService) List(ctx context.Context, limit uint64, offset uint64, filter map[string]string) ([]*entity.User, error) {
+func (u *userService) GetByIDs(ctx context.Context, id string) ([]*entity.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
 	defer cancel()
 
@@ -95,7 +94,26 @@ func (u *userService) List(ctx context.Context, limit uint64, offset uint64, fil
 	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
 	// defer span.End()
 
-	user, err := u.userRepo.List(ctx, limit, offset, filter)
+	admin, err := u.userRepo.GetByIDs(ctx, id)
+	if err != nil {
+		// a.log.Error(fmt.Sprintf("GetUserByEmail - error getting user by email: %v", err))
+		return nil, err
+	}
+
+	return admin, nil
+}
+
+
+// GetUserByEmail gets a user by email
+func (u *userService)  List(ctx context.Context, filter entity.UserFilter) ([]*entity.User, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
+	defer cancel()
+
+	// // tracing
+	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
+	// defer span.End()
+
+	user, err := u.userRepo.List(ctx,filter)
 	if err != nil {
 		// a.log.Error(fmt.Sprintf("GetUserByID - error getting user by id: %v", err))
 		return nil, err

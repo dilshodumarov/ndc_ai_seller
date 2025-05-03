@@ -2,10 +2,10 @@ package v1
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"sugurta/api/handlers"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
@@ -42,6 +42,7 @@ func NewWebsocketRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpt
 		websocketGroup.GET("chat/connect", r.WebSocketHandler)
 		websocketGroup.POST("/chat/send-message", r.SendChatMessage)
 	}
+	apiV1Group.GET("/chat/list/:chatid/:bussnesid",r.ListChat)
 }
 
 var upgrader = websocket.Upgrader{
@@ -69,7 +70,6 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 	h.AddClient(userID, conn)
 	h.log.Info("New WebSocket client connected", zap.String("userID", userID))
 
-	
 	go func() {
 		for {
 			_, msg, err := conn.ReadMessage()
@@ -82,7 +82,7 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 				break
 			}
 			fmt.Println("message: ", string(msg))
-			resp, err := http.Post("http://ai-seller-bot:8081/send-message", "application/json", bytes.NewBuffer(msg))
+			resp, err := http.Post("http://localhost:8081/send-message", "application/json", bytes.NewBuffer(msg))
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 				return
@@ -96,10 +96,10 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bot start" + BotResp.Message})
 				return
 			}
-			h.log.Info("Message send succesfully", zap.String("message",string(msg)))
+			h.log.Info("Message send succesfully", zap.String("message", string(msg)))
 
 			// optional: DB ga saqlash, boshqa foydalanuvchiga yuborish, logger, AI javob, va hokazo
-			
+
 		}
 	}()
 }
@@ -111,7 +111,7 @@ func (h *websocketRoutes) AddClient(userID string, conn *websocket.Conn) {
 }
 
 func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
-	var msg entity.ChatHistory
+	var msg entity.SendMessageResponse
 	if err := c.ShouldBindJSON(&msg); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON: " + err.Error()})
 		return
@@ -122,7 +122,7 @@ func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
 	h.mu.Unlock()
 
 	if !exists {
-		h.log.Warn("No WebSocket connection for user", zap.String("platformID", msg.PlatformID))
+		h.log.Warn("No WebSocket connection for user", zap.String("platformID", msg.BusinessId))
 		c.JSON(http.StatusNotFound, gin.H{"error": "No WebSocket connection for this user"})
 		return
 	}
@@ -138,17 +138,61 @@ func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
 		h.log.Error("WebSocket send error", zap.Error(err))
 
 		h.mu.Lock()
-		delete(h.clients, msg.PlatformID)
+		delete(h.clients, msg.BusinessId)
 		h.mu.Unlock()
 
 		conn.Close()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "WebSocket send error"})
 		return
 	}
-	err=h.ChatRepo.Create(context.TODO(),&msg)
-	if err != nil {
-		h.log.Error("Failed create chat history", zap.Error(err))
+	// err=h.ChatRepo.Create(context.TODO(),&msg)
+	// if err != nil {
+	// 	h.log.Error("Failed create chat history", zap.Error(err))
+	// 	return
+	// }
+	c.JSON(http.StatusOK, gin.H{"message": "Message sent successfully"})
+}
+
+// ListChatHistory godoc
+// @Summary Get list of chat history by ChatID and BusinessID
+// @Description Retrieve chat messages (user or AI) by a given Chat ID and Business ID
+// @Tags CHAT
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param chatid path int true "Chat ID"
+// @Param bussnesid path string true "Business ID"
+// @Param limit query int false "Maximum number of chat messages to return. If 0 or not provided, all messages will be returned. Default: 100"
+// @Success 200 {object} status_http.Response{data=[]entity.SendMessageResponse} "Chat history list"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @Router /chat/list/{chatid}/{bussnesid} [get]
+func (h *websocketRoutes) ListChat(c *gin.Context) {
+	chatid := c.Param("chatid")
+	bussnesid := c.Param("bussnesid")
+	limitStr := c.DefaultQuery("limit", "0")
+	limit, _ := strconv.Atoi(limitStr)
+	
+	if chatid == "" || bussnesid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "chatid and businessid are required"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Message sent successfully"})
+	
+	intchatid, err := strconv.ParseInt(chatid, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid chatid"})
+		return
+	}
+
+	chats, err := h.ChatRepo.List(c, &entity.ListChatHistoryRequest{
+		ChatID: intchatid,
+		BusinessID: bussnesid,
+		Limit: limit,
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, chats)
 }

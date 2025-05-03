@@ -34,11 +34,11 @@ func (c *chatService) Get(ctx context.Context, guid string) (*entity.ChatHistory
 	return c.chatRepo.Get(ctx, guid)
 }
 
-func (c *chatService) List(ctx context.Context, chatID int64) ([]*entity.ChatHistory, error) {
+func (c *chatService) List(ctx context.Context, req *entity.ListChatHistoryRequest) ([]*entity.SendMessageResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, c.ctxTimeout)
 	defer cancel()
 
-	return c.chatRepo.List(ctx, chatID)
+	return c.chatRepo.List(ctx, req)
 }
 
 func (c *chatService) Update(ctx context.Context, h *entity.ChatHistory) error {

@@ -14241,3 +14241,602 @@ main.main.func1
 2025-05-02T16:50:37.292+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T11:02:05.645+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T11:04:43.779+0500	INFO	v1/websocket.go:69	New WebSocket client connected	{"userID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+2025-05-03T11:04:43.779+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/websocket/chat/connect?id=9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T11:05:47.440+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T11:05:48.904+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T11:07:14.502+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T11:07:15.893+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T11:13:34.263+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T11:13:34.263+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T13:17:59.486+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T13:18:22.890+0500	INFO	v1/websocket.go:69	New WebSocket client connected	{"userID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+2025-05-03T13:18:22.892+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/websocket/chat/connect?id=9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T13:18:31.298+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:18:32.805+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:20:43.279+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:20:45.994+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:20:46.122+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:20:46.251+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:21:18.606+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:21:20.427+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:24:49.793+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:24:49.807+0500	INFO	v1/websocket.go:97	Message send succesfully	{"message": "{\n  \"message\": \"salom\",\n  \"business_id\": \"9725a6bb-1461-4a4c-bc78-da5c27d6aa85\",\n  \"reply_to_message_id\": 12345,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-03T13:25:04.280+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:25:04.291+0500	INFO	v1/websocket.go:97	Message send succesfully	{"message": "{\n  \"message\": \"sizga qanday yordam berolamiz\",\n  \"business_id\": \"9725a6bb-1461-4a4c-bc78-da5c27d6aa85\",\n  \"reply_to_message_id\": 12345,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-03T13:32:30.343+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:32:30.355+0500	INFO	v1/websocket.go:97	Message send succesfully	{"message": "{\n  \"message\": \"sizga qanday yordam berolamiz\",\n  \"business_id\": \"9725a6bb-1461-4a4c-bc78-da5c27d6aa85\",\n  \"reply_to_message_id\": 0,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-03T13:33:16.129+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:33:16.132+0500	INFO	v1/websocket.go:97	Message send succesfully	{"message": "{\n  \"message\": \"sizga qanday yordam berolamiz\",\n  \"business_id\": \"9725a6bb-1461-4a4c-bc78-da5c27d6aa85\",\n  \"reply_to_message_id\": 2771,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-03T13:33:30.929+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:33:30.932+0500	INFO	v1/websocket.go:97	Message send succesfully	{"message": "{\n  \"message\": \"sizga qanday yordam berolamiz\",\n  \"business_id\": \"9725a6bb-1461-4a4c-bc78-da5c27d6aa85\",\n  \"reply_to_message_id\": 2771,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-03T13:37:09.615+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T13:37:09.619+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T13:37:12.151+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T13:37:14.777+0500	INFO	v1/websocket.go:69	New WebSocket client connected	{"userID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+2025-05-03T13:37:14.777+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/websocket/chat/connect?id=9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T13:38:28.468+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T13:38:28.476+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T13:38:30.094+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T13:38:31.578+0500	INFO	v1/websocket.go:69	New WebSocket client connected	{"userID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+2025-05-03T13:38:31.578+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/websocket/chat/connect?id=9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T13:38:53.952+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T13:38:55.802+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T13:38:58.172+0500	INFO	v1/websocket.go:69	New WebSocket client connected	{"userID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+2025-05-03T13:38:58.172+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/websocket/chat/connect?id=9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T13:38:59.794+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:38:59.805+0500	INFO	v1/websocket.go:97	Message send succesfully	{"message": "{\n  \"message\": \"sizga qanday yordam berolamiz\",\n  \"business_id\": \"9725a6bb-1461-4a4c-bc78-da5c27d6aa85\",\n  \"reply_to_message_id\": 2771,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-03T13:39:10.514+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T13:39:10.517+0500	INFO	v1/websocket.go:97	Message send succesfully	{"message": "{\n  \"message\": \"sizga qanday yordam berolamiz\",\n  \"business_id\": \"9725a6bb-1461-4a4c-bc78-da5c27d6aa85\",\n  \"reply_to_message_id\": 2771,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-03T13:40:07.365+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T13:40:07.366+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T14:47:40.131+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T14:48:23.559+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-05-03T14:48:23.575+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-05-03T14:48:23.575+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-05-03T14:48:23.874+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-03T14:48:55.646+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-05-03T14:50:03.605+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T14:51:24.231+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T14:51:57.298+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T14:52:06.653+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T14:52:11.008+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T14:52:15.838+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T14:52:15.838+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T15:00:44.956+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T15:00:47.299+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T15:01:29.419+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T15:01:29.419+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T15:04:10.779+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T15:04:12.868+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T15:06:20.489+0500	WARN	v1/websocket.go:125	No WebSocket connection for user	{"platformID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+sugurta/api/handlers/v1.(*websocketRoutes).SendChatMessage
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/websocket.go:125
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T15:06:20.490+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:06:21.644+0500	WARN	v1/websocket.go:125	No WebSocket connection for user	{"platformID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+sugurta/api/handlers/v1.(*websocketRoutes).SendChatMessage
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/websocket.go:125
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T15:06:21.644+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:06:24.805+0500	WARN	v1/websocket.go:125	No WebSocket connection for user	{"platformID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+sugurta/api/handlers/v1.(*websocketRoutes).SendChatMessage
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/websocket.go:125
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T15:06:24.805+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:06:26.873+0500	WARN	v1/websocket.go:125	No WebSocket connection for user	{"platformID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+sugurta/api/handlers/v1.(*websocketRoutes).SendChatMessage
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/websocket.go:125
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T15:06:26.873+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:06:27.028+0500	WARN	v1/websocket.go:125	No WebSocket connection for user	{"platformID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+sugurta/api/handlers/v1.(*websocketRoutes).SendChatMessage
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/websocket.go:125
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T15:06:27.028+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:06:27.165+0500	WARN	v1/websocket.go:125	No WebSocket connection for user	{"platformID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+sugurta/api/handlers/v1.(*websocketRoutes).SendChatMessage
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/websocket.go:125
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T15:06:27.165+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:06:34.518+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T15:07:40.335+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T15:07:42.498+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T15:08:00.961+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T15:08:00.961+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T15:24:04.116+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T15:24:09.919+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T15:30:47.687+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T15:30:52.453+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-03T15:31:15.873+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85?limit=2 
+2025-05-03T15:31:23.553+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85?limit=2 
+2025-05-03T15:31:45.944+0500	INFO	middleware/logger.go:26	::1 - GET /v1/chat/list/1011190155/9725a6bb-1461-4a4c-bc78-da5c27d6aa85?limit=0 
+2025-05-03T15:32:32.224+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T15:32:32.224+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T15:36:25.820+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T15:36:30.802+0500	INFO	v1/websocket.go:71	New WebSocket client connected	{"userID": "9725a6bb-1461-4a4c-bc78-da5c27d6aa85"}
+2025-05-03T15:36:30.802+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/websocket/chat/connect?id=9725a6bb-1461-4a4c-bc78-da5c27d6aa85 
+2025-05-03T15:36:46.371+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:36:47.627+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:37:56.356+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:37:57.987+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:38:12.138+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:38:14.418+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:38:25.870+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:38:27.206+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:43:25.561+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:43:27.484+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:44:00.596+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:44:02.194+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:57:17.686+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:57:19.461+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:57:42.338+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:57:43.926+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:58:18.765+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T15:58:20.293+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:00:01.082+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:00:03.099+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:04:44.012+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:04:45.772+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:06:06.728+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:06:08.664+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:07:03.829+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:07:05.401+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:07:37.584+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:07:38.907+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:07:47.412+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:07:49.009+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:09:43.565+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:09:45.183+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:10:29.360+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:10:31.235+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:20:32.037+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:20:33.687+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:20:58.416+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:20:59.908+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-03T16:44:02.031+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T16:44:02.037+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T17:11:02.545+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T17:11:14.466+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-03T17:11:37.161+0500	ERROR	v1/auth.go:734	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "can't scan into dest[7]: cannot scan text (OID 25) in text format into *bool", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:734
+sugurta/api/handlers/v1.(*authRoutes).ListUsers
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:686
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T17:11:37.161+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/list?limit=10&page=1 
+2025-05-03T17:12:43.792+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-05-03T17:12:43.792+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-05-03T17:12:43.962+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js.map 
+2025-05-03T17:12:43.962+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js.map 
+2025-05-03T17:12:44.062+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css.map 
+2025-05-03T17:14:42.463+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T17:14:42.470+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T17:14:44.821+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T17:14:46.635+0500	ERROR	v1/auth.go:734	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "can't scan into dest[7]: cannot scan text (OID 25) in text format into **bool", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:734
+sugurta/api/handlers/v1.(*authRoutes).ListUsers
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:686
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T17:14:46.635+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/list?limit=10&page=1 
+2025-05-03T17:17:06.789+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T17:17:08.847+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T17:17:10.968+0500	ERROR	v1/auth.go:734	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: column \"guid\" does not exist (SQLSTATE 42703)", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:734
+sugurta/api/handlers/v1.(*authRoutes).ListUsers
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:686
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T17:17:10.968+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/list?limit=10&page=1 
+2025-05-03T17:18:25.885+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T17:18:27.929+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T17:18:29.860+0500	ERROR	v1/auth.go:734	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: could not determine data type of parameter $1 (SQLSTATE 42P18)", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:734
+sugurta/api/handlers/v1.(*authRoutes).ListUsers
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:686
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T17:18:29.860+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/list?limit=10&page=1 
+2025-05-03T17:20:50.227+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T17:20:52.212+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T17:20:53.824+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/list?limit=10&page=1 
+2025-05-03T17:21:41.484+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T17:21:43.323+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T17:21:44.872+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/list?limit=10&page=1 
+2025-05-03T17:21:58.215+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/list?limit=1&page=1 
+2025-05-03T17:22:10.679+0500	ERROR	v1/auth.go:734	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: column \"guid\" does not exist (SQLSTATE 42703)", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:734
+sugurta/api/handlers/v1.(*authRoutes).GetUserByID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:716
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T17:22:10.680+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/6a4c02e3-1e43-4692-9f20-611aef14e5f5 
+2025-05-03T17:22:33.477+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T17:22:33.492+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-03T17:22:35.446+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T17:22:37.481+0500	ERROR	v1/auth.go:734	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: syntax error at or near \"string\" (SQLSTATE 42601)", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:734
+sugurta/api/handlers/v1.(*authRoutes).GetUserByID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:716
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-03T17:22:37.482+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/6a4c02e3-1e43-4692-9f20-611aef14e5f5 
+2025-05-03T17:23:06.967+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T17:23:08.915+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-03T17:23:10.863+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/users/6a4c02e3-1e43-4692-9f20-611aef14e5f5 
+2025-05-03T17:23:18.585+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-03T17:23:18.586+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
