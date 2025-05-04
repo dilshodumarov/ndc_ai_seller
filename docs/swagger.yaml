@@ -390,7 +390,7 @@ definitions:
       updated_at:
         type: string
     type: object
-  entity.SendMessageResponse:
+  entity.SendMessage:
     properties:
       ai_response:
         type: string
@@ -409,6 +409,8 @@ definitions:
       reply_to_message_id:
         type: integer
       timestamp:
+        type: string
+      user_id:
         type: string
     type: object
   entity.UpdateBusinessRequestForSwagger:
@@ -1830,7 +1832,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/entity.SendMessageResponse'
+                    $ref: '#/definitions/entity.SendMessage'
                   type: array
               type: object
         "400":

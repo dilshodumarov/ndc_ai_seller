@@ -2354,7 +2354,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/entity.SendMessageResponse"
+                                                "$ref": "#/definitions/entity.SendMessage"
                                             }
                                         }
                                     }
@@ -4917,7 +4917,7 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.SendMessageResponse": {
+        "entity.SendMessage": {
             "type": "object",
             "properties": {
                 "ai_response": {
@@ -4945,6 +4945,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "timestamp": {
+                    "type": "string"
+                },
+                "user_id": {
                     "type": "string"
                 }
             }

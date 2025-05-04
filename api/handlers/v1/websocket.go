@@ -112,17 +112,22 @@ func (h *websocketRoutes) AddClient(userID string, conn *websocket.Conn) {
 
 func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
 	var msg entity.SendMessageResponse
+	var UserID string
 	if err := c.ShouldBindJSON(&msg); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON: " + err.Error()})
 		return
 	}
-
+	if msg.Type=="chat"{
+		UserID=msg.ChatMessage.UserId
+	} else{
+		UserID=msg.Notifications.UserId
+	}
 	h.mu.Lock()
-	conn, exists := h.clients[msg.BusinessId]
+	conn, exists := h.clients[UserID]
 	h.mu.Unlock()
 
 	if !exists {
-		h.log.Warn("No WebSocket connection for user", zap.String("platformID", msg.BusinessId))
+		h.log.Warn("No WebSocket connection for user", zap.String("userid", UserID))
 		c.JSON(http.StatusNotFound, gin.H{"error": "No WebSocket connection for this user"})
 		return
 	}
@@ -138,18 +143,13 @@ func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
 		h.log.Error("WebSocket send error", zap.Error(err))
 
 		h.mu.Lock()
-		delete(h.clients, msg.BusinessId)
+		delete(h.clients, UserID)
 		h.mu.Unlock()
 
 		conn.Close()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "WebSocket send error"})
 		return
 	}
-	// err=h.ChatRepo.Create(context.TODO(),&msg)
-	// if err != nil {
-	// 	h.log.Error("Failed create chat history", zap.Error(err))
-	// 	return
-	// }
 	c.JSON(http.StatusOK, gin.H{"message": "Message sent successfully"})
 }
 
@@ -163,7 +163,7 @@ func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
 // @Param chatid path int true "Chat ID"
 // @Param bussnesid path string true "Business ID"
 // @Param limit query int false "Maximum number of chat messages to return. If 0 or not provided, all messages will be returned. Default: 100"
-// @Success 200 {object} status_http.Response{data=[]entity.SendMessageResponse} "Chat history list"
+// @Success 200 {object} status_http.Response{data=[]entity.SendMessage} "Chat history list"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 // @Router /chat/list/{chatid}/{bussnesid} [get]

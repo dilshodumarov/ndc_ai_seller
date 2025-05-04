@@ -34,7 +34,7 @@ func (c *chatService) Get(ctx context.Context, guid string) (*entity.ChatHistory
 	return c.chatRepo.Get(ctx, guid)
 }
 
-func (c *chatService) List(ctx context.Context, req *entity.ListChatHistoryRequest) ([]*entity.SendMessageResponse, error) {
+func (c *chatService) List(ctx context.Context, req *entity.ListChatHistoryRequest) ([]*entity.SendMessage, error) {
 	ctx, cancel := context.WithTimeout(ctx, c.ctxTimeout)
 	defer cancel()
 

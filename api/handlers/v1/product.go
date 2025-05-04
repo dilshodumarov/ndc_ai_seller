@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"sugurta/api/handlers"
@@ -74,32 +75,37 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 		return
 	}
 
-	if product.Discount != 0 {
-		botNotification := entity.BotNotification{
-			Guid:      product.BusinessID,
-			ProductId: id,
-		}
-		body, err := json.Marshal(botNotification)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
-			return
-		}
-		resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
-			return
-		}
-		var BotResp entity.BotIntegrationResponse
-		if err := json.NewDecoder(resp.Body).Decode(&BotResp); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode response"})
-			return
-		}
-		if BotResp.Code != 0 {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bot start" + BotResp.Message})
-			return
-		}
-	}
 	p.handleResponse(c, status_http.Created, "Product created successfully")
+
+	if product.Discount != 0 {
+		go func(product entity.CreateProductRequest, id string) {
+			botNotification := entity.BotNotification{
+				Guid:      product.BusinessID,
+				ProductId: id,
+			}
+			body, err := json.Marshal(botNotification)
+			if err != nil {
+				log.Println("Failed to marshal JSON:", err)
+				return
+			}
+
+			resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
+			if err != nil {
+				log.Println("Failed to send request to bot:", err)
+				return
+			}
+			defer resp.Body.Close()
+
+			var BotResp entity.BotIntegrationResponse
+			if err := json.NewDecoder(resp.Body).Decode(&BotResp); err != nil {
+				log.Println("Failed to decode bot response:", err)
+				return
+			}
+			if BotResp.Code != 0 {
+				log.Println("Bot returned error:", BotResp.Message)
+			}
+		}(product, id)
+	}
 }
 
 // @Router /product/get/{id} [get]
@@ -203,12 +209,12 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (p *productRoutes) updateProduct(c *gin.Context) {
 	var product entity.UpdateProductRequest
-	id:=c.Param("id")
+	id := c.Param("id")
 	if err := c.ShouldBindJSON(&product); err != nil {
 		p.handleResponse(c, status_http.BadRequest, "invalid request")
 		return
 	}
-	product.ID=id
+	product.ID = id
 	err := p.productUscase.Update(c, &product)
 	if err != nil {
 		fmt.Println(err)

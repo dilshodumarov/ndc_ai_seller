@@ -70,7 +70,7 @@ func (p *ChatRepo) Get(ctx context.Context, guid string) (*entity.ChatHistory, e
 	return &h, nil
 }
 
-func (p *ChatRepo) List(ctx context.Context, req *entity.ListChatHistoryRequest) ([]*entity.SendMessageResponse, error) {
+func (p *ChatRepo) List(ctx context.Context, req *entity.ListChatHistoryRequest) ([]*entity.SendMessage, error) {
 	baseQuery := `
 		SELECT message_id, business_id, message, ai_response, chat_id, platform, reply_to_message_id, created_at
 		FROM chat_history
@@ -95,7 +95,7 @@ func (p *ChatRepo) List(ctx context.Context, req *entity.ListChatHistoryRequest)
 	}
 	defer rows.Close()
 
-	var results []*entity.SendMessageResponse
+	var results []*entity.SendMessage
 
 	for rows.Next() {
 		var (
@@ -116,7 +116,7 @@ func (p *ChatRepo) List(ctx context.Context, req *entity.ListChatHistoryRequest)
 			return nil, p.db.Error(err)
 		}
 
-		resp := &entity.SendMessageResponse{
+		resp := &entity.SendMessage{
 			MessageId: messageID,
 			Chatid:    chatIDValue,
 			From:      "",
