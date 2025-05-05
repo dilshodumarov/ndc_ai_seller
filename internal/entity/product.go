@@ -44,6 +44,7 @@ type (
 		CreatedAt    time.Time `json:"created_at"`
 		UpdatedAt    time.Time `json:"updated_at"`
 		Image_url    string
+		ProductId    int       `json:"product_id"`
 	}
 
 	UpdateProductRequest struct {
@@ -87,6 +88,7 @@ type (
 		Search     string  // optional
 		Limit      uint64  // required
 		Page       uint64  // required
+		ProductId  int
 	}
 	
 )

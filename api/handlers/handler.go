@@ -17,6 +17,7 @@ import (
 	"sugurta/internal/usecase/chat"
 	clienttype "sugurta/internal/usecase/client-type"
 	"sugurta/internal/usecase/intgration"
+	"sugurta/internal/usecase/notification"
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
@@ -49,6 +50,7 @@ type HandlerOption struct {
 	Chat        chat.Chat
 	Minio       *minio.Client
 	Telegram    telegram.TelegramAccount
+	Notification notification.Notification
 }
 
 type BaseHandler struct {

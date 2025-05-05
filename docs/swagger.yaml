@@ -120,6 +120,17 @@ definitions:
     required:
     - name
     type: object
+  entity.CreateNotificationRequest:
+    properties:
+      message:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      userID:
+        type: string
+    type: object
   entity.CreateOrderProduct:
     properties:
       count:
@@ -205,6 +216,25 @@ definitions:
       total:
         type: integer
     type: object
+  entity.GetNotification:
+    properties:
+      createdAt:
+        type: string
+      guid:
+        type: string
+      isRead:
+        type: boolean
+      message:
+        type: string
+      readAt:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      userID:
+        type: string
+    type: object
   entity.IntegrationCreate:
     properties:
       businessId:
@@ -254,6 +284,15 @@ definitions:
         type: string
       status:
         type: string
+    type: object
+  entity.ListNotification:
+    properties:
+      count:
+        type: integer
+      notification:
+        items:
+          $ref: '#/definitions/entity.GetNotification'
+        type: array
     type: object
   entity.LoginRequest:
     properties:
@@ -349,6 +388,8 @@ definitions:
         type: string
       name:
         type: string
+      product_id:
+        type: integer
       short_info:
         type: string
       updated_at:
@@ -436,6 +477,21 @@ definitions:
     required:
     - id
     - name
+    type: object
+  entity.UpdateNotificationRequest:
+    properties:
+      guid:
+        type: string
+      isRead:
+        type: boolean
+      message:
+        type: string
+      readAt:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
     type: object
   entity.UpdatePasswordRequest:
     properties:
@@ -1799,7 +1855,7 @@ paths:
       summary: Update an existing category
       tags:
       - CATEGORY
-  /chat/list/{chatid}/{bussnesid}:
+  /chat/list/{bussnesid}:
     get:
       consumes:
       - application/json
@@ -1807,9 +1863,8 @@ paths:
         ID
       parameters:
       - description: Chat ID
-        in: path
+        in: query
         name: chatid
-        required: true
         type: integer
       - description: Business ID
         in: path
@@ -2335,6 +2390,239 @@ paths:
       summary: uploadFile
       tags:
       - media
+  /notification/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new notification with the provided details
+      parameters:
+      - description: Notification details
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CreateNotificationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new notification
+      tags:
+      - NOTIFICATION
+  /notification/delete/{id}:
+    delete:
+      description: Delete a notification by its unique identifier
+      parameters:
+      - description: Notification ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a notification
+      tags:
+      - NOTIFICATION
+  /notification/get/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a notification by its unique identifier
+      parameters:
+      - description: Notification ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/entity.GetNotification'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get a notification by ID
+      tags:
+      - NOTIFICATION
+  /notification/list:
+    get:
+      consumes:
+      - application/json
+      description: List notifications by user ID with pagination
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/entity.ListNotification'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: List all notifications
+      tags:
+      - NOTIFICATION
+  /notification/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update an existing notification with new details
+      parameters:
+      - description: Notification ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Notification details
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UpdateNotificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update a notification
+      tags:
+      - NOTIFICATION
   /orders/create:
     post:
       consumes:
@@ -2699,6 +2987,10 @@ paths:
         in: query
         name: category_id
         type: string
+      - description: Filter by product id
+        in: query
+        name: product_id
+        type: integer
       - description: Search in name, description, or short_info
         in: query
         name: search

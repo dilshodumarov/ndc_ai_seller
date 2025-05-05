@@ -145,6 +145,7 @@ func (p *productRoutes) getProductByID(c *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Param category_id query string false "Filter by Category ID"
+// @Param product_id query int false "Filter by product id"
 // @Param search query string false "Search in name, description, or short_info"
 // @Param limit query integer true "Number of products per page (default: 10)"
 // @Param page query integer true "Page number (starts from 1, default: 1)"
@@ -165,11 +166,18 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 		CategoryID: c.Query("category_id"),
 		Search:     c.Query("search"),
 	}
-
+	prid:=c.Query("product_id")
+	strprid,err:=strconv.Atoi(prid)
+	if err!=nil{
+		fmt.Println(err)
+		p.handleResponse(c, status_http.BadRequest, "Invalid product id")
+		return
+	}
+	filter.ProductId=strprid
 	// Default values
 	limitStr := c.DefaultQuery("limit", "10")
 	pageStr := c.DefaultQuery("page", "1")
-
+fmt.Println(filter)
 	limit, err := strconv.ParseUint(limitStr, 10, 64)
 	if err != nil || limit == 0 {
 		p.handleResponse(c, status_http.BadRequest, "Invalid limit parameter")

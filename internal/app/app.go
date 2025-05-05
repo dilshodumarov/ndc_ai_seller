@@ -22,6 +22,7 @@ import (
 	"sugurta/internal/usecase/chat"
 	clienttype "sugurta/internal/usecase/client-type"
 	integration "sugurta/internal/usecase/intgration"
+	"sugurta/internal/usecase/notification"
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
@@ -57,6 +58,7 @@ type App struct {
 	Chat        chat.Chat
 	Minio       *minio.Client
 	Telegram     telegram.TelegramAccount
+	Notification notification.Notification
 }
 
 func NewApp(cfg config.Config) (*App, error) {
@@ -142,6 +144,9 @@ func NewApp(cfg config.Config) (*App, error) {
 	TelegramRepo := postgresql.NewTelegramRepo(db)
 	TelegramUscase := telegram.NewTelegramService(contextTimeout, TelegramRepo)
 	
+	NotificationRepo := postgresql.NewNotificationRepo(db)
+	NotificationUscase := notification.NewNotificationService(contextTimeout, NotificationRepo)
+	
 
 	fmt.Println("order repo: ", orderUseCase)
 	fmt.Println("here 3")
@@ -165,6 +170,7 @@ func NewApp(cfg config.Config) (*App, error) {
 		Chat:        ChatUscase,
 		Minio:       minioClient,
 		Telegram:    TelegramUscase,
+		Notification: NotificationUscase,
 		// BrokerProducer: event.NewBrokerProducer(cfg.Kafka.Brokers, cfg.Kafka.Topic),
 	}, nil
 }
@@ -208,6 +214,7 @@ func (a *App) Run() error {
 		Chat:        a.Chat,
 		Minio:       a.Minio,
 		Telegram:    a.Telegram,
+		Notification: a.Notification,
 	})
 
 	fmt.Println("here 5")

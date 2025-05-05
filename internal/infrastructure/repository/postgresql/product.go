@@ -65,7 +65,7 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 
 func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, error) {
 	query := `
-		SELECT guid, business_id, image_url,name, category_id, short_info, description,
+		SELECT guid, business_id, product_id,image_url,name, category_id, short_info, description,
 		       cost, count, discount_cost, discount, created_at, updated_at
 		FROM product
 		WHERE guid = $1
@@ -75,6 +75,7 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 	err := p.db.QueryRow(ctx, query, id).Scan(
 		&product.ID,
 		&product.BusinessID,
+		&product.ProductId,
 		&product.Image_url,
 		&product.Name,
 		&product.CategoryID,
@@ -109,6 +110,12 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		argID++
 	}
 
+	if filter.ProductId >0  {
+		where += fmt.Sprintf(" AND product_id = $%d", argID)
+		args = append(args, filter.ProductId)
+		argID++
+	}
+
 	// Ixtiyoriy CategoryID bo‘lsa, filter qilamiz
 	if filter.CategoryID != "" {
 		where += fmt.Sprintf(" AND category_id = $%d", argID)
@@ -134,7 +141,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 
 	// Mahsulotlar ro‘yxatini olish uchun query
 	query := fmt.Sprintf(`
-		SELECT guid, business_id, image_url,name, category_id, short_info, description,
+		SELECT guid, business_id, product_id,image_url,name, category_id, short_info, description,
 		       cost, count, discount_cost, discount, created_at, updated_at
 		FROM product
 		%s
@@ -158,6 +165,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		if err := rows.Scan(
 			&product.ID,
 			&product.BusinessID,
+			&product.ProductId,
 			&product.Image_url,
 			&product.Name,
 			&product.CategoryID,

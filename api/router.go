@@ -18,6 +18,7 @@ import (
 	clienttype "sugurta/internal/usecase/client-type"
 	integration "sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/order"
+	"sugurta/internal/usecase/notification"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
 	"sugurta/internal/usecase/telegram"
@@ -58,6 +59,7 @@ type RouteOption struct {
 	Chat        chat.Chat
 	Minio       *minio.Client
 	Telegram    telegram.TelegramAccount
+	Notification notification.Notification
 	// Service        grpcClients.ServiceClient
 	// RefreshToken   refresh_token.RefreshToken
 	// BrokerProducer event.BrokerProducer
@@ -92,6 +94,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		Chat:        option.Chat,
 		Minio:       option.Minio,
 		Telegram:    option.Telegram,
+		Notification: option.Notification,
 	}
 
 	app := gin.New()
@@ -152,6 +155,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		v1.NewWebsocketRoutes(apiV1Group, handleOption)
 		v1.NewTelegramRoutes(apiV1Group,handleOption)
 		v1.NewMinioRoutes(apiV1Group,handleOption)
+		v1.NewNotificationRoutes(apiV1Group,handleOption)
 	}
 
 	return app

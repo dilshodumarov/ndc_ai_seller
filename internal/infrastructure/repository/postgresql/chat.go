@@ -9,8 +9,6 @@ import (
 
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/postgres"
-
-	"github.com/jackc/pgx/v5"
 )
 
 type ChatRepo struct {
@@ -71,25 +69,38 @@ func (p *ChatRepo) Get(ctx context.Context, guid string) (*entity.ChatHistory, e
 }
 
 func (p *ChatRepo) List(ctx context.Context, req *entity.ListChatHistoryRequest) ([]*entity.SendMessage, error) {
-	baseQuery := `
-		SELECT message_id, business_id, message, ai_response, chat_id, platform, reply_to_message_id, created_at
-		FROM chat_history
-		WHERE chat_id = $1 AND business_id = $2
-		ORDER BY created_at DESC
-	`
-
 	var (
-		rows pgx.Rows
-		err  error
+		args      []any
+		argID     = 1
+		where     = "WHERE business_id = $1"
+		limitStmt string
 	)
 
-	if req.Limit > 0 {
-		baseQuery += " LIMIT $3"
-		rows, err = p.db.Query(ctx, baseQuery, req.ChatID, req.BusinessID, req.Limit)
-	} else {
-		rows, err = p.db.Query(ctx, baseQuery, req.ChatID, req.BusinessID)
+	args = append(args, req.BusinessID)
+	argID++
+
+	if req.ChatID > 0 {
+		where += fmt.Sprintf(" AND chat_id = $%d", argID)
+		args = append(args, req.ChatID)
+		argID++
 	}
 
+	// Ixtiyoriy limit
+	if req.Limit > 0 {
+		limitStmt = fmt.Sprintf(" LIMIT $%d", argID)
+		args = append(args, req.Limit)
+		argID++
+	}
+
+	query := fmt.Sprintf(`
+		SELECT message_id, business_id, message, ai_response, chat_id, platform, reply_to_message_id, created_at
+		FROM chat_history
+		%s
+		ORDER BY created_at DESC
+		%s
+	`, where, limitStmt)
+
+	rows, err := p.db.Query(ctx, query, args...)
 	if err != nil {
 		return nil, p.db.Error(err)
 	}
@@ -134,7 +145,6 @@ func (p *ChatRepo) List(ctx context.Context, req *entity.ListChatHistoryRequest)
 		if replyToMessageID.Valid {
 			resp.ReplyToMessageID = int(replyToMessageID.Int64)
 		}
-
 		if message.Valid && message.String != "" {
 			resp.Message = message.String
 			resp.From = "user"

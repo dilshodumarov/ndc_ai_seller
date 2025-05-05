@@ -10,6 +10,7 @@ import (
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
 	"sugurta/internal/usecase/chat"
+	"sugurta/internal/usecase/notification"
 	"sync"
 
 	"github.com/casbin/casbin/v2"
@@ -20,21 +21,23 @@ import (
 
 type websocketRoutes struct {
 	handlers.BaseHandler
-	log      *zap.Logger
-	cfg      *config.Config
-	enforcer *casbin.CachedEnforcer
-	clients  map[string]*websocket.Conn
-	mu       sync.Mutex
-	ChatRepo chat.Chat
+	log              *zap.Logger
+	cfg              *config.Config
+	enforcer         *casbin.CachedEnforcer
+	clients          map[string]*websocket.Conn
+	mu               sync.Mutex
+	ChatRepo         chat.Chat
+	NotificationRepo notification.Notification
 }
 
 func NewWebsocketRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) {
 	r := &websocketRoutes{
-		log:      option.Logger,
-		cfg:      option.Config,
-		enforcer: option.Enforcer,
-		ChatRepo: option.Chat,
-		clients:  make(map[string]*websocket.Conn),
+		log:              option.Logger,
+		cfg:              option.Config,
+		enforcer:         option.Enforcer,
+		ChatRepo:         option.Chat,
+		clients:          make(map[string]*websocket.Conn),
+		NotificationRepo: option.Notification,
 	}
 
 	websocketGroup := apiV1Group.Group("/websocket")
@@ -42,7 +45,7 @@ func NewWebsocketRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpt
 		websocketGroup.GET("chat/connect", r.WebSocketHandler)
 		websocketGroup.POST("/chat/send-message", r.SendChatMessage)
 	}
-	apiV1Group.GET("/chat/list/:chatid/:bussnesid",r.ListChat)
+	apiV1Group.GET("/chat/list/:bussnesid", r.ListChat)
 }
 
 var upgrader = websocket.Upgrader{
@@ -81,7 +84,6 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 				conn.Close()
 				break
 			}
-			fmt.Println("message: ", string(msg))
 			resp, err := http.Post("http://localhost:8081/send-message", "application/json", bytes.NewBuffer(msg))
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
@@ -117,10 +119,19 @@ func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON: " + err.Error()})
 		return
 	}
-	if msg.Type=="chat"{
-		UserID=msg.ChatMessage.UserId
-	} else{
-		UserID=msg.Notifications.UserId
+	if msg.Type == "chat" {
+		UserID = msg.ChatMessage.UserId
+	} else {
+		UserID = msg.Notifications.UserId
+		_,err:=h.NotificationRepo.Create(c, &entity.CreateNotificationRequest{
+			UserID:  msg.Notifications.UserId,
+			Title:   msg.Notifications.Title,
+			Message: msg.Notifications.Content,
+			Type:    "info",
+		})
+		if err!=nil{
+			fmt.Println(err)
+		}
 	}
 	h.mu.Lock()
 	conn, exists := h.clients[UserID]
@@ -160,35 +171,35 @@ func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param chatid path int true "Chat ID"
+// @Param chatid query int false "Chat ID"
 // @Param bussnesid path string true "Business ID"
 // @Param limit query int false "Maximum number of chat messages to return. If 0 or not provided, all messages will be returned. Default: 100"
 // @Success 200 {object} status_http.Response{data=[]entity.SendMessage} "Chat history list"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /chat/list/{chatid}/{bussnesid} [get]
+// @Router /chat/list/{bussnesid} [get]
 func (h *websocketRoutes) ListChat(c *gin.Context) {
-	chatid := c.Param("chatid")
+	chatid := c.Query("chatid")
 	bussnesid := c.Param("bussnesid")
 	limitStr := c.DefaultQuery("limit", "0")
 	limit, _ := strconv.Atoi(limitStr)
-	
-	if chatid == "" || bussnesid == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "chatid and businessid are required"})
+	var res entity.ListChatHistoryRequest
+	if bussnesid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "businessid are required"})
 		return
 	}
-	
-	intchatid, err := strconv.ParseInt(chatid, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid chatid"})
-		return
+	if chatid != "" {
+		intchatid, err := strconv.ParseInt(chatid, 10, 64)
+		res.ChatID = intchatid
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid chatid"})
+			return
+		}
 	}
+	res.BusinessID = bussnesid
+	res.Limit = limit
 
-	chats, err := h.ChatRepo.List(c, &entity.ListChatHistoryRequest{
-		ChatID: intchatid,
-		BusinessID: bussnesid,
-		Limit: limit,
-	})
+	chats, err := h.ChatRepo.List(c, &res)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
