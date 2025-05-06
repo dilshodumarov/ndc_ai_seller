@@ -159,6 +159,13 @@ definitions:
       total_price:
         type: number
     type: object
+  entity.CreateProductImage:
+    properties:
+      imageUrl:
+        type: string
+      productId:
+        type: string
+    type: object
   entity.CreateProductRequest:
     properties:
       business_id:
@@ -384,8 +391,10 @@ definitions:
         type: integer
       id:
         type: string
-      image_url:
-        type: string
+      image_urls:
+        items:
+          type: string
+        type: array
       name:
         type: string
       product_id:
@@ -3051,6 +3060,53 @@ paths:
       security:
       - BearerAuth: []
       summary: List products
+      tags:
+      - PRODUCT
+  /product/picture:
+    post:
+      consumes:
+      - application/json
+      description: Attach an image to an existing product by product ID
+      parameters:
+      - description: Product Picture Details
+        in: body
+        name: picture
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CreateProductImage'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Image added successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Invalid request data
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Failed to add image
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Add a picture to a product
       tags:
       - PRODUCT
   /product/update/{id}:

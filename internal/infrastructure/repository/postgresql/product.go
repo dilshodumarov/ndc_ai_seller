@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/postgres"
 	"time"
@@ -64,11 +65,29 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 }
 
 func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, error) {
+	var(
+		picturesting string
+	)
 	query := `
-		SELECT guid, business_id, product_id,image_url,name, category_id, short_info, description,
-		       cost, count, discount_cost, discount, created_at, updated_at
-		FROM product
-		WHERE guid = $1
+		SELECT 
+			p.guid, 
+			p.business_id, 
+			p.product_id,
+			p.name, 
+			p.category_id, 
+			p.short_info, 
+			p.description,
+			p.cost, 
+			p.count, 
+			p.discount_cost, 
+			p.discount, 
+			p.created_at, 
+			p.updated_at,
+			COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls
+		FROM product p
+		LEFT JOIN product_pictures pp ON p.guid = pp.product_id
+		WHERE p.guid = $1
+		GROUP BY p.guid
 	`
 
 	var product entity.Product
@@ -76,7 +95,6 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 		&product.ID,
 		&product.BusinessID,
 		&product.ProductId,
-		&product.Image_url,
 		&product.Name,
 		&product.CategoryID,
 		&product.ShortInfo,
@@ -87,9 +105,15 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 		&product.Discount,
 		&product.CreatedAt,
 		&product.UpdatedAt,
+		&picturesting,
 	)
 	if err != nil {
 		return nil, p.db.Error(err)
+	}
+
+	// image_urlsni vergul bo'yicha ajratamiz
+	if len(picturesting) > 0 {
+		product.Image_urls = strings.Split(picturesting, ",")
 	}
 
 	return &product, nil
@@ -110,7 +134,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		argID++
 	}
 
-	if filter.ProductId >0  {
+	if filter.ProductId > 0 {
 		where += fmt.Sprintf(" AND product_id = $%d", argID)
 		args = append(args, filter.ProductId)
 		argID++
@@ -139,12 +163,17 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		argID += 2
 	}
 
+
 	// Mahsulotlar ro‘yxatini olish uchun query
 	query := fmt.Sprintf(`
-		SELECT guid, business_id, product_id,image_url,name, category_id, short_info, description,
-		       cost, count, discount_cost, discount, created_at, updated_at
-		FROM product
+		SELECT p.guid, p.business_id, p.product_id, p.name, p.category_id, p.short_info, p.description,
+		       p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at,
+		       COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls
+		FROM product p
+		LEFT JOIN product_pictures pp ON p.guid = pp.product_id
 		%s
+		GROUP BY p.guid, p.business_id, p.product_id, p.name, p.category_id, p.short_info, p.description,
+		         p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at
 		%s
 	`, where, limitStmt)
 
@@ -160,13 +189,13 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 			product        entity.Product
 			discountCostDB sql.NullInt64
 			discountDB     sql.NullInt64
+			imageUrlsStr   string
 		)
 
 		if err := rows.Scan(
 			&product.ID,
 			&product.BusinessID,
 			&product.ProductId,
-			&product.Image_url,
 			&product.Name,
 			&product.CategoryID,
 			&product.ShortInfo,
@@ -177,15 +206,22 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 			&discountDB,
 			&product.CreatedAt,
 			&product.UpdatedAt,
+			&imageUrlsStr,
 		); err != nil {
 			return nil, p.db.Error(err)
 		}
 
+		// Discount values
 		if discountCostDB.Valid {
 			product.DiscountCost = int(discountCostDB.Int64)
 		}
 		if discountDB.Valid {
 			product.Discount = int(discountDB.Int64)
+		}
+
+		// Split image URLs if they exist
+		if imageUrlsStr != "" {
+			product.Image_urls = strings.Split(imageUrlsStr, ",")
 		}
 
 		products.Items = append(products.Items, product)
@@ -308,4 +344,25 @@ func (p *productRepo) Delete(ctx context.Context, id string) error {
 	}
 
 	return nil
+}
+
+func (p *productRepo) AddPicture(ctx context.Context, image *entity.CreateProductImage) (string, error) {
+	id := uuid.New().String()
+	query := `
+		INSERT INTO product_pictures (
+			guid,product_id, image_url
+		) VALUES ($1,$2,$3)
+	`
+
+	_, err := p.db.Exec(ctx, query,
+		id,
+		image.ProductId,
+		image.ImageUrl,
+	)
+	if err != nil {
+		fmt.Println(err)
+		return "", p.db.Error(err)
+	}
+
+	return id, nil
 }

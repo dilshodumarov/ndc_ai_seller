@@ -42,6 +42,7 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 		productGroup.PUT("/update/:id", r.updateProduct)
 		productGroup.GET("/list", r.ListProducts)
 		productGroup.DELETE("/delete/:id", r.deleteProduct)
+		productGroup.POST("/picture", r.addProductPicture)
 	}
 
 }
@@ -74,7 +75,15 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.InternalServerError, "error while creating product")
 		return
 	}
-
+	_,err=p.productUscase.AddPicture(c,&entity.CreateProductImage{
+		ProductId: id,
+		ImageUrl: product.Image_url,
+	})
+	if err != nil {
+		fmt.Println(err)
+		p.handleResponse(c, status_http.InternalServerError, "error while creating image")
+		return
+	}
 	p.handleResponse(c, status_http.Created, "Product created successfully")
 
 	if product.Discount != 0 {
@@ -167,13 +176,16 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 		Search:     c.Query("search"),
 	}
 	prid:=c.Query("product_id")
-	strprid,err:=strconv.Atoi(prid)
-	if err!=nil{
-		fmt.Println(err)
-		p.handleResponse(c, status_http.BadRequest, "Invalid product id")
-		return
+	if prid!=""{
+		strprid,err:=strconv.Atoi(prid)
+		if err!=nil{
+			fmt.Println(err)
+			p.handleResponse(c, status_http.BadRequest, "Invalid product id")
+			return
+		}
+		filter.ProductId=strprid
 	}
-	filter.ProductId=strprid
+
 	// Default values
 	limitStr := c.DefaultQuery("limit", "10")
 	pageStr := c.DefaultQuery("page", "1")
@@ -290,6 +302,36 @@ func (p *productRoutes) deleteProduct(c *gin.Context) {
 
 	p.handleResponse(c, status_http.OK, "Product deleted successfully")
 }
+
+
+// @Router /product/picture [post]
+// @Summary Add a picture to a product
+// @Description Attach an image to an existing product by product ID
+// @Tags PRODUCT
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param picture body entity.CreateProductImage true "Product Picture Details"
+// @Success 201 {object} status_http.Response{data=string} "Image added successfully"
+// @Failure 400 {object} status_http.Response{data=string} "Invalid request data"
+// @Failure 500 {object} status_http.Response{data=string} "Failed to add image"
+func (p *productRoutes) addProductPicture(c *gin.Context) {
+	var req entity.CreateProductImage
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		p.handleResponse(c, status_http.BadRequest, "Invalid request: "+err.Error())
+		return
+	}
+
+	id, err := p.productUscase.AddPicture(c, &req)
+	if err != nil {
+		p.handleResponse(c, status_http.InternalServerError, "Failed to add image: "+err.Error())
+		return
+	}
+
+	p.handleResponse(c, status_http.Created, id)
+}
+
 
 func (h *productRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {
 	switch code := status.Code; {

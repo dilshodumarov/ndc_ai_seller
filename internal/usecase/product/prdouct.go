@@ -90,6 +90,17 @@ func (p *productService) Delete(ctx context.Context, id string) error {
 	return p.productRepo.Delete(ctx, id)
 }
 
+
+func (p *productService) AddPicture(ctx context.Context, image *entity.CreateProductImage) (string, error){
+	ctx, cancel := context.WithTimeout(ctx, p.ctxTimeout)
+	defer cancel()
+
+	// // tracing
+	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
+	// defer span.End()
+
+	return p.productRepo.AddPicture(ctx, image)
+}
 // // CreateAttribute -.
 // func (p *ProductUseCase) CreateAttribute(ctx context.Context, a entity.Attribute) error {
 // 	err := p.productRepo.CreateAttribute(ctx, a)

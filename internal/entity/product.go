@@ -17,6 +17,10 @@ type (
 		Discount     int    `json:"discount"`
 		Image_url    string
 	}
+	CreateProductImage struct {
+		ProductId string
+		ImageUrl  string
+	}
 	CreateProductRequestForSwagger struct {
 		BusinessID   string `json:"business_id"`
 		Name         string `json:"name"`
@@ -43,7 +47,7 @@ type (
 		Discount     int       `json:"discount"`
 		CreatedAt    time.Time `json:"created_at"`
 		UpdatedAt    time.Time `json:"updated_at"`
-		Image_url    string
+		Image_urls   []string
 		ProductId    int       `json:"product_id"`
 	}
 

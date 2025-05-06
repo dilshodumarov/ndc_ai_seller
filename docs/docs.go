@@ -4453,6 +4453,93 @@ const docTemplate = `{
                 }
             }
         },
+        "/product/picture": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Attach an image to an existing product by product ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT"
+                ],
+                "summary": "Add a picture to a product",
+                "parameters": [
+                    {
+                        "description": "Product Picture Details",
+                        "name": "picture",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.CreateProductImage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Image added successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request data",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to add image",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/product/update/{id}": {
             "put": {
                 "security": [
@@ -4993,6 +5080,17 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.CreateProductImage": {
+            "type": "object",
+            "properties": {
+                "imageUrl": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                }
+            }
+        },
         "entity.CreateProductRequest": {
             "type": "object",
             "properties": {
@@ -5336,8 +5434,11 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "image_url": {
-                    "type": "string"
+                "image_urls": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "name": {
                     "type": "string"
