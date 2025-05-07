@@ -15,6 +15,93 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/clients/block": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Block or unblock a client by business ID and platform ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AUTH"
+                ],
+                "summary": "Block or unblock a client",
+                "parameters": [
+                    {
+                        "description": "Block User Request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.BlockUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/auth/clients/list": {
             "get": {
                 "security": [
@@ -22,7 +109,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get a list of clients with optional filtering by name and phone, and pagination",
+                "description": "Get a list of clients with optional filtering by name, phone, from, goal, order_status and pagination",
                 "consumes": [
                     "application/json"
                 ],
@@ -44,6 +131,24 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Filter by phone",
                         "name": "phone",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by source (from)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by goal",
+                        "name": "goal",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by order status",
+                        "name": "order_status",
                         "in": "query"
                     },
                     {
@@ -4352,20 +4457,34 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter by status sotuvda or arxiv",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Search in name, description, or short_info",
                         "name": "search",
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "description": "filtr by product count",
+                        "name": "product_count",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
-                        "description": "Number of products per page (default: 10)",
+                        "default": 10,
+                        "description": "Number of products per page",
                         "name": "limit",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "integer",
-                        "description": "Page number (starts from 1, default: 1)",
+                        "default": 1,
+                        "description": "Page number ",
                         "name": "page",
                         "in": "query",
                         "required": true
@@ -4842,6 +4961,20 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.BlockUser": {
+            "type": "object",
+            "properties": {
+                "block": {
+                    "type": "boolean"
+                },
+                "business_id": {
+                    "type": "string"
+                },
+                "platform_id": {
+                    "type": "string"
+                }
+            }
+        },
         "entity.BotCommandRequest": {
             "type": "object",
             "properties": {
@@ -4913,28 +5046,37 @@ const docTemplate = `{
         "entity.Client": {
             "type": "object",
             "properties": {
-                "businessID": {
+                "created_at": {
                     "type": "string"
                 },
-                "chatID": {
-                    "type": "integer"
-                },
-                "createdAt": {
+                "first_name": {
                     "type": "string"
                 },
-                "firstName": {
+                "from": {
+                    "type": "string"
+                },
+                "goal": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
+                "is_block": {
+                    "type": "boolean"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "order_status": {
+                    "type": "string"
+                },
                 "phone": {
                     "type": "string"
                 },
-                "platformID": {
+                "platform_id": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "user_name": {
                     "type": "string"
                 }
             }
@@ -5116,7 +5258,10 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "image_url": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "name": {
                     "type": "string"
@@ -5447,6 +5592,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "short_info": {
+                    "type": "string"
+                },
+                "status": {
                     "type": "string"
                 },
                 "updated_at": {

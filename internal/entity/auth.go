@@ -1,6 +1,8 @@
 package entity
 
-import "time"
+import (
+	"time"
+)
 
 // Authentication request and response structures
 type (
@@ -21,14 +23,14 @@ type (
 		Email        string    `json:"email"`
 		PhoneNumber  string    `json:"phone_number"`
 		Password     string    `json:"-"`
-		IsActive     *bool      `json:"is_active"`
+		IsActive     *bool     `json:"is_active"`
 		RoleID       string    `json:"role_id"`
 		RoleData     Role      `json:"role_data"`
 		CreatedAt    time.Time `json:"created_at"`
 		UpdatedAt    time.Time `json:"updated_at"`
 		AccessToken  string    `json:"access_token"`
 		RefreshToken string    `json:"refresh_token,omitempty"`
-		BusinessID  string    `json:"business_id,omitempty"`
+		BusinessID   string    `json:"business_id,omitempty"`
 	}
 	UserFilter struct {
 		IsActive  *bool
@@ -37,7 +39,6 @@ type (
 		Offset    uint64
 		Limit     uint64
 	}
-	
 
 	ListUsers struct {
 		Items []User `json:"itmes"`
@@ -81,10 +82,10 @@ type (
 
 	// JWTClaims represents the JWT token claims
 	JWTClaims struct {
-		Sub  string `json:"sub"`
-		Role string `json:"role"`
-		Exp  int64  `json:"exp"`
-		BusinessId string  `json:"bussnes_id"`
+		Sub        string `json:"sub"`
+		Role       string `json:"role"`
+		Exp        int64  `json:"exp"`
+		BusinessId string `json:"bussnes_id"`
 	}
 
 	// UpdatePassword represents a request to update a password
@@ -94,47 +95,42 @@ type (
 	}
 )
 
-// User represents a user in the system
-type Clinet struct {
-	ID         string    `json:"id"`
-	Name       string    `json:"name"`
-	Surname    string    `json:"surname"`
-	Username   string    `json:"username"`
-	Password   string    `json:"password"`
-	BirthDate  string    `json:"birth_date"`
-	TgUserName string    `json:"tg_user_name"`
-	Phone      string    `json:"phone"`
-	Instagram  string    `json:"instagram"`
-	ClientFrom string    `json:"client_from"`
-	RoleID     string    `json:"role_id"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
-}
-
-// Role represents a user role in the system
-
-
+// entity.ClientFilter
 type ClientFilter struct {
-	Name  string `json:"name"`  // ILIKE bo‘yicha qidiriladi
-	Phone string `json:"phone"` // ILIKE bo‘yicha qidiriladi
-	Limit int    `json:"limit"`
-	Page  int    `json:"page"`
+	Name        string `json:"name"`
+	Phone       string `json:"phone"`
+	From        string `json:"from"`
+	Goal        string `json:"goal"`
+	OrderStatus string `json:"order_status"`
+	Page        int    `json:"page"`
+	Limit       int    `json:"limit"`
 }
 
+// entity.Client
 type Client struct {
-	ID         string
-	PlatformID string
-	FirstName  string
-	ChatID     int64
-	BusinessID string
-	Phone      string
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	ID          string    `json:"id"`
+	PlatformID  string    `json:"platform_id"`
+	FirstName   string    `json:"first_name"`
+	Phone       string    `json:"phone"`
+	CreatedAt   time.Time `json:"created_at"`
+	UserName    string    `json:"user_name"`
+	From        string    `json:"from"`
+	OrderStatus string    `json:"order_status"`
+	Goal        string    `json:"goal"`
+	IsBlock     bool      `json:"is_block"`
+	Location    string    `json:"location"`
 }
 
-type ListClients struct{
-	Clients  []Client
-	Count     int
-	Page      int
-	Limit     int
+type ListClients struct {
+	Clients []Client `json:"clients"`
+	Count   int      `json:"count"`
+	Page    int      `json:"page"`
+	Limit   int      `json:"limit"`
+}
+
+
+type BlockUser struct {
+	PlatformId string `json:"platform_id"`
+	BusinessID string `json:"business_id"`
+	Block      bool   `json:"block"`
 }

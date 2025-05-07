@@ -5,6 +5,15 @@ definitions:
       access_token:
         type: string
     type: object
+  entity.BlockUser:
+    properties:
+      block:
+        type: boolean
+      business_id:
+        type: string
+      platform_id:
+        type: string
+    type: object
   entity.BotCommandRequest:
     properties:
       command:
@@ -51,21 +60,27 @@ definitions:
     type: object
   entity.Client:
     properties:
-      businessID:
+      created_at:
         type: string
-      chatID:
-        type: integer
-      createdAt:
+      first_name:
         type: string
-      firstName:
+      from:
+        type: string
+      goal:
         type: string
       id:
         type: string
+      is_block:
+        type: boolean
+      location:
+        type: string
+      order_status:
+        type: string
       phone:
         type: string
-      platformID:
+      platform_id:
         type: string
-      updatedAt:
+      user_name:
         type: string
     type: object
   entity.ClientType:
@@ -183,7 +198,9 @@ definitions:
       discount_cost:
         type: integer
       image_url:
-        type: string
+        items:
+          type: string
+        type: array
       name:
         type: string
       short_info:
@@ -400,6 +417,8 @@ definitions:
       product_id:
         type: integer
       short_info:
+        type: string
+      status:
         type: string
       updated_at:
         type: string
@@ -650,12 +669,59 @@ paths:
       summary: Get client by ID
       tags:
       - AUTH
+  /auth/clients/block:
+    put:
+      consumes:
+      - application/json
+      description: Block or unblock a client by business ID and platform ID
+      parameters:
+      - description: Block User Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.BlockUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Block or unblock a client
+      tags:
+      - AUTH
   /auth/clients/list:
     get:
       consumes:
       - application/json
-      description: Get a list of clients with optional filtering by name and phone,
-        and pagination
+      description: Get a list of clients with optional filtering by name, phone, from,
+        goal, order_status and pagination
       parameters:
       - description: Filter by name
         in: query
@@ -664,6 +730,18 @@ paths:
       - description: Filter by phone
         in: query
         name: phone
+        type: string
+      - description: Filter by source (from)
+        in: query
+        name: from
+        type: string
+      - description: Filter by goal
+        in: query
+        name: goal
+        type: string
+      - description: Filter by order status
+        in: query
+        name: order_status
         type: string
       - default: 10
         description: Limit the number of clients
@@ -3000,16 +3078,26 @@ paths:
         in: query
         name: product_id
         type: integer
+      - description: Filter by status sotuvda or arxiv
+        in: query
+        name: status
+        type: string
       - description: Search in name, description, or short_info
         in: query
         name: search
         type: string
-      - description: 'Number of products per page (default: 10)'
+      - description: filtr by product count
+        in: query
+        name: product_count
+        type: string
+      - default: 10
+        description: Number of products per page
         in: query
         name: limit
         required: true
         type: integer
-      - description: 'Page number (starts from 1, default: 1)'
+      - default: 1
+        description: 'Page number '
         in: query
         name: page
         required: true

@@ -26,7 +26,6 @@ func NewOrderRepo(db *postgres.Postgres) *OrderRepo {
 	}
 }
 
-
 func (r *OrderRepo) Create(ctx context.Context, o *entity.CreateOrderRequest) (id string, err error) {
 	query := fmt.Sprintf(`
 		INSERT INTO %s (client_id,  business_id, location_url, status, total_price, payment_method, status_changed_time, created_at, updated_at)
@@ -65,7 +64,6 @@ func (r *OrderRepo) Create(ctx context.Context, o *entity.CreateOrderRequest) (i
 	return id, nil
 }
 
-
 func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 	query := `
 		SELECT 
@@ -101,7 +99,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			&product.ProductID, &product.Name, &product.ImageURL, &product.Cost,
 			&product.Count, &product.ProductTotalPrice,
 		)
-		products=append(products, product)
+		products = append(products, product)
 		if err != nil {
 			return nil, fmt.Errorf("OrderRepo - Get - scan row: %w", err)
 		}
@@ -113,7 +111,6 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			}
 		}
 
-		
 	}
 
 	if order == nil {
@@ -125,46 +122,81 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 	return order, nil
 }
 
-
-
 func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit, offset uint64) (*entity.GetAllOrdersResponse, error) {
-	where, args := buildWhereClause(filter,"o")
+	where, args := buildWhereClause(filter, "o")
 
-	query := fmt.Sprintf(`
+	// 1. Faqat order ID'larini limit bilan olish
+	orderIDQuery := fmt.Sprintf(`
+		SELECT o.guid
+		FROM %s o
+		%s
+		ORDER BY o.created_at DESC
+	`, r.tableName, where)
+
+	if limit > 0 {
+		orderIDQuery += fmt.Sprintf(" LIMIT $%d OFFSET $%d", len(args)+1, len(args)+2)
+		args = append(args, limit, offset)
+	}
+
+	orderIDRows, err := r.db.Query(ctx, orderIDQuery, args...)
+	if err != nil {
+		return nil, r.db.Error(err)
+	}
+	defer orderIDRows.Close()
+
+	var orderIDs []string
+	for orderIDRows.Next() {
+		var id string
+		if err := orderIDRows.Scan(&id); err != nil {
+			return nil, r.db.Error(err)
+		}
+		orderIDs = append(orderIDs, id)
+	}
+	if len(orderIDs) == 0 {
+		return &entity.GetAllOrdersResponse{
+			Items: []entity.Order{},
+			Total: 0,
+		}, nil
+	}
+
+
+	inClause := ""
+	inArgs := make([]interface{}, len(orderIDs))
+	for i, id := range orderIDs {
+		inClause += fmt.Sprintf("$%d,", i+1)
+		inArgs[i] = id
+	}
+	inClause = inClause[:len(inClause)-1] 
+
+	fullQuery := fmt.Sprintf(`
 		SELECT 
 			o.guid, o.client_id, o.business_id, o.location_url, o.status, o.total_price, 
 			o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
 			p.guid, p.name, p.image_url, p.cost,
 			op.count, op.price
-		    FROM %s o
-			INNER JOIN order_products op ON o.guid = op.order_id
-			INNER JOIN product p ON p.guid = op.product_id
-			%s
+		FROM %s o
+		INNER JOIN order_products op ON o.guid = op.order_id
+		INNER JOIN product p ON p.guid = op.product_id
+		WHERE o.guid IN (%s)
 		ORDER BY o.created_at DESC
-	`, r.tableName, where)
+	`, r.tableName, inClause)
 
-	if limit > 0 {
-		query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", len(args)+1, len(args)+2)
-		args = append(args, limit, offset)
-	}
-
-	rows, err := r.db.Query(ctx, query, args...)
+	rows, err := r.db.Query(ctx, fullQuery, inArgs...)
 	if err != nil {
 		return nil, r.db.Error(err)
 	}
 	defer rows.Close()
 
-	orderMap := make(map[string]*entity.Order) // Orderlarni ID orqali grouping qilish
-	var orderIDs []string                      // Tartib saqlash uchun
+	orderMap := make(map[string]*entity.Order)
 
 	for rows.Next() {
 		var (
-			order                  entity.Order
-			product                entity.OrderProduct
-			nullStatusChangedTime  sql.NullTime
+			order                 entity.Order
+			product               entity.OrderProduct
+			nullStatusChangedTime sql.NullTime
 		)
 
-		err := rows.Scan(
+		if err := rows.Scan(
 			&order.ID,
 			&order.ClientID,
 			&order.BusinessID,
@@ -181,41 +213,34 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			&product.Cost,
 			&product.Count,
 			&product.ProductTotalPrice,
-		)
-		if err != nil {
+		); err != nil {
 			return nil, r.db.Error(err)
 		}
 
 		if existingOrder, ok := orderMap[order.ID]; ok {
-			// Agar order oldin mavjud bo'lsa, products listiga qo'shamiz
-			if product.ProductID != "" {
-				existingOrder.Products = append(existingOrder.Products, product)
-			}
+			existingOrder.Products = append(existingOrder.Products, product)
 		} else {
-			// Yangi order bo'lsa, mapga qo'shamiz
 			if nullStatusChangedTime.Valid {
 				order.StatusChangedTime = &nullStatusChangedTime.Time
 			}
-			if product.ProductID != "" {
-				order.Products = append(order.Products, product)
-			}
+			order.Products = append(order.Products, product)
 			orderMap[order.ID] = &order
-			orderIDs = append(orderIDs, order.ID)
 		}
 	}
 
-	// map dan slice qilish
 	var orders []entity.Order
 	for _, id := range orderIDs {
-		orders = append(orders, *orderMap[id])
+		if order, ok := orderMap[id]; ok {
+			orders = append(orders, *order)
+		}
 	}
 
-	countWhere, _ := buildWhereClause(filter, "")
-	// Count uchun alohida query (bu JOIN qilingan emas!)
+	// 4. Count query
+	countWhere, countArgs := buildWhereClause(filter, "")
 	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM %s %s`, r.tableName, countWhere)
+
 	var totalCount uint64
-	err = r.db.QueryRow(ctx, countQuery, args[:len(args)-(2*boolToInt(limit > 0))]...).Scan(&totalCount)
-	if err != nil {
+	if err := r.db.QueryRow(ctx, countQuery, countArgs...).Scan(&totalCount); err != nil {
 		return nil, r.db.Error(err)
 	}
 
@@ -329,8 +354,6 @@ func buildWhereClause(filter *entity.OrderFilter, alias string) (string, []inter
 	}
 	return "", args
 }
-
-
 
 func boolToInt(b bool) int {
 	if b {

@@ -72,6 +72,7 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 		SELECT 
 			p.guid, 
 			p.business_id, 
+			p.status,
 			p.product_id,
 			p.name, 
 			p.category_id, 
@@ -94,6 +95,7 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 	err := p.db.QueryRow(ctx, query, id).Scan(
 		&product.ID,
 		&product.BusinessID,
+		&product.Status,
 		&product.ProductId,
 		&product.Name,
 		&product.CategoryID,
@@ -125,12 +127,26 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		argID     = 1
 		where     = "WHERE true"
 		limitStmt string
-	)
+	)	
+	fmt.Println(filter)
 
 	// Ixtiyoriy OwnerID bo‘lsa, filter qilamiz
 	if filter.OwnerID != "" {
 		where += fmt.Sprintf(" AND business_id = $%d", argID)
 		args = append(args, filter.OwnerID)
+		argID++
+	}
+
+	if filter.ProductCount>0 {
+		where += fmt.Sprintf(" AND count = $%d", argID)
+		args = append(args, filter.ProductCount)
+		argID++
+	}
+
+
+	if filter.Status!="" {
+		where += fmt.Sprintf(" AND status = $%d", argID)
+		args = append(args, filter.Status)
 		argID++
 	}
 
@@ -166,7 +182,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 
 	// Mahsulotlar ro‘yxatini olish uchun query
 	query := fmt.Sprintf(`
-		SELECT p.guid, p.business_id, p.product_id, p.name, p.category_id, p.short_info, p.description,
+		SELECT p.guid, p.business_id, p.status,p.product_id, p.name, p.category_id, p.short_info, p.description,
 		       p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at,
 		       COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls
 		FROM product p
@@ -195,6 +211,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		if err := rows.Scan(
 			&product.ID,
 			&product.BusinessID,
+			&product.Status,
 			&product.ProductId,
 			&product.Name,
 			&product.CategoryID,

@@ -15,7 +15,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
-		Image_url    string
+		Image_url    []string
 	}
 	CreateProductImage struct {
 		ProductId string
@@ -49,6 +49,7 @@ type (
 		UpdatedAt    time.Time `json:"updated_at"`
 		Image_urls   []string
 		ProductId    int       `json:"product_id"`
+		Status       string    `json:"status"`
 	}
 
 	UpdateProductRequest struct {
@@ -93,6 +94,8 @@ type (
 		Limit      uint64  // required
 		Page       uint64  // required
 		ProductId  int
+		ProductCount int
+		Status     string
 	}
 	
 )

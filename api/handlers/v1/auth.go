@@ -78,6 +78,7 @@ func NewAuthRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) 
 		authGroup.GET("/clients/:id", r.GetClientByID)
 		authGroup.GET("/users/:id", r.GetUserByID)
 		authGroup.GET("/users/list", r.ListUsers)
+		authGroup.PUT("/clients/block",r.BlockClient)
 
 	}
 }
@@ -564,23 +565,28 @@ func (a *authRoutes) deleteAccount(c *gin.Context) {
 
 // @Router /auth/clients/list [get]
 // @Summary Get list of clients
-// @Description Get a list of clients with optional filtering by name and phone, and pagination
+// @Description Get a list of clients with optional filtering by name, phone, from, goal, order_status and pagination
 // @Security BearerAuth
 // @Tags AUTH
 // @Accept json
 // @Produce json
 // @Param name query string false "Filter by name"
 // @Param phone query string false "Filter by phone"
+// @Param from query string false "Filter by source (from)"
+// @Param goal query string false "Filter by goal"
+// @Param order_status query string false "Filter by order status"
 // @Param limit query int false "Limit the number of clients" default(10)
 // @Param page query int false "Page number for pagination" default(1)
 // @Success 200 {array} entity.Client "Success"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (r *authRoutes) ListClients(c *gin.Context) {
-
 	filter := entity.ClientFilter{
-		Name:  c.DefaultQuery("name", ""),
-		Phone: c.DefaultQuery("phone", ""),
+		Name:        c.DefaultQuery("name", ""),
+		Phone:       c.DefaultQuery("phone", ""),
+		From:        c.DefaultQuery("from", ""),
+		Goal:        c.DefaultQuery("goal", ""),
+		OrderStatus: c.DefaultQuery("order_status", ""),
 	}
 
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
@@ -598,13 +604,13 @@ func (r *authRoutes) ListClients(c *gin.Context) {
 
 	clients, err := r.userUseCase.ListClients(c, filter)
 	if err != nil {
-
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
 
 	r.handleResponse(c, status_http.OK, clients)
 }
+
 
 // @Router /auth/clients/{id} [get]
 // @Summary Get client by ID
@@ -633,6 +639,45 @@ func (r *authRoutes) GetClientByID(c *gin.Context) {
 
 	r.handleResponse(c, status_http.OK, client)
 }
+
+// @Router /auth/clients/block [put]
+// @Summary Block or unblock a client
+// @Description Block or unblock a client by business ID and platform ID
+// @Security BearerAuth
+// @Tags AUTH
+// @Accept json
+// @Produce json
+// @Param data body entity.BlockUser true "Block User Request"
+// @Success 200 {object} status_http.Response{data=string} "Success"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+func (r *authRoutes) BlockClient(c *gin.Context) {
+	var req entity.BlockUser
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Invalid request payload")
+		return
+	}
+
+	if req.PlatformId == "" || req.BusinessID == "" {
+		r.handleResponse(c, status_http.BadRequest, "Missing required fields: platform_id or business_id")
+		return
+	}
+
+	err := r.userUseCase.BlockUser(c, req)
+	if err != nil {
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	action := "unblocked"
+	if req.Block {
+		action = "blocked"
+	}
+
+	r.handleResponse(c, status_http.OK, fmt.Sprintf("Client successfully %s", action))
+}
+
 
 // @Router /auth/users/list [get]
 // @Summary Get list of users

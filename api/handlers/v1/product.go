@@ -75,15 +75,19 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.InternalServerError, "error while creating product")
 		return
 	}
-	_,err=p.productUscase.AddPicture(c,&entity.CreateProductImage{
-		ProductId: id,
-		ImageUrl: product.Image_url,
-	})
-	if err != nil {
-		fmt.Println(err)
-		p.handleResponse(c, status_http.InternalServerError, "error while creating image")
-		return
+	
+	for i := 0; i < len(product.Image_url); i++ {
+		_,err=p.productUscase.AddPicture(c,&entity.CreateProductImage{
+			ProductId: id,
+			ImageUrl: product.Image_url[i],
+		})
+		if err != nil {
+			fmt.Println(err)
+			p.handleResponse(c, status_http.InternalServerError, "error while creating image")
+			return
+		}
 	}
+	
 	p.handleResponse(c, status_http.Created, "Product created successfully")
 
 	if product.Discount != 0 {
@@ -155,9 +159,11 @@ func (p *productRoutes) getProductByID(c *gin.Context) {
 // @Security BearerAuth
 // @Param category_id query string false "Filter by Category ID"
 // @Param product_id query int false "Filter by product id"
+// @Param status query string false "Filter by status sotuvda or arxiv"
 // @Param search query string false "Search in name, description, or short_info"
-// @Param limit query integer true "Number of products per page (default: 10)"
-// @Param page query integer true "Page number (starts from 1, default: 1)"
+// @Param product_count query string false "filtr by product count"
+// @Param limit query integer true "Number of products per page" default(10)
+// @Param page query integer true "Page number " default(1)
 // @Param business_id query string false "UserID"
 // @Success 200 {object} status_http.Response{data=entity.GetAllProductsResponse} "List of Products"
 // @Failure 400 {object} status_http.Response{data=string} "Bad request"
@@ -174,6 +180,7 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 		OwnerID:    c.Query("business_id"),
 		CategoryID: c.Query("category_id"),
 		Search:     c.Query("search"),
+		Status:     c.Query("status"),
 	}
 	prid:=c.Query("product_id")
 	if prid!=""{
@@ -185,7 +192,16 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 		}
 		filter.ProductId=strprid
 	}
-
+	count:=c.Query("product_count")
+	if count!=""{
+		strcount,err:=strconv.Atoi(count)
+		if err!=nil{
+			fmt.Println(err)
+			p.handleResponse(c, status_http.BadRequest, "Invalid profuct_count")
+			return
+		}
+		filter.ProductCount=strcount
+	}
 	// Default values
 	limitStr := c.DefaultQuery("limit", "10")
 	pageStr := c.DefaultQuery("page", "1")

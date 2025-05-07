@@ -249,3 +249,21 @@ func (u *userService) GetClientByID(ctx context.Context, id string) (*entity.Cli
 	}
 	return user, nil
 }
+
+func (u *userService)BlockUser(ctx context.Context, req entity.BlockUser) error {
+	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
+	defer cancel()
+
+	// // tracing
+	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
+	// defer span.End()
+
+	 err := u.userRepo.BlockUser(ctx,req)
+	if err != nil {
+		// a.log.Error(fmt.Sprintf("GetUserByID - error getting user by id: %v", err))
+		return  err
+	}
+	return  nil
+}
+
+
