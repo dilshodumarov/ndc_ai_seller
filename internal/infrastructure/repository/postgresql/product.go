@@ -296,11 +296,6 @@ func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductR
 		args = append(args, product.Count)
 		argID++
 	}
-	if product.Image_url != "" {
-		setParts = append(setParts, fmt.Sprintf("image_url=$%d", argID))
-		args = append(args, product.Image_url)
-		argID++
-	}
 	if product.Discount != 0 {
 		setParts = append(setParts, fmt.Sprintf("discount=$%d", argID))
 		args = append(args, product.Discount)
@@ -381,4 +376,22 @@ func (p *productRepo) AddPicture(ctx context.Context, image *entity.CreateProduc
 	}
 
 	return id, nil
+}
+
+
+func (p *productRepo) DeletePicture(ctx context.Context, id string) (error) {
+	query := `
+		delete from product_pictures
+		where product_id =$1
+	`
+
+	_, err := p.db.Exec(ctx, query,
+		id,
+	)
+	if err != nil {
+		fmt.Println(err)
+		return  p.db.Error(err)
+	}
+
+	return  nil
 }

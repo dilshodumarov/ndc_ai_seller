@@ -62,7 +62,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
-		Image_url    string
+		Image_url    []string
 	}
 
 	UpdateProductRequestForSwagger struct {
@@ -74,7 +74,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
-		Image_url    string
+		Image_url    []string
 	}
 
 	GetAllProductsRequest struct {

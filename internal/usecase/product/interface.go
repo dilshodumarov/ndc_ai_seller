@@ -12,4 +12,5 @@ type Product interface {
 	Update(ctx context.Context, product *entity.UpdateProductRequest) error
 	Delete(ctx context.Context, id string) error
 	AddPicture(ctx context.Context, image *entity.CreateProductImage) (string, error)
+	DeletePicture(ctx context.Context, id string) (error)
 }

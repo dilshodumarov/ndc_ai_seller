@@ -19175,3 +19175,15 @@ main.main.func1
 2025-05-07T17:17:28.127+0500	INFO	middleware/logger.go:26	::1 - POST /v1/product/create 
 2025-05-07T17:17:36.435+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?category_id=53bc9ebc-a7b9-40ed-ba57-23478e82b035&limit=10&page=1 
 2025-05-07T17:19:16.985+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-07T17:56:44.722+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-07T17:57:02.093+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-07T17:57:55.941+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-07T17:58:01.879+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-07T17:58:04.383+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-07T17:58:15.552+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?category_id=53bc9ebc-a7b9-40ed-ba57-23478e82b035&limit=10&page=1 
+2025-05-07T17:58:58.920+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/product/update/023dae44-3363-48bd-9ffa-264a1b16bd60 
+2025-05-07T17:59:06.734+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/get/023dae44-3363-48bd-9ffa-264a1b16bd60 
+2025-05-07T18:08:54.332+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-07T18:20:25.713+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-07T18:20:41.662+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/product/update/023dae44-3363-48bd-9ffa-264a1b16bd60 
+2025-05-07T18:20:47.689+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/get/023dae44-3363-48bd-9ffa-264a1b16bd60 

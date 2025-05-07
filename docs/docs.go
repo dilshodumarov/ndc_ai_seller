@@ -5786,7 +5786,10 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "image_url": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "name": {
                     "type": "string"

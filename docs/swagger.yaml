@@ -546,7 +546,9 @@ definitions:
       discount_cost:
         type: integer
       image_url:
-        type: string
+        items:
+          type: string
+        type: array
       name:
         type: string
       short_info:

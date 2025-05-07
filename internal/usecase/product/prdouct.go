@@ -101,6 +101,20 @@ func (p *productService) AddPicture(ctx context.Context, image *entity.CreatePro
 
 	return p.productRepo.AddPicture(ctx, image)
 }
+
+
+func (p *productService) DeletePicture(ctx context.Context, id string) (error){
+	ctx, cancel := context.WithTimeout(ctx, p.ctxTimeout)
+	defer cancel()
+
+	// // tracing
+	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
+	// defer span.End()
+
+	return p.productRepo.DeletePicture(ctx, id)
+}
+
+
 // // CreateAttribute -.
 // func (p *ProductUseCase) CreateAttribute(ctx context.Context, a entity.Attribute) error {
 // 	err := p.productRepo.CreateAttribute(ctx, a)

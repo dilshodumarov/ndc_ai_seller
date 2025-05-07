@@ -75,11 +75,11 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.InternalServerError, "error while creating product")
 		return
 	}
-	
+
 	for i := 0; i < len(product.Image_url); i++ {
-		_,err=p.productUscase.AddPicture(c,&entity.CreateProductImage{
+		_, err = p.productUscase.AddPicture(c, &entity.CreateProductImage{
 			ProductId: id,
-			ImageUrl: product.Image_url[i],
+			ImageUrl:  product.Image_url[i],
 		})
 		if err != nil {
 			fmt.Println(err)
@@ -87,7 +87,7 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 			return
 		}
 	}
-	
+
 	p.handleResponse(c, status_http.Created, "Product created successfully")
 
 	if product.Discount != 0 {
@@ -182,30 +182,30 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 		Search:     c.Query("search"),
 		Status:     c.Query("status"),
 	}
-	prid:=c.Query("product_id")
-	if prid!=""{
-		strprid,err:=strconv.Atoi(prid)
-		if err!=nil{
+	prid := c.Query("product_id")
+	if prid != "" {
+		strprid, err := strconv.Atoi(prid)
+		if err != nil {
 			fmt.Println(err)
 			p.handleResponse(c, status_http.BadRequest, "Invalid product id")
 			return
 		}
-		filter.ProductId=strprid
+		filter.ProductId = strprid
 	}
-	count:=c.Query("product_count")
-	if count!=""{
-		strcount,err:=strconv.Atoi(count)
-		if err!=nil{
+	count := c.Query("product_count")
+	if count != "" {
+		strcount, err := strconv.Atoi(count)
+		if err != nil {
 			fmt.Println(err)
 			p.handleResponse(c, status_http.BadRequest, "Invalid profuct_count")
 			return
 		}
-		filter.ProductCount=strcount
+		filter.ProductCount = strcount
 	}
 	// Default values
 	limitStr := c.DefaultQuery("limit", "10")
 	pageStr := c.DefaultQuery("page", "1")
-fmt.Println(filter)
+	fmt.Println(filter)
 	limit, err := strconv.ParseUint(limitStr, 10, 64)
 	if err != nil || limit == 0 {
 		p.handleResponse(c, status_http.BadRequest, "Invalid limit parameter")
@@ -257,6 +257,25 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.InternalServerError, "error updating product")
 		return
 	}
+	if len(product.Image_url)>0{
+		err=p.productUscase.DeletePicture(c,id)
+		if err != nil {
+			fmt.Println(err)
+			p.handleResponse(c, status_http.InternalServerError, "error while delete image")
+			return
+		}
+	for i := 0; i < len(product.Image_url); i++ {
+		_, err = p.productUscase.AddPicture(c, &entity.CreateProductImage{
+			ProductId: id,
+			ImageUrl:  product.Image_url[i],
+		})
+		if err != nil {
+			fmt.Println(err)
+			p.handleResponse(c, status_http.InternalServerError, "error while creating image")
+			return
+		}
+	}
+}
 	if product.Discount != 0 {
 		BusinessID, code := helper.GetBusnessIdFromToken(c, p.Config)
 		if code != 0 {
@@ -319,7 +338,6 @@ func (p *productRoutes) deleteProduct(c *gin.Context) {
 	p.handleResponse(c, status_http.OK, "Product deleted successfully")
 }
 
-
 // @Router /product/picture [post]
 // @Summary Add a picture to a product
 // @Description Attach an image to an existing product by product ID
@@ -347,7 +365,6 @@ func (p *productRoutes) addProductPicture(c *gin.Context) {
 
 	p.handleResponse(c, status_http.Created, id)
 }
-
 
 func (h *productRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {
 	switch code := status.Code; {
