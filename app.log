@@ -19089,3 +19089,89 @@ main.main.func1
 2025-05-07T16:51:41.899+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-07T17:14:34.467+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-07T17:15:07.321+0500	ERROR	v1/product.go:356	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "error while creating product", "custom_message": ""}
+sugurta/api/handlers/v1.(*productRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/product.go:356
+sugurta/api/handlers/v1.(*productRoutes).createProduct
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/product.go:75
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-07T17:15:07.324+0500	INFO	middleware/logger.go:26	::1 - POST /v1/product/create 
+2025-05-07T17:17:04.272+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-07T17:17:04.287+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-07T17:17:08.228+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-07T17:17:11.297+0500	ERROR	v1/product.go:356	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "error while creating product", "custom_message": ""}
+sugurta/api/handlers/v1.(*productRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/product.go:356
+sugurta/api/handlers/v1.(*productRoutes).createProduct
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/product.go:75
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-07T17:17:11.298+0500	INFO	middleware/logger.go:26	::1 - POST /v1/product/create 
+2025-05-07T17:17:22.526+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-07T17:17:22.527+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-07T17:17:26.010+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-07T17:17:28.127+0500	INFO	middleware/logger.go:26	::1 - POST /v1/product/create 
+2025-05-07T17:17:36.435+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?category_id=53bc9ebc-a7b9-40ed-ba57-23478e82b035&limit=10&page=1 
+2025-05-07T17:19:16.985+0500	INFO	app/main.go:40	api gateway service stops
