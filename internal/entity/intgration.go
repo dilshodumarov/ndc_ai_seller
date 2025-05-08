@@ -18,6 +18,7 @@ type IntegrationUpdate struct {
 	PromptText        string
 	TokenLimit        int
 	IntelligenceLevel int
+	StopUntil         int
 }
 
 type IntegrationUpdateStatus struct {

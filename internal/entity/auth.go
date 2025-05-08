@@ -134,3 +134,11 @@ type BlockUser struct {
 	BusinessID string `json:"business_id"`
 	Block      bool   `json:"block"`
 }
+
+
+type PauzeChat struct {
+	PlatformId string `json:"platform_id"`
+	BusinessID string `json:"business_id"`
+	Pauze      bool   `json:"pauze"`
+	Type       string `json:"type"`
+}

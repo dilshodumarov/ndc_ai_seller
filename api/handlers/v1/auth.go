@@ -78,7 +78,8 @@ func NewAuthRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) 
 		authGroup.GET("/clients/:id", r.GetClientByID)
 		authGroup.GET("/users/:id", r.GetUserByID)
 		authGroup.GET("/users/list", r.ListUsers)
-		authGroup.PUT("/clients/block",r.BlockClient)
+		authGroup.PUT("/clients/block", r.BlockClient)
+		authGroup.PUT("/clients/pause", r.PauseClientChat)
 
 	}
 }
@@ -611,7 +612,6 @@ func (r *authRoutes) ListClients(c *gin.Context) {
 	r.handleResponse(c, status_http.OK, clients)
 }
 
-
 // @Router /auth/clients/{id} [get]
 // @Summary Get client by ID
 // @Description Retrieve a single client by its unique identifier (GUID)
@@ -678,6 +678,43 @@ func (r *authRoutes) BlockClient(c *gin.Context) {
 	r.handleResponse(c, status_http.OK, fmt.Sprintf("Client successfully %s", action))
 }
 
+// @Router /auth/clients/pause [put]
+// @Summary Pause or unpause chat for a client
+// @Description Pause or unpause a client's chat by business ID, platform ID, and source type (e.g., bot or channel)
+// @Security BearerAuth
+// @Tags AUTH
+// @Accept json
+// @Produce json
+// @Param data body entity.PauzeChat true "Pause Chat Request"
+// @Success 200 {object} status_http.Response{data=string} "Chat pause status updated successfully"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
+func (r *authRoutes) PauseClientChat(c *gin.Context) {
+	var req entity.PauzeChat
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Invalid request payload")
+		return
+	}
+
+	if req.PlatformId == "" || req.BusinessID == "" || req.Type == "" {
+		r.handleResponse(c, status_http.BadRequest, "Missing required fields: platform_id, business_id or type")
+		return
+	}
+
+	err := r.userUseCase.PauzChat(c, req)
+	if err != nil {
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	action := "unpaused"
+	if req.Pauze {
+		action = "paused"
+	}
+
+	r.handleResponse(c, status_http.OK, fmt.Sprintf("Client chat successfully %s", action))
+}
 
 // @Router /auth/users/list [get]
 // @Summary Get list of users
@@ -722,7 +759,6 @@ func (r *authRoutes) ListUsers(c *gin.Context) {
 	}
 	filter.Offset = uint64(page)
 
-	
 	users, err := r.userUseCase.List(c, filter)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -731,7 +767,6 @@ func (r *authRoutes) ListUsers(c *gin.Context) {
 
 	r.handleResponse(c, status_http.OK, users)
 }
-
 
 // @Router /auth/users/{id} [get]
 // @Summary Get user by ID
@@ -766,7 +801,6 @@ func (r *authRoutes) GetUserByID(c *gin.Context) {
 
 	r.handleResponse(c, status_http.OK, users[0])
 }
-
 
 // handleResponse handles the HTTP response
 func (h *authRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {

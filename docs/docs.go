@@ -215,6 +215,93 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/clients/pause": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Pause or unpause a client's chat by business ID, platform ID, and source type (e.g., bot or channel)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AUTH"
+                ],
+                "summary": "Pause or unpause chat for a client",
+                "parameters": [
+                    {
+                        "description": "Pause Chat Request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.PauzeChat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Chat pause status updated successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/auth/clients/{id}": {
             "get": {
                 "security": [
@@ -5411,6 +5498,9 @@ const docTemplate = `{
                 "promptText": {
                     "type": "string"
                 },
+                "stopUntil": {
+                    "type": "integer"
+                },
                 "token": {
                     "type": "string"
                 },
@@ -5537,6 +5627,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.PauzeChat": {
+            "type": "object",
+            "properties": {
+                "business_id": {
+                    "type": "string"
+                },
+                "pauze": {
+                    "type": "boolean"
+                },
+                "platform_id": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }

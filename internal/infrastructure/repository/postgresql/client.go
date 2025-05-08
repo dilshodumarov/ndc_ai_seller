@@ -220,3 +220,17 @@ func (r *userRepo) BlockUser(ctx context.Context, req entity.BlockUser) error {
 
 	return nil
 }
+
+func (r *userRepo) PauzChat(ctx context.Context, req entity.PauzeChat) error {
+	query := `
+		UPDATE client
+		SET is_pauze = $1
+		WHERE bussnes_id = $2 AND platform_id = $3 and from_chanel=$4
+	`
+	_, err := r.db.Exec(ctx, query, req.Pauze, req.BusinessID, req.PlatformId, req.Type)
+	if err != nil {
+		return fmt.Errorf("userRepo - BlockUser - Exec: %w", err)
+	}
+
+	return nil
+}

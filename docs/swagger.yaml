@@ -297,6 +297,8 @@ definitions:
         type: integer
       promptText:
         type: string
+      stopUntil:
+        type: integer
       token:
         type: string
       tokenLimit:
@@ -381,6 +383,17 @@ definitions:
       payment_method:
         type: string
       status:
+        type: string
+    type: object
+  entity.PauzeChat:
+    properties:
+      business_id:
+        type: string
+      pauze:
+        type: boolean
+      platform_id:
+        type: string
+      type:
         type: string
     type: object
   entity.PhoneNumber:
@@ -785,6 +798,54 @@ paths:
       security:
       - BearerAuth: []
       summary: Get list of clients
+      tags:
+      - AUTH
+  /auth/clients/pause:
+    put:
+      consumes:
+      - application/json
+      description: Pause or unpause a client's chat by business ID, platform ID, and
+        source type (e.g., bot or channel)
+      parameters:
+      - description: Pause Chat Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.PauzeChat'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Chat pause status updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Pause or unpause chat for a client
       tags:
       - AUTH
   /auth/delete/{id}:

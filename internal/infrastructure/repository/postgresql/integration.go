@@ -68,6 +68,12 @@ func (r *integrationRepo) Update(ctx context.Context, req *entity.IntegrationUpd
 		argPos++
 	}
 
+	if req.StopUntil >0 {
+		setClauses = append(setClauses, fmt.Sprintf("stop_until = $%d", argPos))
+		args = append(args, req.StopUntil)
+		argPos++
+	}
+
 	// Har doim kerak: guid va deleted_at IS NULL
 	setClause := strings.Join(setClauses, ", ")
 	args = append(args, req.ID)

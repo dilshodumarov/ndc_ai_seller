@@ -16,4 +16,5 @@ type User interface {
 	GetClientByID(ctx context.Context, id string) (*entity.Client, error)
 	GetByIDs(ctx context.Context, id string) ([]*entity.User, error)
 	BlockUser(ctx context.Context, req entity.BlockUser) error
+	PauzChat(ctx context.Context, req entity.PauzeChat) error
 }

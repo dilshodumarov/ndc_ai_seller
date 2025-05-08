@@ -103,9 +103,8 @@ func (u *userService) GetByIDs(ctx context.Context, id string) ([]*entity.User, 
 	return admin, nil
 }
 
-
 // GetUserByEmail gets a user by email
-func (u *userService)  List(ctx context.Context, filter entity.UserFilter) ([]*entity.User, error) {
+func (u *userService) List(ctx context.Context, filter entity.UserFilter) ([]*entity.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
 	defer cancel()
 
@@ -113,7 +112,7 @@ func (u *userService)  List(ctx context.Context, filter entity.UserFilter) ([]*e
 	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
 	// defer span.End()
 
-	user, err := u.userRepo.List(ctx,filter)
+	user, err := u.userRepo.List(ctx, filter)
 	if err != nil {
 		// a.log.Error(fmt.Sprintf("GetUserByID - error getting user by id: %v", err))
 		return nil, err
@@ -216,7 +215,6 @@ func (u *userService) Delete(ctx context.Context, id string) error {
 	return u.userRepo.Delete(ctx, id)
 }
 
-
 func (u *userService) ListClients(ctx context.Context, filter entity.ClientFilter) (*entity.ListClients, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
 	defer cancel()
@@ -225,7 +223,7 @@ func (u *userService) ListClients(ctx context.Context, filter entity.ClientFilte
 	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
 	// defer span.End()
 
-	user, err := u.userRepo.ListClients(ctx,filter)
+	user, err := u.userRepo.ListClients(ctx, filter)
 	if err != nil {
 		// a.log.Error(fmt.Sprintf("GetUserByID - error getting user by id: %v", err))
 		return nil, err
@@ -242,7 +240,7 @@ func (u *userService) GetClientByID(ctx context.Context, id string) (*entity.Cli
 	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
 	// defer span.End()
 
-	user, err := u.userRepo.GetClientByID(ctx,id)
+	user, err := u.userRepo.GetClientByID(ctx, id)
 	if err != nil {
 		// a.log.Error(fmt.Sprintf("GetUserByID - error getting user by id: %v", err))
 		return nil, err
@@ -250,7 +248,7 @@ func (u *userService) GetClientByID(ctx context.Context, id string) (*entity.Cli
 	return user, nil
 }
 
-func (u *userService)BlockUser(ctx context.Context, req entity.BlockUser) error {
+func (u *userService) BlockUser(ctx context.Context, req entity.BlockUser) error {
 	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
 	defer cancel()
 
@@ -258,12 +256,26 @@ func (u *userService)BlockUser(ctx context.Context, req entity.BlockUser) error 
 	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
 	// defer span.End()
 
-	 err := u.userRepo.BlockUser(ctx,req)
+	err := u.userRepo.BlockUser(ctx, req)
 	if err != nil {
 		// a.log.Error(fmt.Sprintf("GetUserByID - error getting user by id: %v", err))
-		return  err
+		return err
 	}
-	return  nil
+	return nil
 }
 
+func (u *userService) PauzChat(ctx context.Context, req entity.PauzeChat) error {
+	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
+	defer cancel()
 
+	// // tracing
+	// ctx, span := otlp.Start(ctx, "refreshTokenService", "refreshTokenUsecaseGet")
+	// defer span.End()
+
+	err := u.userRepo.PauzChat(ctx, req)
+	if err != nil {
+		// a.log.Error(fmt.Sprintf("GetUserByID - error getting user by id: %v", err))
+		return err
+	}
+	return nil
+}
