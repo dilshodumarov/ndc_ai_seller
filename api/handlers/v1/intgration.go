@@ -3,12 +3,15 @@ package v1
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strings"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
 	integration "sugurta/internal/usecase/intgration"
+	"time"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
@@ -38,6 +41,8 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 		integration.DELETE("/delete/:id", r.DeleteIntegration)
 		integration.GET("/owner/:business_id", r.GetIntegrationByBusinessId)
 		integration.PUT("/status", r.UpdateStatus)
+		integration.GET("/usage/:business_id", r.GetTokenUsageList)
+
 	}
 }
 
@@ -95,35 +100,35 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
-	if req.Token!=""{
-	BotStart := entity.BotIntegration{
-		Token: req.Token,
-		Guid:  res.GUID,
-	}
-	body, err := json.Marshal(BotStart)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
-		return
-	}
-	if res.Itype == "bot" {
-		resp, err := http.Post("http://ai-seller-bot:8081/start", "application/json", bytes.NewBuffer(body))
+	if req.Token != "" {
+		BotStart := entity.BotIntegration{
+			Token: req.Token,
+			Guid:  res.GUID,
+		}
+		body, err := json.Marshal(BotStart)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
 			return
 		}
-		var BotResp entity.BotIntegrationResponse
-		if err := json.NewDecoder(resp.Body).Decode(&BotResp); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode response"})
+		if res.Itype == "bot" {
+			resp, err := http.Post("http://ai-seller-bot:8081/start", "application/json", bytes.NewBuffer(body))
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
+				return
+			}
+			var BotResp entity.BotIntegrationResponse
+			if err := json.NewDecoder(resp.Body).Decode(&BotResp); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode response"})
+				return
+			}
+			if BotResp.Code != 0 {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bot start" + BotResp.Message})
+				return
+			}
+			i.handleResponse(c, status_http.OK, "Integration updated successfully")
 			return
 		}
-		if BotResp.Code != 0 {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bot start" + BotResp.Message})
-			return
-		}
-		i.handleResponse(c, status_http.OK, "Integration updated successfully")
-		return
 	}
-}
 	i.handleResponse(c, status_http.OK, "Integration updated successfully")
 }
 
@@ -297,6 +302,77 @@ func (i *integrationRoutes) SendTelegramCode(c *gin.Context) {
 	}
 
 	i.handleResponse(c, status_http.OK, "Integration updated successfully")
+}
+
+// GetTokenUsageList godoc
+// @Summary Get token usage list by business ID
+// @Description Retrieves list of token usages for given business with optional filters
+// @Tags INTEGRATION
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param business_id path string true "Business ID"
+// @Param source_type query string false "Source type (e.g. bot, telegram)"
+// @Param from_date query string false "Start date (RFC3339 format)"
+// @Param to_date query string false "End date (RFC3339 format)"
+// @Success 200 {object} status_http.Response{data=entity.IntegrationListResponse} "OK"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
+// @Router /integration/usage/{business_id} [get]
+func (i *integrationRoutes) GetTokenUsageList(c *gin.Context) {
+	businessID := c.Param("business_id")
+	if businessID == "" {
+		i.handleResponse(c, status_http.BadRequest, "business_id is required")
+		return
+	}
+	userAgent := c.Query("User-Agent")
+	fmt.Println(DetectDevice(userAgent))
+
+	var (
+		fromDate time.Time
+		toDate   time.Time
+		err      error
+	)
+
+	if from := c.Query("from_date"); from != "" {
+		fromDate, err = time.Parse(time.RFC3339, from)
+		if err != nil {
+			i.handleResponse(c, status_http.BadRequest, "invalid from_date format, use RFC3339")
+			return
+		}
+	}
+
+	if to := c.Query("to_date"); to != "" {
+		toDate, err = time.Parse(time.RFC3339, to)
+		if err != nil {
+			i.handleResponse(c, status_http.BadRequest, "invalid to_date format, use RFC3339")
+			return
+		}
+	}
+
+	req := &entity.IntegrationListRequest{
+		BusinessID: businessID,
+		SourceType: c.Query("source_type"),
+		FromDate:   fromDate,
+		ToDate:     toDate,
+	}
+
+	resp, err := i.integrationUsecase.GetTokenUsageList(c, req)
+	if err != nil {
+		i.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	i.handleResponse(c, status_http.OK, resp)
+}
+
+func DetectDevice(userAgent string) string {
+	userAgent = strings.ToLower(userAgent)
+
+	if strings.Contains(userAgent, "mobile") || strings.Contains(userAgent, "android") || strings.Contains(userAgent, "iphone") {
+		return "mobile"
+	}
+	return "desktop"
 }
 
 func (h *integrationRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {

@@ -19791,3 +19791,104 @@ net/http.(*conn).serve
 2025-05-08T14:34:13.289+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-09T11:02:50.641+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-09T11:02:53.672+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-05-09T11:02:53.687+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-05-09T11:02:53.688+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-05-09T11:02:53.689+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-05-09T11:02:53.880+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-09T11:02:54.083+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/favicon-32x32.png 
+2025-05-09T11:03:23.603+0500	ERROR	v1/auth.go:810	response	{"code": 400, "status": "BAD_REQUEST", "description": "The server could not understand the request due to invalid syntax", "data": "wrong email or password", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:810
+sugurta/api/handlers/v1.(*authRoutes).login
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:360
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-09T11:03:23.604+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-05-09T11:03:43.577+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-05-09T11:04:51.766+0500	INFO	middleware/logger.go:26	::1 - GET /v1/integration/usage/b08ef7db-0eec-4044-854c-a66ca41fee5b 
+2025-05-09T11:05:28.896+0500	INFO	middleware/logger.go:26	::1 - GET /v1/integration/usage/b08ef7db-0eec-4044-854c-a66ca41fee5b?from_date=2025-05-09T05%3A33%3A00.618052Z 
+2025-05-09T11:05:45.718+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-09T11:05:45.719+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-09T11:25:38.015+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-09T11:25:42.284+0500	INFO	v1/websocket.go:74	New WebSocket client connected	{"userID": "b2ba635e-6376-4173-80ad-7b85f02ccee7"}
+2025-05-09T11:25:42.285+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/websocket/chat/connect?id=b2ba635e-6376-4173-80ad-7b85f02ccee7 
+2025-05-09T11:25:45.424+0500	INFO	v1/websocket.go:101	Message send succesfully	{"message": "{\n  \"message\": \"Assalm alaykum keltirilgan noqulaylik uchun uzur \",\n  \"business_id\": \"b08ef7db-0eec-4044-854c-a66ca41fee5b\",\n  \"reply_to_message_id\": 3131,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-09T11:25:58.100+0500	INFO	v1/websocket.go:101	Message send succesfully	{"message": "{\n  \"message\": \"Assalm alaykum keltirilgan noqulaylik uchun uzur \",\n  \"business_id\": \"b08ef7db-0eec-4044-854c-a66ca41fee5b\",\n  \"reply_to_message_id\": 3131,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-09T11:34:27.983+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-09T11:34:27.983+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-09T15:43:48.688+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-09T15:43:52.333+0500	INFO	v1/websocket.go:74	New WebSocket client connected	{"userID": "b2ba635e-6376-4173-80ad-7b85f02ccee7"}
+2025-05-09T15:43:52.333+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/websocket/chat/connect?id=b2ba635e-6376-4173-80ad-7b85f02ccee7 
+2025-05-09T15:43:54.152+0500	INFO	v1/websocket.go:101	Message send succesfully	{"message": "{\n  \"message\": \"Assalm alaykum keltirilgan noqulaylik uchun uzur \",\n  \"business_id\": \"b08ef7db-0eec-4044-854c-a66ca41fee5b\",\n  \"reply_to_message_id\": 3131,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-09T15:43:59.312+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:43:59.442+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:45:32.136+0500	INFO	v1/websocket.go:101	Message send succesfully	{"message": "{\n  \"message\": \"Assalm alaykum keltirilgan noqulaylik uchun uzur \",\n  \"business_id\": \"b08ef7db-0eec-4044-854c-a66ca41fee5b\",\n  \"reply_to_message_id\": 3131,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-09T15:45:41.858+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:45:43.680+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:45:48.950+0500	INFO	v1/websocket.go:101	Message send succesfully	{"message": "{\n  \"message\": \"Assalm alaykum keltirilgan noqulaylik uchun uzur \",\n  \"business_id\": \"b08ef7db-0eec-4044-854c-a66ca41fee5b\",\n  \"reply_to_message_id\": 3131,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-09T15:46:56.422+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:46:56.660+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:47:07.426+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:47:07.622+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:47:25.599+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:47:25.732+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:48:06.775+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:48:06.898+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:48:33.682+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T15:48:33.838+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:03:43.179+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:03:45.117+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:03:47.848+0500	INFO	v1/websocket.go:101	Message send succesfully	{"message": "{\n  \"message\": \"Assalm alaykum keltirilgan noqulaylik uchun uzur \",\n  \"business_id\": \"b08ef7db-0eec-4044-854c-a66ca41fee5b\",\n  \"reply_to_message_id\": 3131,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-09T16:05:54.483+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:05:54.679+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:07:56.584+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:07:56.785+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:08:04.879+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:08:05.049+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:08:27.412+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:08:27.584+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:09:10.470+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:09:12.448+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:09:22.446+0500	INFO	v1/websocket.go:101	Message send succesfully	{"message": "{\n  \"message\": \"Assalm alaykum keltirilgan noqulaylik uchun uzur \",\n  \"business_id\": \"b08ef7db-0eec-4044-854c-a66ca41fee5b\",\n  \"reply_to_message_id\": 3131,\n  \"chatid\": 1011190155\n}\n\n"}
+2025-05-09T16:09:26.902+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:09:27.063+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-09T16:57:13.350+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-09T16:57:20.455+0500	INFO	middleware/logger.go:26	::1 - GET /v1/integration/usage/b08ef7db-0eec-4044-854c-a66ca41fee5b 
+2025-05-09T17:16:45.616+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-09T17:16:45.616+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31

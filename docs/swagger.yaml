@@ -289,6 +289,15 @@ definitions:
       tokenLimit:
         type: integer
     type: object
+  entity.IntegrationListResponse:
+    properties:
+      totalTokens:
+        type: integer
+      usages:
+        items:
+          $ref: '#/definitions/entity.TokenUsage'
+        type: array
+    type: object
   entity.IntegrationUpdate:
     properties:
       id:
@@ -493,6 +502,23 @@ definitions:
       timestamp:
         type: string
       user_id:
+        type: string
+    type: object
+  entity.TokenUsage:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      request_tokens:
+        type: integer
+      response_tokens:
+        type: integer
+      source_type:
+        type: string
+      total_tokens:
+        type: integer
+      used_for:
         type: string
     type: object
   entity.UpdateBusinessRequestForSwagger:
@@ -2511,6 +2537,65 @@ paths:
       security:
       - BearerAuth: []
       summary: Update integration token
+      tags:
+      - INTEGRATION
+  /integration/usage/{business_id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves list of token usages for given business with optional
+        filters
+      parameters:
+      - description: Business ID
+        in: path
+        name: business_id
+        required: true
+        type: string
+      - description: Source type (e.g. bot, telegram)
+        in: query
+        name: source_type
+        type: string
+      - description: Start date (RFC3339 format)
+        in: query
+        name: from_date
+        type: string
+      - description: End date (RFC3339 format)
+        in: query
+        name: to_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.IntegrationListResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get token usage list by business ID
       tags:
       - INTEGRATION
   /minio/media:

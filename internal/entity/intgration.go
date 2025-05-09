@@ -38,6 +38,29 @@ type IntegrationRequest struct {
 	BusinessId string
 }
 
+type IntegrationListRequest struct {
+	BusinessID  string
+	SourceType  string    // optional
+	FromDate    time.Time // optional
+	ToDate      time.Time // optional
+}
+
+type IntegrationListResponse struct {
+	Usages      []TokenUsage
+	TotalTokens int
+}
+
+type TokenUsage struct {
+	ID             string    `json:"id"`
+	SourceType     string    `json:"source_type"`
+	UsedFor        string    `json:"used_for"`
+	RequestTokens  int       `json:"request_tokens"`
+	ResponseTokens int       `json:"response_tokens"`
+	TotalTokens    int       `json:"total_tokens"`
+	CreatedAt      time.Time `json:"created_at"`
+}
+
+
 type IntegrationGetResponse struct {
 	Guid string
 	IntegrationToken string

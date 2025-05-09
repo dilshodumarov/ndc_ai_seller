@@ -53,3 +53,11 @@ func (s *integrationService) UpdateStatus(ctx context.Context, req *entity.Integ
 
 	return s.integrationRepo.UpdateStatus(ctx, req)
 }
+
+
+func (s *integrationService) GetTokenUsageList(ctx context.Context, req *entity.IntegrationListRequest) (*entity.IntegrationListResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
+	defer cancel()
+
+	return s.integrationRepo.GetTokenUsageList(ctx, req)
+}
