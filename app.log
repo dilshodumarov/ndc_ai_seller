@@ -20102,3 +20102,13 @@ main.main.func1
 2025-05-12T11:06:31.806+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-12T14:18:22.648+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-12T14:18:24.247+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/get/9991f361-4fc1-4b01-9397-31ff40c4eb29 
+2025-05-12T14:18:59.937+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/product/update/9991f361-4fc1-4b01-9397-31ff40c4eb29 
+2025-05-12T14:19:20.780+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/product/update/9991f361-4fc1-4b01-9397-31ff40c4eb29 
+2025-05-12T14:19:27.700+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/get/9991f361-4fc1-4b01-9397-31ff40c4eb29 
+2025-05-12T14:19:52.294+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/get/023dae44-3363-48bd-9ffa-264a1b16bd60 
+2025-05-12T14:19:57.941+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/product/update/9991f361-4fc1-4b01-9397-31ff40c4eb29 
+2025-05-12T14:20:03.512+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/product/update/023dae44-3363-48bd-9ffa-264a1b16bd60 
+2025-05-12T14:20:10.417+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/get/023dae44-3363-48bd-9ffa-264a1b16bd60 
+2025-05-12T14:26:50.805+0500	INFO	app/main.go:40	api gateway service stops
