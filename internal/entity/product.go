@@ -50,6 +50,7 @@ type (
 		Image_urls   []string
 		ProductId    int       `json:"product_id"`
 		Status       string    `json:"status"`
+		CategoryName string    `json:"category"`
 	}
 
 	UpdateProductRequest struct {

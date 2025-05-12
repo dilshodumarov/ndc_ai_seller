@@ -68,27 +68,30 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 		picturesting string
 	)
 	query := `
-		SELECT 
-			p.guid, 
-			p.business_id, 
-			p.status,
-			p.product_id,
-			p.name, 
-			p.category_id, 
-			p.short_info, 
-			p.description,
-			p.cost, 
-			p.count, 
-			p.discount_cost, 
-			p.discount, 
-			p.created_at, 
-			p.updated_at,
-			COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls
-		FROM product p
-		LEFT JOIN product_pictures pp ON p.guid = pp.product_id
-		WHERE p.guid = $1
-		GROUP BY p.guid
-	`
+	SELECT 
+		p.guid, 
+		p.business_id, 
+		p.status,
+		p.product_id,
+		p.name, 
+		p.category_id, 
+		p.short_info, 
+		p.description,
+		p.cost, 
+		p.count, 
+		p.discount_cost, 
+		p.discount, 
+		p.created_at, 
+		p.updated_at,
+		c.name AS category_name, 
+		COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls
+	FROM product p
+	LEFT JOIN product_pictures pp ON p.guid = pp.product_id
+	LEFT JOIN category c ON p.category_id = c.guid  -- category jadvali bilan bog'lanmoqda
+	WHERE p.guid = $1
+	GROUP BY p.guid, c.name
+`
+
 
 	var product entity.Product
 	err := p.db.QueryRow(ctx, query, id).Scan(
@@ -106,6 +109,7 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 		&product.Discount,
 		&product.CreatedAt,
 		&product.UpdatedAt,
+		&product.CategoryName,
 		&picturesting,
 	)
 	if err != nil {
@@ -181,16 +185,18 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 
 	// Mahsulotlar ro‘yxatini olish uchun query
 	query := fmt.Sprintf(`
-		SELECT p.guid, p.business_id, p.status,p.product_id, p.name, p.category_id, p.short_info, p.description,
-		       p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at,
-		       COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls
-		FROM product p
-		LEFT JOIN product_pictures pp ON p.guid = pp.product_id
-		%s
-		GROUP BY p.guid, p.business_id, p.product_id, p.name, p.category_id, p.short_info, p.description,
-		         p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at
-		%s
-	`, where, limitStmt)
+	SELECT p.guid, p.business_id, p.status, p.product_id, p.name, p.category_id, p.short_info, p.description,
+	       p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at, c.name,
+	       COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls
+	FROM product p
+	LEFT JOIN product_pictures pp ON p.guid = pp.product_id
+	LEFT JOIN category c ON p.category_id = c.guid
+	%s
+	GROUP BY p.guid, p.business_id, p.status, p.product_id, p.name, p.category_id, p.short_info, p.description,
+	         p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at, c.name
+	%s
+`, where, limitStmt)
+
 
 	rows, err := p.db.Query(ctx, query, args...)
 	if err != nil {
@@ -222,6 +228,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 			&discountDB,
 			&product.CreatedAt,
 			&product.UpdatedAt,
+			&product.CategoryName,
 			&imageUrlsStr,
 		); err != nil {
 			return nil, p.db.Error(err)
