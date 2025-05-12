@@ -334,12 +334,7 @@ definitions:
       email:
         type: string
       password:
-        maxLength: 16
-        minLength: 6
         type: string
-    required:
-    - email
-    - password
     type: object
   entity.Order:
     properties:

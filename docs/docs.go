@@ -5653,18 +5653,12 @@ const docTemplate = `{
         },
         "entity.LoginRequest": {
             "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
                 "password": {
-                    "type": "string",
-                    "maxLength": 16,
-                    "minLength": 6
+                    "type": "string"
                 }
             }
         },
