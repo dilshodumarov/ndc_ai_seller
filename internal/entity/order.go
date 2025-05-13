@@ -25,16 +25,24 @@ type (
 
 	Order struct {
 		ID                string
-		ClientID          string
+		Client          ClientInfo
 		BusinessID        string
 		LocationURL       string
 		Status            string
+		AdminStatus       string
 		TotalPrice        float64
 		PaymentMethod     string
+		Platform          string
 		StatusChangedTime *time.Time
 		CreatedAt         time.Time
 		UpdatedAt         time.Time
 		Products          []OrderProduct // <--- Products field qo‘shamiz
+	}
+
+	ClientInfo struct {
+		GUID  string
+		Name  string
+		Phone string
 	}
 	
 	OrderProduct struct {
@@ -70,6 +78,8 @@ type (
 		BusinessID    string
 		Status        string
 		PaymentMethod string
+		Platform      string
+		Search        string
 	}
 	
 )

@@ -16,6 +16,7 @@ type IntegrationUpdate struct {
 	ID                string
 	Token             string
 	PromptText        string
+	PromptOrder        string
 	TokenLimit        int
 	IntelligenceLevel int
 	StopUntil         int
@@ -68,7 +69,8 @@ type IntegrationGetResponse struct {
 	Status           string
 	StartedAt        time.Time
 	StoppedAt        time.Time 
-	PromptText        string
+	PromptText       string
+	PromtOrder       string
 	TokenLimit        int
 	IntelligenceLevel int
 }

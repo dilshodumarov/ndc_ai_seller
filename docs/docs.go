@@ -4242,6 +4242,18 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "platform",
+                        "name": "platform",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Payment Method",
                         "name": "payment_method",
                         "in": "query"
@@ -5271,6 +5283,20 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.ClientInfo": {
+            "type": "object",
+            "properties": {
+                "guid": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
         "entity.ClientType": {
             "type": "object",
             "properties": {
@@ -5575,6 +5601,9 @@ const docTemplate = `{
                 "promptText": {
                     "type": "string"
                 },
+                "promtOrder": {
+                    "type": "string"
+                },
                 "startedAt": {
                     "type": "string"
                 },
@@ -5611,6 +5640,9 @@ const docTemplate = `{
                 },
                 "intelligenceLevel": {
                     "type": "integer"
+                },
+                "promptOrder": {
+                    "type": "string"
                 },
                 "promptText": {
                     "type": "string"
@@ -5665,11 +5697,14 @@ const docTemplate = `{
         "entity.Order": {
             "type": "object",
             "properties": {
+                "adminStatus": {
+                    "type": "string"
+                },
                 "businessID": {
                     "type": "string"
                 },
-                "clientID": {
-                    "type": "string"
+                "client": {
+                    "$ref": "#/definitions/entity.ClientInfo"
                 },
                 "createdAt": {
                     "type": "string"
@@ -5681,6 +5716,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "paymentMethod": {
+                    "type": "string"
+                },
+                "platform": {
                     "type": "string"
                 },
                 "products": {
@@ -5771,6 +5809,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "business_id": {
+                    "type": "string"
+                },
+                "category": {
                     "type": "string"
                 },
                 "category_id": {

@@ -106,6 +106,8 @@ func (r *OrderRoutes) getOrder(c *gin.Context) {
 // @Param client_id query string false "Client ID"
 // @Param business_id query string false "Business ID"
 // @Param status query string false "Status"
+// @Param search query string false "Search"
+// @Param platform query string false "platform"
 // @Param payment_method query string false "Payment Method"
 // @Success 200 {object} entity.GetAllOrdersResponse
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -127,6 +129,8 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 		BusinessID:    c.Query("business_id"),
 		Status:        c.Query("status"),
 		PaymentMethod: c.Query("payment_method"),
+		Platform:      c.Query("platform"),
+		Search:        c.Query("search"),
 	}
 
 	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))

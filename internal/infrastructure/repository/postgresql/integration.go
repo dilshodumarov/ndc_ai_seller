@@ -57,6 +57,12 @@ func (r *integrationRepo) Update(ctx context.Context, req *entity.IntegrationUpd
 		args = append(args, req.PromptText)
 		argPos++
 	}
+
+	if req.PromptOrder != "" {
+		setClauses = append(setClauses, fmt.Sprintf("prompt_order = $%d", argPos))
+		args = append(args, req.PromptOrder)    
+		argPos++
+	}
 	if req.TokenLimit != 0 {
 		setClauses = append(setClauses, fmt.Sprintf("token_limit = $%d", argPos))
 		args = append(args, req.TokenLimit)
@@ -142,7 +148,7 @@ func (r *integrationRepo) Delete(ctx context.Context, id string) error {
 func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.IntegrationRequest) (*entity.IntegrationGetResponse, error) {
 	query := fmt.Sprintf(`
 		SELECT guid, integration_token, integration_type, status, started_at, stoped_at,
-		       prompt_text, token_limit, intelligence_level
+		       prompt_text, prompt_order,token_limit, intelligence_level
 		FROM %s 
 		WHERE owner_id = $1 AND deleted_at IS NULL
 	`, r.tableName)
@@ -151,6 +157,7 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 		startedAt sql.NullTime
 		stoppedAt sql.NullTime
 		prompt    sql.NullString
+		promptOrder    sql.NullString
 		res       entity.IntegrationGetResponse
 	)
 
@@ -162,6 +169,7 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 		&startedAt,
 		&stoppedAt,
 		&prompt,
+		&promptOrder,
 		&res.TokenLimit,
 		&res.IntelligenceLevel,
 	)
@@ -177,6 +185,10 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 	}
 	if prompt.Valid {
 		res.PromptText = prompt.String
+	}
+
+	if promptOrder.Valid {
+		res.PromtOrder = promptOrder.String
 	}
 
 	return &res, nil

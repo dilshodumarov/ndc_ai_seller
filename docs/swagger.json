@@ -4235,6 +4235,18 @@
                     },
                     {
                         "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "platform",
+                        "name": "platform",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Payment Method",
                         "name": "payment_method",
                         "in": "query"
@@ -5264,6 +5276,20 @@
                 }
             }
         },
+        "entity.ClientInfo": {
+            "type": "object",
+            "properties": {
+                "guid": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
         "entity.ClientType": {
             "type": "object",
             "properties": {
@@ -5568,6 +5594,9 @@
                 "promptText": {
                     "type": "string"
                 },
+                "promtOrder": {
+                    "type": "string"
+                },
                 "startedAt": {
                     "type": "string"
                 },
@@ -5604,6 +5633,9 @@
                 },
                 "intelligenceLevel": {
                     "type": "integer"
+                },
+                "promptOrder": {
+                    "type": "string"
                 },
                 "promptText": {
                     "type": "string"
@@ -5658,11 +5690,14 @@
         "entity.Order": {
             "type": "object",
             "properties": {
+                "adminStatus": {
+                    "type": "string"
+                },
                 "businessID": {
                     "type": "string"
                 },
-                "clientID": {
-                    "type": "string"
+                "client": {
+                    "$ref": "#/definitions/entity.ClientInfo"
                 },
                 "createdAt": {
                     "type": "string"
@@ -5674,6 +5709,9 @@
                     "type": "string"
                 },
                 "paymentMethod": {
+                    "type": "string"
+                },
+                "platform": {
                     "type": "string"
                 },
                 "products": {
@@ -5764,6 +5802,9 @@
             "type": "object",
             "properties": {
                 "business_id": {
+                    "type": "string"
+                },
+                "category": {
                     "type": "string"
                 },
                 "category_id": {

@@ -66,16 +66,21 @@ func (r *OrderRepo) Create(ctx context.Context, o *entity.CreateOrderRequest) (i
 
 func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 	query := `
-		SELECT 
-			o.guid, o.client_id, o.business_id, o.location_url, o.status, o.total_price, 
-			o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
-			p.guid, p.name, p.image_url, p.cost,
-			op.count, op.price
-		FROM "order" o
-		LEFT JOIN order_products op ON o.guid = op.order_id
-		LEFT JOIN product p ON p.guid = op.product_id
-		WHERE o.guid = $1
-	`
+	SELECT 
+		o.guid, o.business_id,o.platform,o.location_url, o.status, o.total_price, 
+		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
+
+		c.guid, c.first_name, c.phone, 
+
+		p.guid, p.name, p.image_url, p.cost,
+		op.count, op.price
+	FROM "order" o
+	LEFT JOIN order_products op ON o.guid = op.order_id
+	LEFT JOIN product p ON p.guid = op.product_id
+	LEFT JOIN client c ON o.client_id = c.guid
+	WHERE o.guid = $1
+`
+
 
 	rows, err := r.db.Query(ctx, query, id)
 	if err != nil {
@@ -91,14 +96,23 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			o                     entity.Order
 			product               entity.OrderProduct
 			nullStatusChangedTime sql.NullTime
+		
+			clientGUID  sql.NullString
+			clientName  sql.NullString
+			clientPhone sql.NullString
 		)
+		
 
 		err = rows.Scan(
-			&o.ID, &o.ClientID, &o.BusinessID, &o.LocationURL, &o.Status, &o.TotalPrice,
+			&o.ID,  &o.BusinessID, &o.Platform,&o.LocationURL, &o.Status, &o.TotalPrice,
 			&o.PaymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,
+		
+			&clientGUID, &clientName, &clientPhone, // client
+		
 			&product.ProductID, &product.Name, &product.ImageURL, &product.Cost,
 			&product.Count, &product.ProductTotalPrice,
 		)
+		
 		products = append(products, product)
 		if err != nil {
 			return nil, fmt.Errorf("OrderRepo - Get - scan row: %w", err)
@@ -109,6 +123,16 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			if nullStatusChangedTime.Valid {
 				order.StatusChangedTime = &nullStatusChangedTime.Time
 			}
+		}
+		if clientGUID.Valid{
+			order.Client.GUID=clientGUID.String
+		}
+
+		if clientName.Valid{
+			order.Client.Name=clientName.String
+		}
+		if clientPhone.Valid{
+			order.Client.Phone=clientPhone.String
 		}
 
 	}
@@ -123,16 +147,70 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 }
 
 func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit, offset uint64) (*entity.GetAllOrdersResponse, error) {
-	where, args := buildWhereClause(filter, "o")
-
-	// 1. Faqat order ID'larini limit bilan olish
+	query := ""
+	var where []string
+	var args []interface{}
+	argPos := 1
+	
+	if filter.ID != "" {
+		where = append(where, fmt.Sprintf("o.guid = $%d", argPos))
+		args = append(args, filter.ID)
+		argPos++
+	}
+	
+	if filter.Platform != "" {
+		where = append(where, fmt.Sprintf("o.platform = $%d", argPos))
+		args = append(args, filter.Platform)
+		argPos++
+	}
+	
+	if filter.ClientID != "" {
+		where = append(where, fmt.Sprintf("o.client_id = $%d", argPos))
+		args = append(args, filter.ClientID)
+		argPos++
+	}
+	
+	if filter.BusinessID != "" {
+		where = append(where, fmt.Sprintf("o.business_id = $%d", argPos))
+		args = append(args, filter.BusinessID)
+		argPos++
+	}
+	
+	if filter.Status != "" {
+		where = append(where, fmt.Sprintf("o.status = $%d", argPos))
+		args = append(args, filter.Status)
+		argPos++
+	}
+	
+	if filter.PaymentMethod != "" {
+		where = append(where, fmt.Sprintf("o.payment_method = $%d", argPos))
+		args = append(args, filter.PaymentMethod)
+		argPos++
+	}
+	
+	if filter.Search != "" {
+		
+		where = append(where, fmt.Sprintf("(p.name ILIKE $%d OR c.first_name ILIKE $%d)", argPos, argPos))
+		args = append(args, "%"+filter.Search+"%")
+		argPos++
+	}
+	
+	// WHERE blokini qo‘shish
+	if len(where) > 0 {
+		query = "WHERE " + strings.Join(where, " AND ")
+	}
+	
+	// Yakuniy order ID'larini olish so‘rovi
 	orderIDQuery := fmt.Sprintf(`
 		SELECT o.guid
 		FROM %s o
+		LEFT JOIN order_products op ON o.guid = op.order_id
+		LEFT JOIN product p ON p.guid = op.product_id
+		LEFT JOIN client c ON o.client_id = c.guid
 		%s
 		ORDER BY o.created_at DESC
-	`, r.tableName, where)
-
+	`, r.tableName, query)
+	
 	if limit > 0 {
 		orderIDQuery += fmt.Sprintf(" LIMIT $%d OFFSET $%d", len(args)+1, len(args)+2)
 		args = append(args, limit, offset)
@@ -159,27 +237,31 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		}, nil
 	}
 
-
 	inClause := ""
 	inArgs := make([]interface{}, len(orderIDs))
 	for i, id := range orderIDs {
 		inClause += fmt.Sprintf("$%d,", i+1)
 		inArgs[i] = id
 	}
-	inClause = inClause[:len(inClause)-1] 
+	inClause = inClause[:len(inClause)-1]
 
 	fullQuery := fmt.Sprintf(`
-		SELECT 
-			o.guid, o.client_id, o.business_id, o.location_url, o.status, o.total_price, 
-			o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
-			p.guid, p.name, p.image_url, p.cost,
-			op.count, op.price
-		FROM %s o
-		INNER JOIN order_products op ON o.guid = op.order_id
-		INNER JOIN product p ON p.guid = op.product_id
-		WHERE o.guid IN (%s)
-		ORDER BY o.created_at DESC
-	`, r.tableName, inClause)
+	SELECT 
+		o.guid, 
+		c.guid AS client_guid, c.first_name AS client_name, c.phone AS client_phone, 
+		o.business_id, o.platform,o.location_url, o.status, o.total_price, 
+		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
+		os.custom_name AS status_name,
+		p.guid, p.name, p.image_url, p.cost,
+		op.count, op.price
+	FROM %s o
+	LEFT JOIN order_status os ON o.order_status_id = os.guid
+	INNER JOIN order_products op ON o.guid = op.order_id
+	INNER JOIN product p ON p.guid = op.product_id
+	INNER JOIN client c ON o.client_id = c.guid
+	WHERE o.guid IN (%s)
+	ORDER BY o.created_at DESC
+`, r.tableName, inClause)
 
 	rows, err := r.db.Query(ctx, fullQuery, inArgs...)
 	if err != nil {
@@ -194,12 +276,17 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			order                 entity.Order
 			product               entity.OrderProduct
 			nullStatusChangedTime sql.NullTime
+			nullStatusName        sql.NullString
+			clientGUID            sql.NullString
+			clientName            sql.NullString
+			clientPhone           sql.NullString
 		)
 
 		if err := rows.Scan(
 			&order.ID,
-			&order.ClientID,
+			&clientGUID, &clientName, &clientPhone,
 			&order.BusinessID,
+			&order.Platform,
 			&order.LocationURL,
 			&order.Status,
 			&order.TotalPrice,
@@ -207,6 +294,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			&nullStatusChangedTime,
 			&order.CreatedAt,
 			&order.UpdatedAt,
+			&nullStatusName,
 			&product.ProductID,
 			&product.Name,
 			&product.ImageURL,
@@ -215,6 +303,21 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			&product.ProductTotalPrice,
 		); err != nil {
 			return nil, r.db.Error(err)
+		}
+
+		if nullStatusName.Valid {
+			order.AdminStatus = nullStatusName.String
+		}
+
+		if clientGUID.Valid{
+			order.Client.GUID=clientGUID.String
+		}
+
+		if clientName.Valid{
+			order.Client.Name=clientName.String
+		}
+		if clientPhone.Valid{
+			order.Client.Phone=clientPhone.String
 		}
 
 		if existingOrder, ok := orderMap[order.ID]; ok {
@@ -249,7 +352,6 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		Total: totalCount,
 	}, nil
 }
-
 
 // Update - Update Order
 func (r *OrderRepo) Update(ctx context.Context, o *entity.OrderUpdate) error {
@@ -328,21 +430,30 @@ func buildWhereClause(filter *entity.OrderFilter, alias string) (string, []inter
 		args = append(args, filter.ID)
 		argPos++
 	}
+	if filter.Platform != "" {
+		where = append(where, fmt.Sprintf(`%s = $%d`, col("platform"), argPos))
+		args = append(args, filter.Platform)
+		argPos++
+	}
+
 	if filter.ClientID != "" {
 		where = append(where, fmt.Sprintf(`%s = $%d`, col("client_id"), argPos))
 		args = append(args, filter.ClientID)
 		argPos++
 	}
+
 	if filter.BusinessID != "" {
 		where = append(where, fmt.Sprintf(`%s = $%d`, col("business_id"), argPos))
 		args = append(args, filter.BusinessID)
 		argPos++
 	}
+
 	if filter.Status != "" {
 		where = append(where, fmt.Sprintf(`%s = $%d`, col("status"), argPos))
 		args = append(args, filter.Status)
 		argPos++
 	}
+
 	if filter.PaymentMethod != "" {
 		where = append(where, fmt.Sprintf(`%s = $%d`, col("payment_method"), argPos))
 		args = append(args, filter.PaymentMethod)
