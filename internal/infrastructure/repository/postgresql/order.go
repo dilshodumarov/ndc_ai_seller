@@ -100,11 +100,12 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			clientGUID  sql.NullString
 			clientName  sql.NullString
 			clientPhone sql.NullString
+			imageurl           sql.NullString
 		)
 		
 
 		err = rows.Scan(
-			&o.ID,  &o.OrderId,o.ImageUrl,&o.BusinessID, &o.Platform,&o.LocationURL, &o.Status, &o.TotalPrice,
+			&o.ID,  &o.OrderId,&imageurl,&o.BusinessID, &o.Platform,&o.LocationURL, &o.Status, &o.TotalPrice,
 			&o.PaymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,
 		
 			&clientGUID, &clientName, &clientPhone, // client
@@ -126,6 +127,9 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 		}
 		if clientGUID.Valid{
 			order.Client.GUID=clientGUID.String
+		}
+		if imageurl.Valid{
+			order.ImageUrl=imageurl.String
 		}
 
 		if clientName.Valid{
@@ -280,12 +284,13 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			clientGUID            sql.NullString
 			clientName            sql.NullString
 			clientPhone           sql.NullString
+			imageurl              sql.NullString
 		)
 
 		if err := rows.Scan(
 			&order.ID,
 			&order.OrderId,
-			&order.ImageUrl,
+			&imageurl,
 			&clientGUID, &clientName, &clientPhone,
 			&order.BusinessID,
 			&order.Platform,
@@ -321,7 +326,9 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		if clientPhone.Valid{
 			order.Client.Phone=clientPhone.String
 		}
-
+		if imageurl.Valid{
+			order.ImageUrl=imageurl.String
+		}
 		if existingOrder, ok := orderMap[order.ID]; ok {
 			existingOrder.Products = append(existingOrder.Products, product)
 		} else {
