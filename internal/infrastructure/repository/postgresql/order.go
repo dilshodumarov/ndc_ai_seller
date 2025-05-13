@@ -67,7 +67,7 @@ func (r *OrderRepo) Create(ctx context.Context, o *entity.CreateOrderRequest) (i
 func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 	query := `
 	SELECT 
-		o.guid, o.order_id,o.business_id,o.platform,o.location_url, o.status, o.total_price, 
+		o.guid, o.order_id,o.image_url,o.business_id,o.platform,o.location_url, o.status, o.total_price, 
 		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
 
 		c.guid, c.first_name, c.phone, 
@@ -104,7 +104,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 		
 
 		err = rows.Scan(
-			&o.ID,  &o.OrderId,&o.BusinessID, &o.Platform,&o.LocationURL, &o.Status, &o.TotalPrice,
+			&o.ID,  &o.OrderId,o.ImageUrl,&o.BusinessID, &o.Platform,&o.LocationURL, &o.Status, &o.TotalPrice,
 			&o.PaymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,
 		
 			&clientGUID, &clientName, &clientPhone, // client
@@ -247,7 +247,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 
 	fullQuery := fmt.Sprintf(`
 	SELECT 
-		o.guid, o.order_id,
+		o.guid, o.order_id,o.image_url,
 		c.guid AS client_guid, c.first_name AS client_name, c.phone AS client_phone, 
 		o.business_id, o.platform,o.location_url, o.status, o.total_price, 
 		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
@@ -285,6 +285,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		if err := rows.Scan(
 			&order.ID,
 			&order.OrderId,
+			&order.ImageUrl,
 			&clientGUID, &clientName, &clientPhone,
 			&order.BusinessID,
 			&order.Platform,

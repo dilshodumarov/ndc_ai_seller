@@ -5712,7 +5712,13 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "imageUrl": {
+                    "type": "string"
+                },
                 "locationURL": {
+                    "type": "string"
+                },
+                "orderId": {
                     "type": "string"
                 },
                 "paymentMethod": {

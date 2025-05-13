@@ -34,6 +34,7 @@ type (
 		TotalPrice        float64
 		PaymentMethod     string
 		Platform          string
+		ImageUrl          string
 		StatusChangedTime *time.Time
 		CreatedAt         time.Time
 		UpdatedAt         time.Time

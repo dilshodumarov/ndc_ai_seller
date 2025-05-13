@@ -361,7 +361,11 @@ definitions:
         type: string
       id:
         type: string
+      imageUrl:
+        type: string
       locationURL:
+        type: string
+      orderId:
         type: string
       paymentMethod:
         type: string
