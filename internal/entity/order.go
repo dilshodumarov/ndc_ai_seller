@@ -26,8 +26,9 @@ type (
 	Order struct {
 		ID                string
 		OrderId           string
-		Client          ClientInfo
+		Client            ClientInfo
 		BusinessID        string
+		StatusNumber      int
 		LocationURL       string
 		Status            string
 		AdminStatus       string
