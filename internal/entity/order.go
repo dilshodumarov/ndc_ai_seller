@@ -46,6 +46,7 @@ type (
 		GUID  string
 		Name  string
 		Phone string
+		UserName string
 	}
 	
 	OrderProduct struct {

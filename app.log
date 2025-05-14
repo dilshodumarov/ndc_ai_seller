@@ -24212,3 +24212,40 @@ main.main.func1
 2025-05-14T13:58:26.652+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list/b08ef7db-0eec-4044-854c-a66ca41fee5b 
 2025-05-14T13:58:36.335+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list/a27f0d6e-1e43-42ac-b270-664b175b5d37 
 2025-05-14T13:58:41.410+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list/b08ef7db-0eec-4044-854c-a66ca41fee5b 
+2025-05-14T14:04:58.784+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-14T14:05:04.512+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/clients/list?limit=10&page=1 
+2025-05-14T14:13:19.529+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-14T14:13:23.390+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/clients/list?limit=10&page=1 
+2025-05-14T14:13:44.462+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0 
+2025-05-14T14:14:41.690+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/get/14fe4a0f-3003-41dc-8109-6148b258bd7b 
+2025-05-14T14:16:45.149+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-14T14:16:45.150+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-14T14:16:52.678+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-14T14:16:58.205+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/get/14fe4a0f-3003-41dc-8109-6148b258bd7b 
+2025-05-14T14:17:06.701+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0 
+2025-05-14T14:17:27.398+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-14T14:17:27.398+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-14T14:17:38.141+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-14T14:17:49.623+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0 
+2025-05-14T14:19:08.225+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-14T14:19:08.225+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-14T14:19:19.649+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-14T14:19:23.951+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0 
+2025-05-14T14:19:51.939+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-14T14:19:51.939+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-14T14:19:58.272+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-14T14:20:03.597+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0 
+2025-05-14T14:21:16.313+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-14T14:21:16.313+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-14T14:21:24.903+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-14T14:21:28.587+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0 

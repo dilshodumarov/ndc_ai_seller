@@ -70,7 +70,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 		o.guid, o.order_id,o.status_number,o.image_url,o.business_id,o.platform,o.location_url, o.status, o.total_price, 
 		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
 
-		c.guid, c.first_name, c.phone, 
+		c.guid, c.first_name, c.phone, c.user_name,
 
 		p.guid, p.name, p.image_url, p.cost,
 		op.count, op.price
@@ -101,6 +101,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			clientName  sql.NullString
 			clientPhone sql.NullString
 			imageurl           sql.NullString
+			username    sql.NullString
 		)
 		
 
@@ -108,7 +109,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			&o.ID,  &o.OrderId,&o.StatusNumber,&imageurl,&o.BusinessID, &o.Platform,&o.LocationURL, &o.Status, &o.TotalPrice,
 			&o.PaymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,
 		
-			&clientGUID, &clientName, &clientPhone, // client
+			&clientGUID, &clientName, &clientPhone,&username, // client
 		
 			&product.ProductID, &product.Name, &product.ImageURL, &product.Cost,
 			&product.Count, &product.ProductTotalPrice,
@@ -127,6 +128,9 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 		}
 		if clientGUID.Valid{
 			order.Client.GUID=clientGUID.String
+		}
+		if username.Valid{
+			order.Client.UserName=username.String
 		}
 		if imageurl.Valid{
 			order.ImageUrl=imageurl.String
@@ -249,7 +253,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	fullQuery := fmt.Sprintf(`
 		SELECT 
 			o.guid, o.order_id, o.status_number, o.image_url,
-			c.guid, c.first_name, c.phone,
+			c.guid, c.first_name, c.phone,c.user_name,
 			o.business_id, o.platform, o.location_url, o.status, o.total_price,
 			o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
 			os.custom_name,
@@ -279,6 +283,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			nullStatusName        sql.NullString
 			clientGUID, clientName, clientPhone sql.NullString
 			imageURL              sql.NullString
+			username              sql.NullString
 		)
 
 		if err := rows.Scan(
@@ -286,7 +291,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			&order.OrderId,
 			&order.StatusNumber,
 			&imageURL,
-			&clientGUID, &clientName, &clientPhone,
+			&clientGUID, &clientName, &clientPhone,&username,
 			&order.BusinessID, &order.Platform, &order.LocationURL, &order.Status,
 			&order.TotalPrice, &order.PaymentMethod,
 			&nullStatusChangedTime, &order.CreatedAt, &order.UpdatedAt,
@@ -306,6 +311,8 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		if nullStatusChangedTime.Valid {
 			order.StatusChangedTime = &nullStatusChangedTime.Time
 		}
+		
+		
 		if nullStatusName.Valid {
 			order.AdminStatus = nullStatusName.String
 		}
@@ -316,6 +323,9 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		if clientGUID.Valid {
 			order.Client.GUID = clientGUID.String
 		}
+		if username.Valid{
+			order.Client.UserName=username.String
+		}	
 		if clientName.Valid {
 			order.Client.Name = clientName.String
 		}
@@ -346,7 +356,6 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	if err := r.db.QueryRow(ctx, countQuery, countArgs...).Scan(&totalCount); err != nil {
 		return nil, r.db.Error(err)
 	}
-
 	return &entity.GetAllOrdersResponse{
 		Items: orders,
 		Total: totalCount,
