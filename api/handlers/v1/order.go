@@ -103,6 +103,7 @@ func (r *OrderRoutes) getOrder(c *gin.Context) {
 // @Security BearerAuth
 // @Param limit query int false "Limit" default(10)
 // @Param offset query int false "Offset" default(0)
+// @Param day query int false "day" default(7)
 // @Param client_id query string false "Client ID"
 // @Param business_id query string false "Business ID"
 // @Param status query string false "Status"
@@ -114,7 +115,12 @@ func (r *OrderRoutes) getOrder(c *gin.Context) {
 func (r *OrderRoutes) listOrders(c *gin.Context) {
 	limitStr := c.DefaultQuery("limit", "10")
 	offsetStr := c.DefaultQuery("offset", "0")
+	dayStr := c.DefaultQuery("day", "7")
 
+	day, err := strconv.Atoi(dayStr)
+	if err != nil {
+		day = 7
+	}
 	limit, err := strconv.Atoi(limitStr)
 	if err != nil {
 		limit = 10
@@ -131,6 +137,7 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 		PaymentMethod: c.Query("payment_method"),
 		Platform:      c.Query("platform"),
 		Search:        c.Query("search"),
+		Daye: day,
 	}
 
 	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))

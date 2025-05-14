@@ -158,13 +158,19 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	var where []string
 	var args []interface{}
 	argPos := 1
-
 	// Filterlar
 	if filter.ID != "" {
 		where = append(where, fmt.Sprintf("o.guid = $%d", argPos))
 		args = append(args, filter.ID)
 		argPos++
 	}
+	if filter.Daye > 0 {
+		if filter.Daye > 0 {
+			where = append(where, fmt.Sprintf("o.created_at >= NOW() - INTERVAL '%d days'", filter.Daye))
+		}
+		
+	}
+	
 	if filter.Platform != "" {
 		where = append(where, fmt.Sprintf("o.platform = $%d", argPos))
 		args = append(args, filter.Platform)

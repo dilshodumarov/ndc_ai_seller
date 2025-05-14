@@ -84,6 +84,7 @@ type (
 		PaymentMethod string
 		Platform      string
 		Search        string
+		Daye          int
 	}
 	
 )

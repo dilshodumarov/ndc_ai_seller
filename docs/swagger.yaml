@@ -91,6 +91,8 @@ definitions:
         type: string
       phone:
         type: string
+      userName:
+        type: string
     type: object
   entity.ClientType:
     properties:
@@ -3044,6 +3046,11 @@ paths:
         description: Offset
         in: query
         name: offset
+        type: integer
+      - default: 7
+        description: day
+        in: query
+        name: day
         type: integer
       - description: Client ID
         in: query

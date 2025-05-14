@@ -4223,6 +4223,13 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "integer",
+                        "default": 7,
+                        "description": "day",
+                        "name": "day",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "Client ID",
                         "name": "client_id",
@@ -5696,6 +5703,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "phone": {
+                    "type": "string"
+                },
+                "userName": {
                     "type": "string"
                 }
             }
