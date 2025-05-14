@@ -117,3 +117,27 @@ type (
 		UpdatedAt  time.Time `json:"updated_at"`
 	}
 )
+
+
+type OrderStatus struct {
+	GUID         string `json:"guid"`
+	BusinessID   string `json:"business_id"`
+	TypeID       string `json:"type_id"`
+	CustomName   string `json:"custom_name"`
+	TypeName     string `json:"type_name"`
+	StatusNumber int    `json:"status_number"`
+	OrderCount   int    `json:"order_count"` // yangi maydon
+	CreatedAt    time.Time `json:"created_at"`
+}
+
+
+type CreateOrderStatusRequest struct {
+	BusinessID string `json:"business_id"`
+	TypeID     string `json:"type_id"`
+	CustomName string `json:"custom_name"`
+}
+
+type UpdateOrderStatusRequest struct {
+	GUID       string `json:"guid"`
+	CustomName string `json:"custom_name"`
+}

@@ -21,6 +21,7 @@ import (
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/product"
 	"sugurta/internal/usecase/role"
+	"sugurta/internal/usecase/settings"
 	"sugurta/internal/usecase/telegram"
 	"sugurta/internal/usecase/user"
 )
@@ -51,6 +52,7 @@ type HandlerOption struct {
 	Minio       *minio.Client
 	Telegram    telegram.TelegramAccount
 	Notification notification.Notification
+	Settings     settings.SettingsStorage
 }
 
 type BaseHandler struct {
