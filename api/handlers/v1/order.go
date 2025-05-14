@@ -9,6 +9,7 @@ import (
 	"sugurta/internal/pkg/config"
 
 	"sugurta/internal/usecase/order"
+	"sugurta/internal/usecase/settings"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,7 @@ type OrderRoutes struct {
 	cfg          *config.Config
 	enforcer     *casbin.CachedEnforcer
 	OrderUseCase order.Order
+	SettingsUScase settings.SettingsStorage
 }
 
 // NewOrderRoutes creates a new order routes controller
@@ -31,6 +33,7 @@ func NewOrderRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption)
 		cfg:          option.Config,
 		enforcer:     option.Enforcer,
 		OrderUseCase: option.Order,
+		SettingsUScase: option.Settings,
 	}
 
 	r.Cache = option.Cache
@@ -165,19 +168,45 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 func (r *OrderRoutes) updateOrder(c *gin.Context) {
 	id := c.Param("id")
 	var req entity.OrderUpdate
+
 	if err := c.ShouldBindJSON(&req); err != nil {
-		r.handleResponse(c, status_http.BadRequest, err.Error())
+		r.handleResponse(c, status_http.BadRequest, "Invalid request: "+err.Error())
 		return
 	}
 
+	switch req.Status {
+	case "tolov_qilindi":
+		req.Status = "yetkazish_kerak"
+		req.StatusNumber = 4
+	case "yetkazip_berildi":
+		req.Status = "yetkazildi"
+		req.StatusNumber = 5
+	case "bekor_qilindi":
+		req.Status = "bekor_qilindi"
+		req.StatusNumber = 7
+	default:
+		r.handleResponse(c, status_http.BadRequest, "Noto‘g‘ri status qiymati")
+		return
+	}
+	
+	statusID, err := r.SettingsUScase.GetStatusByName(c, req.Status,req.BussnesId)
+	if err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Failed to get status ID: "+err.Error())
+		return
+	}
+
+	req.StatusID = statusID
 	req.ID = id
+
+	// Update order
 	if err := r.OrderUseCase.Update(c, &req); err != nil {
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		r.handleResponse(c, status_http.InternalServerError, "Failed to update order: "+err.Error())
 		return
 	}
 
 	r.handleResponse(c, status_http.OK, "Order updated successfully")
 }
+
 
 // @Router /orders/delete/{id} [delete]
 // @Summary Delete Order

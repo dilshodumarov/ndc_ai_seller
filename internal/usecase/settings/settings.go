@@ -53,3 +53,11 @@ func (ss *settingsService) List(ctx context.Context, businessID string) ([]*enti
 
 	return ss.settingsRepo.List(ctx, businessID)
 }
+
+
+func (ss *settingsService) GetStatusByName(ctx context.Context, name,bussnesid string) (*string, error) {
+	ctx, cancel := context.WithTimeout(ctx, ss.ctxTimeout)
+	defer cancel()
+
+	return ss.settingsRepo.GetStatusByName(ctx, name,bussnesid)
+}

@@ -11,4 +11,5 @@ type SettingsStorage interface {
 	Update(ctx context.Context, req *entity.UpdateOrderStatusRequest) error
 	Delete(ctx context.Context, guid string) error
 	List(ctx context.Context, businessID string) ([]*entity.OrderStatus, error)
+	GetStatusByName(ctx context.Context, name,bussnesid string) (*string, error)
 }

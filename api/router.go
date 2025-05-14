@@ -48,20 +48,20 @@ type RouteOption struct {
 	Cache          redisrepo.Cache
 	Enforcer       *casbin.CachedEnforcer
 
-	User        user.User
-	Role        role.Role
-	ClientType  clienttype.ClientType
-	Business    business.Business
-	Product     product.Product
-	Category    category.Category
-	Order       order.Order
-	Integration integration.Integration
-	BotComments botcomments.BotCommandStorage
-	Chat        chat.Chat
-	Minio       *minio.Client
-	Telegram    telegram.TelegramAccount
+	User         user.User
+	Role         role.Role
+	ClientType   clienttype.ClientType
+	Business     business.Business
+	Product      product.Product
+	Category     category.Category
+	Order        order.Order
+	Integration  integration.Integration
+	BotComments  botcomments.BotCommandStorage
+	Chat         chat.Chat
+	Minio        *minio.Client
+	Telegram     telegram.TelegramAccount
 	Notification notification.Notification
-	Settings    settings.SettingsStorage
+	Settings     settings.SettingsStorage
 	// Service        grpcClients.ServiceClient
 	// RefreshToken   refresh_token.RefreshToken
 	// BrokerProducer event.BrokerProducer
@@ -86,16 +86,16 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		ContextTimeout: option.ContextTimeout,
 		Cache:          option.Cache,
 		// Enforcer:       option.Enforcer,
-		User:        option.User,
-		Business:    option.Business,
-		Order:       option.Order,
-		Integration: option.Integration,
-		Product:     option.Product,
-		Category:    option.Category,
-		BotComments: option.BotComments,
-		Chat:        option.Chat,
-		Minio:       option.Minio,
-		Telegram:    option.Telegram,
+		User:         option.User,
+		Business:     option.Business,
+		Order:        option.Order,
+		Integration:  option.Integration,
+		Product:      option.Product,
+		Category:     option.Category,
+		BotComments:  option.BotComments,
+		Chat:         option.Chat,
+		Minio:        option.Minio,
+		Telegram:     option.Telegram,
 		Notification: option.Notification,
 		Settings:     option.Settings,
 	}
@@ -104,7 +104,6 @@ func NewRouter(option *RouteOption) *gin.Engine {
 
 	app.Use(gin.Logger(), gin.Recovery())
 
-	
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -135,6 +134,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 			})
 		}
 
+		
 		ctx.Header("Content-Type", "text/html")
 		ctx.String(http.StatusOK, htmlContent)
 
@@ -156,10 +156,10 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		v1.NewProductRoutes(apiV1Group, handleOption)
 		v1.NewBotCommentsRoutes(apiV1Group, handleOption)
 		v1.NewWebsocketRoutes(apiV1Group, handleOption)
-		v1.NewTelegramRoutes(apiV1Group,handleOption)
-		v1.NewMinioRoutes(apiV1Group,handleOption)
-		v1.NewNotificationRoutes(apiV1Group,handleOption)
-		v1.NewSettingsRoutes(apiV1Group,handleOption)
+		v1.NewTelegramRoutes(apiV1Group, handleOption)
+		v1.NewMinioRoutes(apiV1Group, handleOption)
+		v1.NewNotificationRoutes(apiV1Group, handleOption)
+		v1.NewSettingsRoutes(apiV1Group, handleOption)
 	}
 
 	return app

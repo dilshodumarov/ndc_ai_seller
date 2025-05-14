@@ -64,11 +64,15 @@ type (
 		Status        string `json:"status"`
 		LocationURL   string `json:"location_url"`
 		PaymentMethod string `json:"payment_method"`
+		BussnesId     string  
+		StatusNumber  int
+		StatusID      *string
 	}
 	OrderUpdateForSwagger struct {
 		Status        string `json:"status"`
-		LocationURL   string `json:"location_url"`
-		PaymentMethod string `json:"payment_method"`
+		BussnesId     string
+		// LocationURL   string `json:"location_url"`
+		// PaymentMethod string `json:"payment_method"`
 	}
 
 	GetAllOrdersResponse struct {

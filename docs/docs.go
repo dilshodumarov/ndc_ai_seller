@@ -6235,10 +6235,7 @@ const docTemplate = `{
         "entity.OrderUpdateForSwagger": {
             "type": "object",
             "properties": {
-                "location_url": {
-                    "type": "string"
-                },
-                "payment_method": {
+                "bussnesId": {
                     "type": "string"
                 },
                 "status": {

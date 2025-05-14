@@ -88,7 +88,6 @@ type (
 		Port     string    `env:"EMAIL_PORT,required"`
 	}
 
-
 	Redis struct {
 		Host     string
 		Port     string
@@ -165,7 +164,6 @@ func getEnv(key, defaultValue string) string {
 	return defaultValue
 }
 
-
 // package config
 
 // import (
@@ -177,20 +175,20 @@ func getEnv(key, defaultValue string) string {
 // type (
 // 	// Config -.
 // 	Config struct {
-// 		App           App
-// 		Environment   string
-// 		Server        Server
-// 		Context       Context
-// 		HTTP          HTTP
-// 		GRPC          GRPC
-// 		Log           Log
-// 		PG            PG
-// 		DB            DB
-// 		RMQ           RMQ
-// 		Redis         Redis
-// 		Email         EmailConfig
+// 		App         App
+// 		Environment string
+// 		Server      Server
+// 		Context     Context
+// 		HTTP        HTTP
+// 		GRPC        GRPC
+// 		Log         Log
+// 		PG          PG
+// 		DB          DB
+// 		RMQ         RMQ
+// 		Redis       Redis
+// 		Email       EmailConfig
 // 		//OTLPCollector WebAddress
-// 		JWT           JWT
+// 		JWT JWT
 // 	}
 
 // 	Server struct {
@@ -253,9 +251,8 @@ func getEnv(key, defaultValue string) string {
 // 		From     string `env:"EMAIL_FROM,required"`
 // 		Password string `env:"EMAIL_PASSWORD,required"`
 // 		Host     string `env:"EMAIL_HOST,required"`
-// 		Port     string    `env:"EMAIL_PORT,required"`
+// 		Port     string `env:"EMAIL_PORT,required"`
 // 	}
-
 
 // 	Redis struct {
 // 		Host     string
@@ -291,7 +288,7 @@ func getEnv(key, defaultValue string) string {
 // 	config.Server.IdleTimeout = getEnv("SERVER_IDLE_TIMEOUT", "120s")
 
 // 	// db configuration
-	
+
 // 	config.DB.Host = getEnv("POSTGRES_HOST", "3.75.171.99")
 // 	config.DB.Port = getEnv("POSTGRES_PORT", "5435")
 // 	config.DB.Name = getEnv("POSTGRES_DATABASE", "seller_db")
@@ -309,7 +306,7 @@ func getEnv(key, defaultValue string) string {
 
 // 	config.Email.From = getEnv("EMAIL_FROM", "the.aura.fashionn@gmail.com")
 // 	config.Email.Password = getEnv("EMAIL_PASSWORD", "uqik mvwn qtfe wbte")
-// 	config.Email.Port =getEnv("EMAIL_PORT", "587")
+// 	config.Email.Port = getEnv("EMAIL_PORT", "587")
 // 	config.Email.Host = getEnv("EMAIL_HOST", "smtp.gmail.com")
 
 // 	// config.ContentService.Host = getEnv("CONTENT_SERVICE_GRPC_HOST", "localhost")
@@ -318,7 +315,7 @@ func getEnv(key, defaultValue string) string {
 // 	// otlp collector configuration
 // 	//config.OTLPCollector.Host = getEnv("OTLP_COLLECTOR_HOST", "localhost")
 // 	//config.OTLPCollector.Port = getEnv("OTLP_COLLECTOR_PORT", ":4317")
-// 	config.JWT.Secret=getEnv("JWT_SECRET", "jlakdjfadkjfl")
+// 	config.JWT.Secret = getEnv("JWT_SECRET", "jlakdjfadkjfl")
 // 	// kafka configuration
 // 	// config.Kafka.Address = strings.Split(getEnv("KAFKA_ADDRESS", "localhost:29092"), ",")
 // 	// config.Kafka.Topic.InvestmentPaymentTransaction = getEnv("KAFKA_TOPIC_INVESTMENT_PAYMENT_TRANSACTION", "investment.payment.transaction")
@@ -333,4 +330,3 @@ func getEnv(key, defaultValue string) string {
 
 // 	return defaultValue
 // }
-

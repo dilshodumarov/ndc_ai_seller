@@ -374,12 +374,19 @@ func (r *OrderRepo) Update(ctx context.Context, o *entity.OrderUpdate) error {
 	var updates []string
 	var args []interface{}
 	argPos := 1
-
+	fmt.Println(1111,o)
 	if o.Status != "" {
 		updates = append(updates, fmt.Sprintf("status = $%d", argPos))
 		args = append(args, o.Status)
 		argPos++
+		updates = append(updates, fmt.Sprintf("status_number = $%d", argPos))
+		args = append(args, o.StatusNumber)
+		argPos++
+		updates = append(updates, fmt.Sprintf("order_status_id = $%d", argPos))
+		args = append(args, o.StatusID)
+		argPos++
 	}
+	
 	if o.LocationURL != "" {
 		updates = append(updates, fmt.Sprintf("location_url = $%d", argPos))
 		args = append(args, o.LocationURL)

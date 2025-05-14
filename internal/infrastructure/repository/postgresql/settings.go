@@ -179,3 +179,24 @@ func (r *settingsRepo) List(ctx context.Context, businessID string) ([]*entity.O
 
 	return result, nil
 }
+
+func (r *settingsRepo) GetStatusByName(ctx context.Context, name, bussnesid string) (*string, error) {
+	query := `
+		SELECT os.guid
+		FROM order_status os
+		JOIN order_status_type ost ON os.type_id = ost.guid
+		WHERE ost.name = $1 and os.business_id=$2
+	`
+	row := r.db.QueryRow(ctx, query, name, bussnesid)
+
+	var guid string
+	err := row.Scan(&guid)
+	if err != nil {
+		if err.Error() == "no rows in result set" {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("Get order_status: %w", err)
+	}
+
+	return &guid, nil
+}

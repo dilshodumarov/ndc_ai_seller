@@ -436,9 +436,7 @@ definitions:
     type: object
   entity.OrderUpdateForSwagger:
     properties:
-      location_url:
-        type: string
-      payment_method:
+      bussnesId:
         type: string
       status:
         type: string
