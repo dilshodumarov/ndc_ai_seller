@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/postgres"
@@ -75,26 +76,58 @@ func (r *settingsRepo) Delete(ctx context.Context, guid string) error {
 
 // List returns all order statuses with their type names for a business.
 func (r *settingsRepo) List(ctx context.Context, businessID string) ([]*entity.OrderStatus, error) {
-	query := `
-		SELECT 
-			os.guid,
-			os.business_id,
-			os.type_id,
-			os.custom_name,
-			ost.name as type_name,
-			ost.status_number,
-			os.created_at,
-			COALESCE(COUNT(o.guid), 0) AS order_count
-		FROM order_status os
-		JOIN order_status_type ost ON os.type_id = ost.guid
-		LEFT JOIN "order" o ON 
-			o.order_status_id = os.guid AND 
-			o.status = ost.name AND 
-			o.business_id = os.business_id
-		WHERE os.business_id = $1
-		GROUP BY os.guid, ost.name, ost.status_number
-		ORDER BY os.created_at DESC
+	// Step 1: Tekshir order_status mavjudmi
+	checkQuery := `
+		SELECT EXISTS (
+			SELECT 1 FROM order_status WHERE business_id = $1
+		)
 	`
+	var exists bool
+	if err := r.db.QueryRow(ctx, checkQuery, businessID).Scan(&exists); err != nil {
+		return nil, fmt.Errorf("check order_status exists: %w", err)
+	}
+
+	var query string
+	if exists {
+		// order_status mavjud bo‘lsa
+		query = `
+			SELECT 
+				os.guid,
+				os.business_id,
+				os.type_id,
+				os.custom_name,
+				ost.name as type_name,
+				ost.status_number,
+				os.created_at,
+				COUNT(o.guid) AS order_count
+			FROM order_status_type ost
+			LEFT JOIN order_status os 
+				ON os.type_id = ost.guid AND os.business_id = $1
+			LEFT JOIN "order" o 
+				ON o.status = ost.name AND o.business_id = $1
+			GROUP BY os.guid, os.business_id, os.type_id, os.custom_name, os.created_at,
+			         ost.name, ost.status_number
+			ORDER BY ost.status_number
+		`
+	} else {
+		// order_status yo‘q bo‘lsa
+		query = `
+			SELECT 
+				NULL AS guid,
+				NULL AS business_id,
+				NULL AS type_id,
+				NULL AS custom_name,
+				ost.name AS type_name,
+				ost.status_number,
+				NULL AS created_at,
+				COUNT(o.guid) AS order_count
+			FROM order_status_type ost
+			LEFT JOIN "order" o 
+				ON o.status = ost.name AND o.business_id = $1
+			GROUP BY ost.name, ost.status_number
+			ORDER BY ost.status_number
+		`
+	}
 
 	rows, err := r.db.Query(ctx, query, businessID)
 	if err != nil {
@@ -104,23 +137,45 @@ func (r *settingsRepo) List(ctx context.Context, businessID string) ([]*entity.O
 
 	var result []*entity.OrderStatus
 	for rows.Next() {
-		var status entity.OrderStatus
+		var (
+			guid, businessID, typeID, customName sql.NullString
+			createdAt                            sql.NullTime
+			status                               entity.OrderStatus
+		)
+
 		err := rows.Scan(
-			&status.GUID,
-			&status.BusinessID,
-			&status.TypeID,
-			&status.CustomName,
+			&guid,
+			&businessID,
+			&typeID,
+			&customName,
 			&status.TypeName,
 			&status.StatusNumber,
-			&status.CreatedAt,
+			&createdAt,
 			&status.OrderCount,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("List scan: %w", err)
 		}
+
+		// Null bo'lishini tekshiramiz va kerakli structga o‘tkazamiz
+		if guid.Valid {
+			status.GUID = guid.String
+		}
+		if businessID.Valid {
+			status.BusinessID = businessID.String
+		}
+		if typeID.Valid {
+			status.TypeID = typeID.String
+		}
+		if customName.Valid {
+			status.CustomName = customName.String
+		}
+		if createdAt.Valid {
+			status.CreatedAt = createdAt.Time
+		}
+
 		result = append(result, &status)
 	}
+
 	return result, nil
 }
-
-
