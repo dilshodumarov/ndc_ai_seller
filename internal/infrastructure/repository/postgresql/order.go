@@ -264,7 +264,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
 			os.custom_name,
 			p.guid, p.name, p.image_url, p.cost,
-			op.count, op.price
+			op.count, op.total_price
 		FROM %s o
 		LEFT JOIN order_status os ON o.order_status_id = os.guid
 		INNER JOIN order_products op ON o.guid = op.order_id
@@ -312,7 +312,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			existingOrder.Products = append(existingOrder.Products, product)
 			continue
 		}
-
+		
 		// yangi order
 		if nullStatusChangedTime.Valid {
 			order.StatusChangedTime = &nullStatusChangedTime.Time

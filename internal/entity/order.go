@@ -55,7 +55,7 @@ type (
 		ImageURL         string
 		Cost             int
 		Count            int
-		ProductTotalPrice float64 // order_products.price
+		ProductTotalPrice int // order_products.price
 	}
 	
 
