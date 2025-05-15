@@ -281,60 +281,62 @@ definitions:
     type: object
   entity.IntegrationCreate:
     properties:
-      businessId:
+      business_id:
         type: string
-      integrationToken:
+      integration_token:
         type: string
-      integrationType:
+      integration_type:
         type: string
     type: object
   entity.IntegrationGetResponse:
     properties:
       guid:
         type: string
-      integrationToken:
+      integration_token:
         type: string
-      integrationType:
+      integration_type:
         type: string
-      intelligenceLevel:
+      intelligence_level:
         type: integer
-      promptText:
+      prompt_text:
         type: string
-      promtOrder:
+      promt_order:
         type: string
-      startedAt:
+      promt_product:
+        type: string
+      started_at:
         type: string
       status:
         type: string
-      stoppedAt:
+      stopped_at:
         type: string
-      tokenLimit:
+      token_limit:
         type: integer
     type: object
   entity.IntegrationListResponse:
     properties:
-      totalTokens:
+      total_tokens:
         type: integer
       usages:
         items:
           $ref: '#/definitions/entity.TokenUsage'
         type: array
     type: object
-  entity.IntegrationUpdate:
+  entity.IntegrationUpdateForSwagger:
     properties:
-      id:
-        type: string
-      intelligenceLevel:
+      intelligence_level:
         type: integer
-      promptOrder:
+      prompt_order:
         type: string
-      promptText:
+      prompt_product:
         type: string
-      stopUntil:
+      prompt_text:
+        type: string
+      stop_until:
         type: integer
       token:
         type: string
-      tokenLimit:
+      token_limit:
         type: integer
     type: object
   entity.IntegrationUpdateStatus:
@@ -412,7 +414,7 @@ definitions:
         type: string
       productTotalPrice:
         description: order_products.price
-        type: number
+        type: integer
     type: object
   entity.OrderStatus:
     properties:
@@ -2548,18 +2550,23 @@ paths:
       summary: Update integration status
       tags:
       - INTEGRATION
-  /integration/update:
+  /integration/update/{id}:
     put:
       consumes:
       - application/json
       description: Update integration token using ID
       parameters:
+      - description: Integration ID
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Update integration
         in: body
         name: integration
         required: true
         schema:
-          $ref: '#/definitions/entity.IntegrationUpdate'
+          $ref: '#/definitions/entity.IntegrationUpdateForSwagger'
       produces:
       - application/json
       responses:

@@ -3334,7 +3334,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/integration/update": {
+        "/integration/update/{id}": {
             "put": {
                 "security": [
                     {
@@ -3354,12 +3354,19 @@ const docTemplate = `{
                 "summary": "Update integration token",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Integration ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Update integration",
                         "name": "integration",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.IntegrationUpdate"
+                            "$ref": "#/definitions/entity.IntegrationUpdateForSwagger"
                         }
                     }
                 ],
@@ -5999,13 +6006,13 @@ const docTemplate = `{
         "entity.IntegrationCreate": {
             "type": "object",
             "properties": {
-                "businessId": {
+                "business_id": {
                     "type": "string"
                 },
-                "integrationToken": {
+                "integration_token": {
                     "type": "string"
                 },
-                "integrationType": {
+                "integration_type": {
                     "type": "string"
                 }
             }
@@ -6016,31 +6023,34 @@ const docTemplate = `{
                 "guid": {
                     "type": "string"
                 },
-                "integrationToken": {
+                "integration_token": {
                     "type": "string"
                 },
-                "integrationType": {
+                "integration_type": {
                     "type": "string"
                 },
-                "intelligenceLevel": {
+                "intelligence_level": {
                     "type": "integer"
                 },
-                "promptText": {
+                "prompt_text": {
                     "type": "string"
                 },
-                "promtOrder": {
+                "promt_order": {
                     "type": "string"
                 },
-                "startedAt": {
+                "promt_product": {
+                    "type": "string"
+                },
+                "started_at": {
                     "type": "string"
                 },
                 "status": {
                     "type": "string"
                 },
-                "stoppedAt": {
+                "stopped_at": {
                     "type": "string"
                 },
-                "tokenLimit": {
+                "token_limit": {
                     "type": "integer"
                 }
             }
@@ -6048,7 +6058,7 @@ const docTemplate = `{
         "entity.IntegrationListResponse": {
             "type": "object",
             "properties": {
-                "totalTokens": {
+                "total_tokens": {
                     "type": "integer"
                 },
                 "usages": {
@@ -6059,28 +6069,28 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.IntegrationUpdate": {
+        "entity.IntegrationUpdateForSwagger": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "intelligenceLevel": {
+                "intelligence_level": {
                     "type": "integer"
                 },
-                "promptOrder": {
+                "prompt_order": {
                     "type": "string"
                 },
-                "promptText": {
+                "prompt_product": {
                     "type": "string"
                 },
-                "stopUntil": {
+                "prompt_text": {
+                    "type": "string"
+                },
+                "stop_until": {
                     "type": "integer"
                 },
                 "token": {
                     "type": "string"
                 },
-                "tokenLimit": {
+                "token_limit": {
                     "type": "integer"
                 }
             }
@@ -6198,7 +6208,7 @@ const docTemplate = `{
                 },
                 "productTotalPrice": {
                     "description": "order_products.price",
-                    "type": "number"
+                    "type": "integer"
                 }
             }
         },

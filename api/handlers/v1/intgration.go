@@ -37,7 +37,7 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 	integration := apiV1Group.Group("/integration")
 	{
 		integration.POST("/create", r.CreateIntegration)
-		integration.PUT("/update", r.UpdateIntegration)
+		integration.PUT("/update/:id", r.UpdateIntegration)
 		integration.DELETE("/delete/:id", r.DeleteIntegration)
 		integration.GET("/owner/:business_id", r.GetIntegrationByBusinessId)
 		integration.PUT("/status", r.UpdateStatus)
@@ -84,17 +84,20 @@ func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param integration body entity.IntegrationUpdate true "Update integration"
+// @Param id path string true "Integration ID"
+// @Param integration body entity.IntegrationUpdateForSwagger true "Update integration"
 // @Success 200 {object} status_http.Response{data=string} "Updated"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
-// @Router /integration/update [put]
+// @Router /integration/update/{id} [put]
 func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 	var req entity.IntegrationUpdate
 	if err := c.ShouldBindJSON(&req); err != nil {
 		i.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
+	id:=c.Param("id")
+	req.ID=id
 	res, err := i.integrationUsecase.Update(c, &req)
 	if err != nil {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())

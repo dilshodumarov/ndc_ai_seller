@@ -60,7 +60,12 @@ func (r *integrationRepo) Update(ctx context.Context, req *entity.IntegrationUpd
 
 	if req.PromptOrder != "" {
 		setClauses = append(setClauses, fmt.Sprintf("prompt_order = $%d", argPos))
-		args = append(args, req.PromptOrder)    
+		args = append(args, req.PromptOrder)
+		argPos++
+	}
+	if req.PromptProduct != "" {
+		setClauses = append(setClauses, fmt.Sprintf("prompt_product = $%d", argPos))
+		args = append(args, req.PromptProduct)
 		argPos++
 	}
 	if req.TokenLimit != 0 {
@@ -74,7 +79,7 @@ func (r *integrationRepo) Update(ctx context.Context, req *entity.IntegrationUpd
 		argPos++
 	}
 
-	if req.StopUntil >0 {
+	if req.StopUntil > 0 {
 		setClauses = append(setClauses, fmt.Sprintf("stop_until = $%d", argPos))
 		args = append(args, req.StopUntil)
 		argPos++
@@ -148,17 +153,18 @@ func (r *integrationRepo) Delete(ctx context.Context, id string) error {
 func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.IntegrationRequest) (*entity.IntegrationGetResponse, error) {
 	query := fmt.Sprintf(`
 		SELECT guid, integration_token, integration_type, status, started_at, stoped_at,
-		       prompt_text, prompt_order,token_limit, intelligence_level
+		       prompt_text, prompt_order,prompt_product,token_limit, intelligence_level
 		FROM %s 
 		WHERE owner_id = $1 AND deleted_at IS NULL
 	`, r.tableName)
 
 	var (
-		startedAt sql.NullTime
-		stoppedAt sql.NullTime
-		prompt    sql.NullString
-		promptOrder    sql.NullString
-		res       entity.IntegrationGetResponse
+		startedAt     sql.NullTime
+		stoppedAt     sql.NullTime
+		prompt        sql.NullString
+		promptOrder   sql.NullString
+		promptProduct sql.NullString
+		res           entity.IntegrationGetResponse
 	)
 
 	err := r.db.QueryRow(ctx, query, req.BusinessId).Scan(
@@ -170,6 +176,7 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 		&stoppedAt,
 		&prompt,
 		&promptOrder,
+		&promptProduct,
 		&res.TokenLimit,
 		&res.IntelligenceLevel,
 	)
@@ -179,6 +186,9 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 
 	if startedAt.Valid {
 		res.StartedAt = startedAt.Time
+	}
+	if promptProduct.Valid {
+		res.PromtProduct = promptProduct.String
 	}
 	if stoppedAt.Valid {
 		res.StoppedAt = stoppedAt.Time
@@ -193,6 +203,3 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 
 	return &res, nil
 }
-
-
-
