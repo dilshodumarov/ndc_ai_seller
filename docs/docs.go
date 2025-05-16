@@ -4328,12 +4328,6 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Business ID",
-                        "name": "business_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
                         "description": "Status",
                         "name": "status",
                         "in": "query"

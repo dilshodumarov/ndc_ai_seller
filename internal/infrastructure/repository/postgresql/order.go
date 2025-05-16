@@ -207,7 +207,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	if len(where) > 0 {
 		whereClause = "WHERE " + strings.Join(where, " AND ")
 	}
-
+	
 	// Step 1: Faqat order_id'larni olish
 	orderIDQuery := fmt.Sprintf(`
 	SELECT DISTINCT ON (o.guid) o.guid
@@ -220,6 +220,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 `, r.tableName, whereClause)
 
 
+
 	if limit > 0 {
 		orderIDQuery += fmt.Sprintf(" LIMIT $%d OFFSET $%d", len(args)+1, len(args)+2)
 		args = append(args, limit, offset)
@@ -227,6 +228,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 
 	orderIDRows, err := r.db.Query(ctx, orderIDQuery, args...)
 	if err != nil {
+		
 		return nil, r.db.Error(err)
 	}
 	defer orderIDRows.Close()
@@ -235,6 +237,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	for orderIDRows.Next() {
 		var id string
 		if err := orderIDRows.Scan(&id); err != nil {
+			
 			return nil, r.db.Error(err)
 		}
 		orderIDs = append(orderIDs, id)
@@ -276,6 +279,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 
 	rows, err := r.db.Query(ctx, fullQuery, inArgs...)
 	if err != nil {
+		
 		return nil, r.db.Error(err)
 	}
 	defer rows.Close()
@@ -351,7 +355,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	}
 
 	// Step 3: total count
-	countWhere, countArgs := buildWhereClause(filter, "")
+	countWhere, countArgs := buildWhereClause(filter, "o")
 	countQuery := fmt.Sprintf(`SELECT COUNT(DISTINCT o.guid) FROM %s o
 	LEFT JOIN order_products op ON o.guid = op.order_id
 	LEFT JOIN product p ON p.guid = op.product_id

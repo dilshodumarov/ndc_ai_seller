@@ -109,10 +109,10 @@ func GenerateJWT(userID, busnessId, role, signingKey string, timeout int) (strin
 
 	// Refresh token with longer expiry
 	refreshTokenClaims := jwt.MapClaims{
-		"sub":  userID,
-		"role": role,
-		"owner_id":busnessId,
-		"exp":  time.Now().Add(time.Hour * 24 * 7).Unix(), // 7 days
+		"sub":      userID,
+		"role":     role,
+		"owner_id": busnessId,
+		"exp":      time.Now().Add(time.Hour * 24 * 7).Unix(), // 7 days
 	}
 
 	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshTokenClaims)
@@ -194,14 +194,14 @@ func GetBusnessIdFromToken(c *gin.Context, Config *config.Config) (string, int) 
 	if err != nil {
 		return "unauthorized", http.StatusUnauthorized
 	}
-
-	return cast.ToString(claims["owner_id"]), 0
+	if cast.ToString(claims["role"]) == "user" {
+		return cast.ToString(claims["owner_id"]), 0
+	}
+	return "", 0
 }
-
 
 func GetUserIdFromToken(c *gin.Context, Config *config.Config) (string, int) {
 	var softToken string
-	fmt.Println(444444444444)
 	token := c.GetHeader("Authorization")
 	if token == "" {
 		return "unauthorized", http.StatusUnauthorized
@@ -210,24 +210,24 @@ func GetUserIdFromToken(c *gin.Context, Config *config.Config) (string, int) {
 	} else {
 		softToken = token
 	}
-	fmt.Println(3333333333)
+
 	fmt.Println("cfg: ", Config.JWT.Secret)
 	claims, err := ParseJWT(softToken, Config.JWT.Secret)
 	if err != nil {
 		return "unauthorized", http.StatusUnauthorized
 	}
-	fmt.Println(222222222)
+
 	return cast.ToString(claims["sub"]), 0
 }
 func ParseJWT(tokenString string, jwtKey string) (jwt.MapClaims, error) {
-	fmt.Println(66666)
+
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Validate the algorithm
-		fmt.Println(7777777777)
+
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		fmt.Println(888888888)
+
 		// Return the secret key
 		return []byte(jwtKey), nil
 	})

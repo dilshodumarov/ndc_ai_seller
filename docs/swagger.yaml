@@ -3112,10 +3112,6 @@ paths:
         in: query
         name: client_id
         type: string
-      - description: Business ID
-        in: query
-        name: business_id
-        type: string
       - description: Status
         in: query
         name: status

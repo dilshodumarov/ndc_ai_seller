@@ -70,7 +70,6 @@ type (
 	}
 	OrderUpdateForSwagger struct {
 		Status        string `json:"status"`
-		BussnesId     string
 		// LocationURL   string `json:"location_url"`
 		// PaymentMethod string `json:"payment_method"`
 	}
@@ -139,6 +138,11 @@ type OrderStatus struct {
 
 type CreateOrderStatusRequest struct {
 	BusinessID string `json:"business_id"`
+	TypeID     string `json:"type_id"`
+	CustomName string `json:"custom_name"`
+}
+
+type CreateOrderStatusRequestForswagger struct {
 	TypeID     string `json:"type_id"`
 	CustomName string `json:"custom_name"`
 }

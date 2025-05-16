@@ -10,6 +10,7 @@ import (
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+	"sugurta/internal/pkg/helper"
 
 	"sugurta/internal/usecase/order"
 	"sugurta/internal/usecase/settings"
@@ -51,7 +52,7 @@ func NewOrderRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption)
 		orderGroup.PUT("/update/:id", r.updateOrder)
 		orderGroup.DELETE("/delete/:id", r.deleteOrder)
 		orderGroup.GET("/export", r.exportOrders)
-		
+
 	}
 }
 
@@ -114,7 +115,6 @@ func (r *OrderRoutes) getOrder(c *gin.Context) {
 // @Param offset query int false "Offset" default(0)
 // @Param day query int false "day" default(7)
 // @Param client_id query string false "Client ID"
-// @Param business_id query string false "Business ID"
 // @Param status query string false "Status"
 // @Param search query string false "Search"
 // @Param platform query string false "platform"
@@ -138,10 +138,13 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 	if err != nil {
 		offset = 0
 	}
-
+	// BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
+	// if code != 0 {
+	// 	r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	// }
 	filter := &entity.OrderFilter{
 		ClientID:      c.Query("client_id"),
-		BusinessID:    c.Query("business_id"),
+		BusinessID:    "",
 		Status:        c.Query("status"),
 		PaymentMethod: c.Query("payment_method"),
 		Platform:      c.Query("platform"),
@@ -175,14 +178,18 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 // @Success 200 {file} file "Excel file"
 // @Failure 500 {object} status_http.Response{data=string}
 func (r *OrderRoutes) exportOrders(c *gin.Context) {
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	
 	filter := &entity.OrderFilter{
 		ClientID:      c.Query("client_id"),
-		BusinessID:    c.Query("business_id"),
+		BusinessID:    BusinessID,
 		Status:        c.Query("status"),
 		PaymentMethod: c.Query("payment_method"),
 		Platform:      c.Query("platform"),
 		Search:        c.Query("search"),
-	
 	}
 
 	fileBytes, err := r.ExportToExcel(c, filter)
@@ -210,7 +217,11 @@ func (r *OrderRoutes) exportOrders(c *gin.Context) {
 func (r *OrderRoutes) updateOrder(c *gin.Context) {
 	id := c.Param("id")
 	var req entity.OrderUpdate
-
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	req.BussnesId=BusinessID
 	if err := c.ShouldBindJSON(&req); err != nil {
 		r.handleResponse(c, status_http.BadRequest, "Invalid request: "+err.Error())
 		return
@@ -230,7 +241,7 @@ func (r *OrderRoutes) updateOrder(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, "Noto‘g‘ri status qiymati")
 		return
 	}
-
+	
 	statusID, err := r.SettingsUScase.GetStatusByName(c, req.Status, req.BussnesId)
 	if err != nil {
 		r.handleResponse(c, status_http.BadRequest, "Failed to get status ID: "+err.Error())

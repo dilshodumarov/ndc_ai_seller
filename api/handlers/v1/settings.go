@@ -5,6 +5,7 @@ import (
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+	"sugurta/internal/pkg/helper"
 	"sugurta/internal/usecase/settings"
 
 	"github.com/casbin/casbin/v2"
@@ -45,7 +46,7 @@ func NewSettingsRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param order_status body entity.CreateOrderStatusRequest true "Order Status"
+// @Param order_status body entity.CreateOrderStatusRequestForswagger true "Order Status"
 // @Success 201 {object} status_http.Response{data=string} "Created"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -56,6 +57,11 @@ func (r *settingsRoutes) CreateOrderStatus(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	req.BusinessID=BusinessID
 	if err := r.settingsUC.Create(c, &req); err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
@@ -141,13 +147,15 @@ func (r *settingsRoutes) DeleteOrderStatus(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param business_id path string true "Business ID"
 // @Success 200 {object} status_http.Response{data=[]entity.OrderStatus} "OK"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 // @Router /settings/order-status/list/{business_id} [get]
 func (r *settingsRoutes) ListOrderStatus(c *gin.Context) {
-	businessID := c.Param("business_id")
-	res, err := r.settingsUC.List(c, businessID)
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	res, err := r.settingsUC.List(c, BusinessID)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return

@@ -22,7 +22,6 @@ type (
 		ImageUrl  string
 	}
 	CreateProductRequestForSwagger struct {
-		BusinessID   string `json:"business_id"`
 		Name         string `json:"name"`
 		CategoryID   string `json:"category_id"`
 		ShortInfo    string `json:"short_info"`
@@ -31,7 +30,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
-		Image_url    string
+		Image_url    []string
 	}
 
 	Product struct {

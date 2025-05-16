@@ -54,7 +54,7 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param product body entity.CreateProductRequest true "Product Details"
+// @Param product body entity.CreateProductRequestForSwagger true "Product Details"
 // @Success 201 {object} status_http.Response{data=string} "Product created successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -64,11 +64,11 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	// BusinessID, code := helper.GetBusnessIdFromToken(c, p.Config)
-	// if code != 0 {
-	// 	p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	// }
-	// product.BusinessID = BusinessID
+	BusinessID, code := helper.GetBusnessIdFromToken(c, p.Config)
+	if code != 0 {
+		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	product.BusinessID = BusinessID
 	id, err := p.productUscase.Create(c, &product)
 	if err != nil {
 		fmt.Println(err)
@@ -164,20 +164,19 @@ func (p *productRoutes) getProductByID(c *gin.Context) {
 // @Param product_count query string false "filtr by product count"
 // @Param limit query integer true "Number of products per page" default(10)
 // @Param page query integer true "Page number " default(1)
-// @Param business_id query string false "UserID"
 // @Success 200 {object} status_http.Response{data=entity.GetAllProductsResponse} "List of Products"
 // @Failure 400 {object} status_http.Response{data=string} "Bad request"
 // @Failure 401 {object} status_http.Response{data=string} "Unauthorized"
 // @Failure 500 {object} status_http.Response{data=string} "Internal server error"
 func (p *productRoutes) ListProducts(c *gin.Context) {
-	// ownerId, code := helper.GetBusnessIdFromToken(c, p.cfg)
-	// if code != 0 {
-	// 	p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	// 	return
-	// }
+	ownerId, code := helper.GetBusnessIdFromToken(c, p.cfg)
+	if code != 0 {
+		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+		return
+	}
 
 	filter := entity.ProductFilter{
-		OwnerID:    c.Query("business_id"),
+		OwnerID:    ownerId,
 		CategoryID: c.Query("category_id"),
 		Search:     c.Query("search"),
 		Status:     c.Query("status"),
