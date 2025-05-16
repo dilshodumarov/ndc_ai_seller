@@ -1,7 +1,10 @@
 package v1
 
 import (
+	"bytes"
+	"context"
 	"fmt"
+	"net/http"
 	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
@@ -13,26 +16,27 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/xuri/excelize/v2"
 	"go.uber.org/zap"
 )
 
 // OrderRoutes represents the order controller
 type OrderRoutes struct {
 	handlers.BaseHandler
-	log          *zap.Logger
-	cfg          *config.Config
-	enforcer     *casbin.CachedEnforcer
-	OrderUseCase order.Order
+	log            *zap.Logger
+	cfg            *config.Config
+	enforcer       *casbin.CachedEnforcer
+	OrderUseCase   order.Order
 	SettingsUScase settings.SettingsStorage
 }
 
 // NewOrderRoutes creates a new order routes controller
 func NewOrderRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) {
 	r := &OrderRoutes{
-		log:          option.Logger,
-		cfg:          option.Config,
-		enforcer:     option.Enforcer,
-		OrderUseCase: option.Order,
+		log:            option.Logger,
+		cfg:            option.Config,
+		enforcer:       option.Enforcer,
+		OrderUseCase:   option.Order,
 		SettingsUScase: option.Settings,
 	}
 
@@ -46,6 +50,8 @@ func NewOrderRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption)
 		orderGroup.GET("/list", r.listOrders)
 		orderGroup.PUT("/update/:id", r.updateOrder)
 		orderGroup.DELETE("/delete/:id", r.deleteOrder)
+		orderGroup.GET("/export", r.exportOrders)
+		
 	}
 }
 
@@ -140,7 +146,7 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 		PaymentMethod: c.Query("payment_method"),
 		Platform:      c.Query("platform"),
 		Search:        c.Query("search"),
-		Daye: day,
+		Daye:          day,
 	}
 
 	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
@@ -151,6 +157,42 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 	}
 
 	r.handleResponse(c, status_http.OK, result)
+}
+
+// @Router /orders/export [get]
+// @Summary Export Orders to Excel
+// @Description Export orders with applied filters in Excel format
+// @Tags Orders
+// @Accept json
+// @Produce application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+// @Security BearerAuth
+// @Param client_id query string false "Client ID"
+// @Param business_id query string false "Business ID"
+// @Param status query string false "Status"
+// @Param search query string false "Search"
+// @Param platform query string false "Platform"
+// @Param payment_method query string false "Payment Method"
+// @Success 200 {file} file "Excel file"
+// @Failure 500 {object} status_http.Response{data=string}
+func (r *OrderRoutes) exportOrders(c *gin.Context) {
+	filter := &entity.OrderFilter{
+		ClientID:      c.Query("client_id"),
+		BusinessID:    c.Query("business_id"),
+		Status:        c.Query("status"),
+		PaymentMethod: c.Query("payment_method"),
+		Platform:      c.Query("platform"),
+		Search:        c.Query("search"),
+	
+	}
+
+	fileBytes, err := r.ExportToExcel(c, filter)
+	if err != nil {
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment; filename=orders.xlsx")
+	c.Data(http.StatusOK, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileBytes)
 }
 
 // @Router /orders/update/{id} [put]
@@ -183,13 +225,13 @@ func (r *OrderRoutes) updateOrder(c *gin.Context) {
 		req.StatusNumber = 5
 	case "bekor_qilindi":
 		req.Status = "bekor_qilindi"
-		req.StatusNumber = 7
+		req.StatusNumber = 6
 	default:
 		r.handleResponse(c, status_http.BadRequest, "Noto‘g‘ri status qiymati")
 		return
 	}
-	
-	statusID, err := r.SettingsUScase.GetStatusByName(c, req.Status,req.BussnesId)
+
+	statusID, err := r.SettingsUScase.GetStatusByName(c, req.Status, req.BussnesId)
 	if err != nil {
 		r.handleResponse(c, status_http.BadRequest, "Failed to get status ID: "+err.Error())
 		return
@@ -206,7 +248,6 @@ func (r *OrderRoutes) updateOrder(c *gin.Context) {
 
 	r.handleResponse(c, status_http.OK, "Order updated successfully")
 }
-
 
 // @Router /orders/delete/{id} [delete]
 // @Summary Delete Order
@@ -249,4 +290,49 @@ func (h *OrderRoutes) handleResponse(c *gin.Context, status status_http.Status, 
 		Data:          data,
 		CustomMessage: status.CustomMessage,
 	})
+}
+
+func (uc *OrderRoutes) ExportToExcel(ctx context.Context, filter *entity.OrderFilter) ([]byte, error) {
+	orders, err := uc.OrderUseCase.List(ctx, filter, 0, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	f := excelize.NewFile()
+	sheet := "Orders"
+	f.SetSheetName("Sheet1", sheet)
+
+	// Header row
+	headers := []string{
+		"Order ID", "Client ID", "Business ID", "Status", "Payment Method", "Platform", "Total Price", "Created At",
+	}
+	for i, h := range headers {
+		cell, _ := excelize.CoordinatesToCellName(i+1, 1)
+		f.SetCellValue(sheet, cell, h)
+	}
+
+	// Data rows
+	for idx, order := range orders.Items {
+		values := []interface{}{
+			order.ID,
+			order.Client,
+			order.BusinessID,
+			order.Status,
+			order.PaymentMethod,
+			order.Platform,
+			order.TotalPrice,
+			order.CreatedAt,
+		}
+		for colIdx, val := range values {
+			cell, _ := excelize.CoordinatesToCellName(colIdx+1, idx+2)
+			f.SetCellValue(sheet, cell, val)
+		}
+	}
+
+	var buf bytes.Buffer
+	if err := f.Write(&buf); err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
 }

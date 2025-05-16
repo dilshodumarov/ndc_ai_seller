@@ -24675,3 +24675,29 @@ main.main.func1
 2025-05-15T12:28:34.225+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-16T12:26:10.067+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-16T12:26:14.116+0500	INFO	v1/websocket.go:74	New WebSocket client connected	{"userID": "b2ba635e-6376-4173-80ad-7b85f02ccee7"}
+2025-05-16T12:26:14.116+0500	INFO	middleware/logger.go:26	127.0.0.1 - GET /v1/websocket/chat/connect?id=b2ba635e-6376-4173-80ad-7b85f02ccee7 
+2025-05-16T12:26:27.684+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-16T12:26:29.488+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-16T12:26:30.301+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-16T12:28:00.354+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-16T12:28:02.892+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-16T12:28:03.434+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-16T12:28:28.490+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-16T12:28:30.983+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-16T12:28:31.501+0500	INFO	middleware/logger.go:26	127.0.0.1 - POST /v1/websocket/chat/send-message 
+2025-05-16T12:28:41.913+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-16T12:28:41.913+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-16T14:45:58.156+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-16T14:46:10.428+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-05-16T14:46:10.500+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-05-16T14:46:10.501+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-05-16T14:46:10.501+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-05-16T14:46:10.793+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-16T14:46:11.034+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/favicon-32x32.png 
+2025-05-16T14:46:19.271+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-05-16T14:46:45.254+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/export 
+2025-05-16T14:46:58.782+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/export 

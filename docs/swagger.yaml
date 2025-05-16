@@ -2995,6 +2995,57 @@ paths:
       summary: Delete Order
       tags:
       - Orders
+  /orders/export:
+    get:
+      consumes:
+      - application/json
+      description: Export orders with applied filters in Excel format
+      parameters:
+      - description: Client ID
+        in: query
+        name: client_id
+        type: string
+      - description: Business ID
+        in: query
+        name: business_id
+        type: string
+      - description: Status
+        in: query
+        name: status
+        type: string
+      - description: Search
+        in: query
+        name: search
+        type: string
+      - description: Platform
+        in: query
+        name: platform
+        type: string
+      - description: Payment Method
+        in: query
+        name: payment_method
+        type: string
+      produces:
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: Excel file
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Export Orders to Excel
+      tags:
+      - Orders
   /orders/get/{id}:
     get:
       consumes:
