@@ -249,6 +249,7 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.BadRequest, "invalid request")
 		return
 	}
+	fmt.Println(111111,id)
 	product.ID = id
 	err := p.productUscase.Update(c, &product)
 	if err != nil {
