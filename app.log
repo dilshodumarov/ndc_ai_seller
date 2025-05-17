@@ -25656,3 +25656,13 @@ net/http.serverHandler.ServeHTTP
 net/http.(*conn).serve
 	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
 2025-05-17T13:43:03.095+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/product/update/1b169e98-593d-4e42-bc11-dff071be21f0 
+2025-05-17T14:02:55.886+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-17T14:03:00.223+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/get/396f3000-6f2f-46a3-b0b8-835110b6698f 
+2025-05-17T14:03:27.379+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/product/update/396f3000-6f2f-46a3-b0b8-835110b6698f 
+2025-05-17T14:03:35.020+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/get/396f3000-6f2f-46a3-b0b8-835110b6698f 
+2025-05-17T14:04:41.029+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-17T14:04:44.530+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-17T14:04:51.435+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-17T14:04:51.435+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31

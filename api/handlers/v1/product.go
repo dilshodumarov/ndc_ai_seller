@@ -250,6 +250,7 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 		return
 	}
 	fmt.Println(111111,id)
+	fmt.Println(222222222,product)
 	product.ID = id
 	err := p.productUscase.Update(c, &product)
 	if err != nil {
