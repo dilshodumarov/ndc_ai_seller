@@ -3285,6 +3285,136 @@ paths:
       summary: Delete a product by ID
       tags:
       - PRODUCT
+  /product/export:
+    get:
+      consumes:
+      - application/json
+      description: Export product list with filters in Excel format
+      parameters:
+      - description: Filter by Category ID
+        in: query
+        name: category_id
+        type: string
+      - description: Filter by product id
+        in: query
+        name: product_id
+        type: integer
+      - description: Filter by status sotuvda or arxiv
+        in: query
+        name: status
+        type: string
+      - description: Search in name, description, or short_info
+        in: query
+        name: search
+        type: string
+      - description: Filter by product count
+        in: query
+        name: product_count
+        type: string
+      produces:
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: Excel file
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Export Products to Excel
+      tags:
+      - PRODUCT
+  /product/export-csv:
+    get:
+      consumes:
+      - application/json
+      description: Export product list with filters in CSV format
+      parameters:
+      - description: Filter by Category ID
+        in: query
+        name: category_id
+        type: string
+      - description: Filter by product id
+        in: query
+        name: product_id
+        type: integer
+      - description: Filter by status sotuvda or arxiv
+        in: query
+        name: status
+        type: string
+      - description: Search in name, description, or short_info
+        in: query
+        name: search
+        type: string
+      - description: Filter by product count
+        in: query
+        name: product_count
+        type: string
+      produces:
+      - text/csv
+      responses:
+        "200":
+          description: CSV file
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Export Products to CSV
+      tags:
+      - PRODUCT
   /product/get/{id}:
     get:
       consumes:

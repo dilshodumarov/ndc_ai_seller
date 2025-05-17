@@ -2,6 +2,8 @@ package v1
 
 import (
 	"bytes"
+	"context"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -16,6 +18,7 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/xuri/excelize/v2"
 	"go.uber.org/zap"
 )
 
@@ -43,6 +46,9 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 		productGroup.GET("/list", r.ListProducts)
 		productGroup.DELETE("/delete/:id", r.deleteProduct)
 		productGroup.POST("/picture", r.addProductPicture)
+		productGroup.GET("/export", r.ExportProducts)
+		productGroup.GET("/export-csv", r.ExportProductsCSV)
+		
 	}
 
 }
@@ -249,8 +255,7 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.BadRequest, "invalid request")
 		return
 	}
-	fmt.Println(111111,id)
-	fmt.Println(222222222,product)
+
 	product.ID = id
 	err := p.productUscase.Update(c, &product)
 	if err != nil {
@@ -258,25 +263,25 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.InternalServerError, "error updating product")
 		return
 	}
-	if len(product.Image_url)>0{
-		err=p.productUscase.DeletePicture(c,id)
+	if len(product.Image_url) > 0 {
+		err = p.productUscase.DeletePicture(c, id)
 		if err != nil {
 			fmt.Println(err)
 			p.handleResponse(c, status_http.InternalServerError, "error while delete image")
 			return
 		}
-	for i := 0; i < len(product.Image_url); i++ {
-		_, err = p.productUscase.AddPicture(c, &entity.CreateProductImage{
-			ProductId: id,
-			ImageUrl:  product.Image_url[i],
-		})
-		if err != nil {
-			fmt.Println(err)
-			p.handleResponse(c, status_http.InternalServerError, "error while creating image")
-			return
+		for i := 0; i < len(product.Image_url); i++ {
+			_, err = p.productUscase.AddPicture(c, &entity.CreateProductImage{
+				ProductId: id,
+				ImageUrl:  product.Image_url[i],
+			})
+			if err != nil {
+				fmt.Println(err)
+				p.handleResponse(c, status_http.InternalServerError, "error while creating image")
+				return
+			}
 		}
 	}
-}
 	if product.Discount != 0 {
 		BusinessID, code := helper.GetBusnessIdFromToken(c, p.Config)
 		if code != 0 {
@@ -366,6 +371,240 @@ func (p *productRoutes) addProductPicture(c *gin.Context) {
 	}
 
 	p.handleResponse(c, status_http.Created, id)
+}
+
+// @Router /product/export [get]
+// @Summary Export Products to Excel
+// @Description Export product list with filters in Excel format
+// @Tags PRODUCT
+// @Accept json
+// @Produce application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+// @Security BearerAuth
+// @Param category_id query string false "Filter by Category ID"
+// @Param product_id query int false "Filter by product id"
+// @Param status query string false "Filter by status sotuvda or arxiv"
+// @Param search query string false "Search in name, description, or short_info"
+// @Param product_count query string false "Filter by product count"
+// @Success 200 {file} file "Excel file"
+// @Failure 400 {object} status_http.Response{data=string}
+// @Failure 401 {object} status_http.Response{data=string}
+// @Failure 500 {object} status_http.Response{data=string}
+func (p *productRoutes) ExportProducts(c *gin.Context) {
+	ownerId, code := helper.GetBusnessIdFromToken(c, p.cfg)
+	if code != 0 {
+		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+		return
+	}
+
+	filter := entity.ProductFilter{
+		OwnerID:    ownerId,
+		CategoryID: c.Query("category_id"),
+		Search:     c.Query("search"),
+		Status:     c.Query("status"),
+	}
+	prid := c.Query("product_id")
+	if prid != "" {
+		id, err := strconv.Atoi(prid)
+		if err != nil {
+			p.handleResponse(c, status_http.BadRequest, "Invalid product id")
+			return
+		}
+		filter.ProductId = id
+	}
+	count := c.Query("product_count")
+	if count != "" {
+		cInt, err := strconv.Atoi(count)
+		if err != nil {
+			p.handleResponse(c, status_http.BadRequest, "Invalid product count")
+			return
+		}
+		filter.ProductCount = cInt
+	}
+
+	// Excelga eksport qilish
+	fileBytes, err := p.exportToExcel(c, &filter)
+	if err != nil {
+		p.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment; filename=products.xlsx")
+	c.Data(http.StatusOK, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileBytes)
+}
+
+// @Router /product/export-csv [get]
+// @Summary Export Products to CSV
+// @Description Export product list with filters in CSV format
+// @Tags PRODUCT
+// @Accept json
+// @Produce text/csv
+// @Security BearerAuth
+// @Param category_id query string false "Filter by Category ID"
+// @Param product_id query int false "Filter by product id"
+// @Param status query string false "Filter by status sotuvda or arxiv"
+// @Param search query string false "Search in name, description, or short_info"
+// @Param product_count query string false "Filter by product count"
+// @Success 200 {file} file "CSV file"
+// @Failure 400 {object} status_http.Response{data=string}
+// @Failure 401 {object} status_http.Response{data=string}
+// @Failure 500 {object} status_http.Response{data=string}
+func (p *productRoutes) ExportProductsCSV(c *gin.Context) {
+	ownerId, code := helper.GetBusnessIdFromToken(c, p.cfg)
+	if code != 0 {
+		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+		return
+	}
+
+	filter := entity.ProductFilter{
+		OwnerID:    ownerId,
+		CategoryID: c.Query("category_id"),
+		Search:     c.Query("search"),
+		Status:     c.Query("status"),
+	}
+	prid := c.Query("product_id")
+	if prid != "" {
+		id, err := strconv.Atoi(prid)
+		if err != nil {
+			p.handleResponse(c, status_http.BadRequest, "Invalid product id")
+			return
+		}
+		filter.ProductId = id
+	}
+	count := c.Query("product_count")
+	if count != "" {
+		cInt, err := strconv.Atoi(count)
+		if err != nil {
+			p.handleResponse(c, status_http.BadRequest, "Invalid product count")
+			return
+		}
+		filter.ProductCount = cInt
+	}
+
+	// CSVga eksport qilish
+	fileBytes, err := p.exportToCSV(c, &filter)
+	if err != nil {
+		p.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment; filename=products.csv")
+	c.Data(http.StatusOK, "text/csv", fileBytes)
+}
+
+func (p *productRoutes) exportToCSV(ctx context.Context, filter *entity.ProductFilter) ([]byte, error) {
+	filter.Limit = 0
+	filter.Page = 0
+
+	result, err := p.productUscase.List(ctx, *filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var buf bytes.Buffer
+	writer := csv.NewWriter(&buf)
+
+	// Header
+	headers := []string{
+		"Product ID", "Business ID", "Name", "Category ID", "Category Name",
+		"Short Info", "Description", "Cost", "Count", "Discount", "Discount Cost",
+		"Status", "Created At", "Updated At",
+	}
+	writer.Write(headers)
+
+	// Data rows
+	for _, prod := range result.Items {
+		row := []string{
+			prod.ID,
+			prod.BusinessID,
+			prod.Name,
+			prod.CategoryID,
+			prod.CategoryName,
+			prod.ShortInfo,
+			prod.Description,
+			fmt.Sprintf("%.d", prod.Cost),
+			strconv.Itoa(prod.Count),
+			fmt.Sprintf("%.d", prod.Discount),
+			fmt.Sprintf("%.d", prod.DiscountCost),
+			func() string {
+				if prod.Status {
+					return "Sotuvda"
+				}
+				return "Arxiv"
+			}(),
+			prod.CreatedAt.Format("2006-01-02 15:04:05"),
+			prod.UpdatedAt.Format("2006-01-02 15:04:05"),
+		}
+		writer.Write(row)
+	}
+	writer.Flush()
+
+	if err := writer.Error(); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func (p *productRoutes) exportToExcel(ctx context.Context, filter *entity.ProductFilter) ([]byte, error) {
+	// limit=0, page=0 → barcha mahsulotlarni olish
+	filter.Limit = 0
+	filter.Page = 0
+
+	result, err := p.productUscase.List(ctx, *filter)
+	if err != nil {
+		return nil, err
+	}
+
+	f := excelize.NewFile()
+	sheet := "Products"
+	f.SetSheetName("Sheet1", sheet)
+
+	// Header row
+	headers := []string{
+		"Product ID", "Business ID", "Name", "Category ID", "Category Name",
+		"Short Info", "Description", "Cost", "Count", "Discount", "Discount Cost",
+		"Status", "Created At", "Updated At",
+	}
+	for i, h := range headers {
+		cell, _ := excelize.CoordinatesToCellName(i+1, 1)
+		f.SetCellValue(sheet, cell, h)
+	}
+
+	// Data rows
+	for idx, prod := range result.Items {
+		values := []interface{}{
+			prod.ID,
+			prod.BusinessID,
+			prod.Name,
+			prod.CategoryID,
+			prod.CategoryName,
+			prod.ShortInfo,
+			prod.Description,
+			prod.Cost,
+			prod.Count,
+			prod.Discount,
+			prod.DiscountCost,
+			func() string {
+				if prod.Status {
+					return "Sotuvda"
+				}
+				return "Arxiv"
+			}(),
+			prod.CreatedAt.Format("2006-01-02 15:04:05"),
+			prod.UpdatedAt.Format("2006-01-02 15:04:05"),
+		}
+
+		for colIdx, val := range values {
+			cell, _ := excelize.CoordinatesToCellName(colIdx+1, idx+2)
+			f.SetCellValue(sheet, cell, val)
+		}
+	}
+
+	var buf bytes.Buffer
+	if err := f.Write(&buf); err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
 }
 
 func (h *productRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {
