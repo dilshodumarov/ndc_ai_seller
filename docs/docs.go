@@ -4486,7 +4486,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.CreateProductRequest"
+                            "$ref": "#/definitions/entity.CreateProductRequestForSwagger"
                         }
                     }
                 ],
@@ -4782,12 +4782,6 @@ const docTemplate = `{
                         "name": "page",
                         "in": "query",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "UserID",
-                        "name": "business_id",
-                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -5054,7 +5048,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.CreateOrderStatusRequest"
+                            "$ref": "#/definitions/entity.CreateOrderStatusRequestForswagger"
                         }
                     }
                 ],
@@ -5286,15 +5280,6 @@ const docTemplate = `{
                     "SETTINGS"
                 ],
                 "summary": "List all order statuses for a business",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Business ID",
-                        "name": "business_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -5936,12 +5921,9 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.CreateOrderStatusRequest": {
+        "entity.CreateOrderStatusRequestForswagger": {
             "type": "object",
             "properties": {
-                "business_id": {
-                    "type": "string"
-                },
                 "custom_name": {
                     "type": "string"
                 },
@@ -5961,12 +5943,9 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.CreateProductRequest": {
+        "entity.CreateProductRequestForSwagger": {
             "type": "object",
             "properties": {
-                "business_id": {
-                    "type": "string"
-                },
                 "category_id": {
                     "type": "string"
                 },
@@ -6323,9 +6302,6 @@ const docTemplate = `{
         "entity.OrderUpdateForSwagger": {
             "type": "object",
             "properties": {
-                "bussnesId": {
-                    "type": "string"
-                },
                 "status": {
                     "type": "string"
                 }
@@ -6405,7 +6381,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
-                    "type": "string"
+                    "type": "boolean"
                 },
                 "updated_at": {
                     "type": "string"
@@ -6643,6 +6619,9 @@ const docTemplate = `{
                 },
                 "short_info": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
                 }
             }
         },

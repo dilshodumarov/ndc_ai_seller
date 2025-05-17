@@ -185,10 +185,8 @@ definitions:
       total_price:
         type: number
     type: object
-  entity.CreateOrderStatusRequest:
+  entity.CreateOrderStatusRequestForswagger:
     properties:
-      business_id:
-        type: string
       custom_name:
         type: string
       type_id:
@@ -201,10 +199,8 @@ definitions:
       productId:
         type: string
     type: object
-  entity.CreateProductRequest:
+  entity.CreateProductRequestForSwagger:
     properties:
-      business_id:
-        type: string
       category_id:
         type: string
       cost:
@@ -438,8 +434,6 @@ definitions:
     type: object
   entity.OrderUpdateForSwagger:
     properties:
-      bussnesId:
-        type: string
       status:
         type: string
     type: object
@@ -492,7 +486,7 @@ definitions:
       short_info:
         type: string
       status:
-        type: string
+        type: boolean
       updated_at:
         type: string
     type: object
@@ -650,6 +644,8 @@ definitions:
         type: string
       short_info:
         type: string
+      status:
+        type: boolean
     type: object
   entity.User:
     properties:
@@ -3207,7 +3203,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/entity.CreateProductRequest'
+          $ref: '#/definitions/entity.CreateProductRequestForSwagger'
       produces:
       - application/json
       responses:
@@ -3373,10 +3369,6 @@ paths:
         name: page
         required: true
         type: integer
-      - description: UserID
-        in: query
-        name: business_id
-        type: string
       produces:
       - application/json
       responses:
@@ -3522,7 +3514,7 @@ paths:
         name: order_status
         required: true
         schema:
-          $ref: '#/definitions/entity.CreateOrderStatusRequest'
+          $ref: '#/definitions/entity.CreateOrderStatusRequestForswagger'
       produces:
       - application/json
       responses:
@@ -3646,12 +3638,6 @@ paths:
       consumes:
       - application/json
       description: Returns a list of order statuses for a specific business
-      parameters:
-      - description: Business ID
-        in: path
-        name: business_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:

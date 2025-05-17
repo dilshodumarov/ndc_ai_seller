@@ -48,7 +48,7 @@ type (
 		UpdatedAt    time.Time `json:"updated_at"`
 		Image_urls   []string
 		ProductId    int       `json:"product_id"`
-		Status       string    `json:"status"`
+		Status       bool      `json:"status"`
 		CategoryName string    `json:"category"`
 	}
 
@@ -62,6 +62,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
+	    Status       *bool    `json:"status"`
 		Image_url    []string
 	}
 
@@ -74,6 +75,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
+		Status      *bool  `json:"status"`
 		Image_url    []string
 	}
 

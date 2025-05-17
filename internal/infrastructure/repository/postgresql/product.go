@@ -64,7 +64,7 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 }
 
 func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, error) {
-	var(
+	var (
 		picturesting string
 	)
 	query := `
@@ -91,7 +91,6 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 	WHERE p.guid = $1
 	GROUP BY p.guid, c.name
 `
-
 
 	var product entity.Product
 	err := p.db.QueryRow(ctx, query, id).Scan(
@@ -130,45 +129,44 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		argID     = 1
 		where     = "WHERE true"
 		limitStmt string
-	)	
-	fmt.Println(filter)
+	)
+	fmt.Println(filter.OwnerID)
 
 	// Ixtiyoriy OwnerID bo‘lsa, filter qilamiz
 	if filter.OwnerID != "" {
-		where += fmt.Sprintf(" AND business_id = $%d", argID)
+		where += fmt.Sprintf(" AND p.business_id = $%d", argID)
 		args = append(args, filter.OwnerID)
 		argID++
 	}
 
-	if filter.ProductCount>0 {
-		where += fmt.Sprintf(" AND count = $%d", argID)
+	if filter.ProductCount > 0 {
+		where += fmt.Sprintf(" AND p.count = $%d", argID)
 		args = append(args, filter.ProductCount)
 		argID++
 	}
 
-
-	if filter.Status!="" {
-		where += fmt.Sprintf(" AND status = $%d", argID)
+	if filter.Status != "" {
+		where += fmt.Sprintf(" AND p.status = $%d", argID)
 		args = append(args, filter.Status)
 		argID++
 	}
 
 	if filter.ProductId > 0 {
-		where += fmt.Sprintf(" AND product_id = $%d", argID)
+		where += fmt.Sprintf(" AND p.product_id = $%d", argID)
 		args = append(args, filter.ProductId)
 		argID++
 	}
 
 	// Ixtiyoriy CategoryID bo‘lsa, filter qilamiz
 	if filter.CategoryID != "" {
-		where += fmt.Sprintf(" AND category_id = $%d", argID)
+		where += fmt.Sprintf(" AND p.category_id = $%d", argID)
 		args = append(args, filter.CategoryID)
 		argID++
 	}
 
 	// Qidiruv so‘zi bo‘lsa, name/description/short_info bo‘yicha qidiramiz
 	if filter.Search != "" {
-		where += fmt.Sprintf(` AND (name ILIKE $%d OR description ILIKE $%d OR short_info ILIKE $%d)`, argID, argID+1, argID+2)
+		where += fmt.Sprintf(` AND (p.name ILIKE $%d OR p.description ILIKE $%d OR p.short_info ILIKE $%d)`, argID, argID+1, argID+2)
 		searchTerm := "%" + filter.Search + "%"
 		args = append(args, searchTerm, searchTerm, searchTerm)
 		argID += 3
@@ -181,7 +179,6 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		args = append(args, filter.Limit, offset)
 		argID += 2
 	}
-
 
 	// Mahsulotlar ro‘yxatini olish uchun query
 	query := fmt.Sprintf(`
@@ -196,7 +193,6 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 	         p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at, c.name
 	%s
 `, where, limitStmt)
-
 
 	rows, err := p.db.Query(ctx, query, args...)
 	if err != nil {
@@ -250,11 +246,29 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		products.Items = append(products.Items, product)
 	}
 
-	// Umumiy sonini hisoblash (limit va offsetni olib tashlaymiz)
-	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM product %s`, where)
-	countArgs := args
-	if filter.Limit > 0 {
-		countArgs = args[:len(args)-2]
+	// Umumiy sonini hisoblash (LIMIT va OFFSET ishlatmasdan WHERE bo‘lishi kerak)
+	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM product p %s`, where)
+
+	// count uchun argumentlarni alohida yig'amiz
+	var countArgs []any
+	if filter.OwnerID != "" {
+		countArgs = append(countArgs, filter.OwnerID)
+	}
+	if filter.ProductCount > 0 {
+		countArgs = append(countArgs, filter.ProductCount)
+	}
+	if filter.Status != "" {
+		countArgs = append(countArgs, filter.Status)
+	}
+	if filter.ProductId > 0 {
+		countArgs = append(countArgs, filter.ProductId)
+	}
+	if filter.CategoryID != "" {
+		countArgs = append(countArgs, filter.CategoryID)
+	}
+	if filter.Search != "" {
+		searchTerm := "%" + filter.Search + "%"
+		countArgs = append(countArgs, searchTerm, searchTerm, searchTerm)
 	}
 
 	var totalCount uint64
@@ -267,7 +281,6 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 	return &products, nil
 }
 
-
 func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductRequest) error {
 	setParts := []string{}
 	args := []interface{}{}
@@ -276,6 +289,11 @@ func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductR
 	if product.Name != "" {
 		setParts = append(setParts, fmt.Sprintf("name=$%d", argID))
 		args = append(args, product.Name)
+		argID++
+	}
+	if product.Status != nil {
+		setParts = append(setParts, fmt.Sprintf("status=$%d", argID))
+		args = append(args, product.Status)
 		argID++
 	}
 	if product.CategoryID != "" {
@@ -385,8 +403,7 @@ func (p *productRepo) AddPicture(ctx context.Context, image *entity.CreateProduc
 	return id, nil
 }
 
-
-func (p *productRepo) DeletePicture(ctx context.Context, id string) (error) {
+func (p *productRepo) DeletePicture(ctx context.Context, id string) error {
 	query := `
 		delete from product_pictures
 		where product_id =$1
@@ -397,8 +414,8 @@ func (p *productRepo) DeletePicture(ctx context.Context, id string) (error) {
 	)
 	if err != nil {
 		fmt.Println(err)
-		return  p.db.Error(err)
+		return p.db.Error(err)
 	}
 
-	return  nil
+	return nil
 }
