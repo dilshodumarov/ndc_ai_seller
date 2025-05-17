@@ -35,7 +35,7 @@ func NewSettingsRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		settings.GET("/get/:guid", r.GetOrderStatus)
 		settings.PUT("/update/:guid", r.UpdateOrderStatus)
 		settings.DELETE("/delete/:guid", r.DeleteOrderStatus)
-		settings.GET("/list/:business_id", r.ListOrderStatus)
+		settings.GET("/list", r.ListOrderStatus)
 	}
 }
 
@@ -149,9 +149,9 @@ func (r *settingsRoutes) DeleteOrderStatus(c *gin.Context) {
 // @Security BearerAuth
 // @Success 200 {object} status_http.Response{data=[]entity.OrderStatus} "OK"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /settings/order-status/list/{business_id} [get]
+// @Router /settings/order-status/list [get]
 func (r *settingsRoutes) ListOrderStatus(c *gin.Context) {
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
 	if code != 0 {
 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}

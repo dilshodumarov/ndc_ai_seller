@@ -5262,7 +5262,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/settings/order-status/list/{business_id}": {
+        "/settings/order-status/list": {
             "get": {
                 "security": [
                     {
