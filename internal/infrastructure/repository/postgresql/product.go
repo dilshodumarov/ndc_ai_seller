@@ -88,7 +88,7 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 	FROM product p
 	LEFT JOIN product_pictures pp ON p.guid = pp.product_id
 	LEFT JOIN category c ON p.category_id = c.guid  -- category jadvali bilan bog'lanmoqda
-	WHERE p.guid = $1
+	WHERE p.guid = $1 AND p.deleted_at is null
 	GROUP BY p.guid, c.name
 `
 
@@ -127,7 +127,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 	var (
 		args      []any
 		argID     = 1
-		where     = "WHERE true"
+		where     = "WHERE p.deleted_at is null"
 		limitStmt string
 	)
 	fmt.Println(filter.OwnerID)
@@ -337,7 +337,7 @@ func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductR
 	args = append(args, time.Now())
 	argID++
 
-	args = append(args, product.ID) // WHERE id=$n
+	args = append(args, product.ID) 
 
 	query := fmt.Sprintf(`UPDATE product SET %s WHERE guid=$%d`,
 		joinStrings(setParts, ", "), argID)
@@ -368,9 +368,9 @@ func join(s []string, sep string) string {
 }
 
 func (p *productRepo) Delete(ctx context.Context, id string) error {
-	query := `DELETE FROM product WHERE guid = $1`
+	query := `UPDATE  product set deleted_at =$2 WHERE guid = $1`
 
-	res, err := p.db.Exec(ctx, query, id)
+	res, err := p.db.Exec(ctx, query, id,time.Now())
 	if err != nil {
 		return p.db.Error(err)
 	}

@@ -330,6 +330,7 @@ func (p *productRoutes) deleteProduct(c *gin.Context) {
 
 	err := p.productUscase.Delete(c, id)
 	if err != nil {
+		fmt.Println(err)
 		p.handleResponse(c, status_http.InternalServerError, "error deleting product")
 		return
 	}
