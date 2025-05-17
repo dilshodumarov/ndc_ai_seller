@@ -4,9 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/csv"
-	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"sugurta/api/handlers"
@@ -43,6 +41,7 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 		productGroup.POST("/create", r.createProduct)
 		productGroup.GET("/get/:id", r.getProductByID)
 		productGroup.PUT("/update/:id", r.updateProduct)
+		productGroup.PUT("/update", r.updateProducts)
 		productGroup.GET("/list", r.ListProducts)
 		productGroup.DELETE("/delete/:id", r.deleteProduct)
 		productGroup.POST("/picture", r.addProductPicture)
@@ -60,71 +59,77 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param product body entity.CreateProductRequestForSwagger true "Product Details"
+// @Param product body []entity.CreateProductRequestForSwagger true "Product Details"
 // @Success 201 {object} status_http.Response{data=string} "Product created successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 401 {object} status_http.Response{data=string} "Unauthorized"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (p *productRoutes) createProduct(c *gin.Context) {
-	var product entity.CreateProductRequest
-	if err := c.ShouldBindJSON(&product); err != nil {
+	var products []entity.CreateProductRequest
+
+	if err := c.ShouldBindJSON(&products); err != nil {
 		p.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, p.Config)
+
+	businessID, code := helper.GetBusnessIdFromToken(c, p.cfg)
 	if code != 0 {
 		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	}
-	product.BusinessID = BusinessID
-	id, err := p.productUscase.Create(c, &product)
-	if err != nil {
-		fmt.Println(err)
-		p.handleResponse(c, status_http.InternalServerError, "error while creating product")
 		return
 	}
 
-	for i := 0; i < len(product.Image_url); i++ {
-		_, err = p.productUscase.AddPicture(c, &entity.CreateProductImage{
-			ProductId: id,
-			ImageUrl:  product.Image_url[i],
-		})
+	for _, product := range products {
+		product.BusinessID = businessID
+
+		id, err := p.productUscase.Create(c, &product)
 		if err != nil {
-			fmt.Println(err)
-			p.handleResponse(c, status_http.InternalServerError, "error while creating image")
+			p.handleResponse(c, status_http.InternalServerError, "Error while creating product")
 			return
+		}
+
+		for _, imageURL := range product.Image_url {
+			_, err := p.productUscase.AddPicture(c, &entity.CreateProductImage{
+				ProductId: id,
+				ImageUrl:  imageURL,
+			})
+			if err != nil {
+				p.handleResponse(c, status_http.InternalServerError, "Error while saving product image")
+				return
+			}
 		}
 	}
 
 	p.handleResponse(c, status_http.Created, "Product created successfully")
 
-	if product.Discount != 0 {
-		go func(product entity.CreateProductRequest, id string) {
-			botNotification := entity.BotNotification{
-				Guid:      product.BusinessID,
-				ProductId: id,
-			}
-			body, err := json.Marshal(botNotification)
-			if err != nil {
-				log.Println("Failed to marshal JSON:", err)
-				return
-			}
+	// if product.Discount != 0 {
+	// 	go func(product entity.CreateProductRequest, id string) {
+	// 		botNotification := entity.BotNotification{
+	// 			Guid:      product.BusinessID,
+	// 			ProductId: id,
+	// 		}
+	// 		body, err := json.Marshal(botNotification)
+	// 		if err != nil {
+	// 			log.Println("Failed to marshal JSON:", err)
+	// 			return
+	// 		}
 
-			resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
-			if err != nil {
-				log.Println("Failed to send request to bot:", err)
-				return
-			}
-			defer resp.Body.Close()
+	// 		resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
+	// 		if err != nil {
+	// 			log.Println("Failed to send request to bot:", err)
+	// 			return
+	// 		}
+	// 		defer resp.Body.Close()
 
-			var BotResp entity.BotIntegrationResponse
-			if err := json.NewDecoder(resp.Body).Decode(&BotResp); err != nil {
-				log.Println("Failed to decode bot response:", err)
-				return
-			}
-			if BotResp.Code != 0 {
-				log.Println("Bot returned error:", BotResp.Message)
-			}
-		}(product, id)
-	}
+	// 		var BotResp entity.BotIntegrationResponse
+	// 		if err := json.NewDecoder(resp.Body).Decode(&BotResp); err != nil {
+	// 			log.Println("Failed to decode bot response:", err)
+	// 			return
+	// 		}
+	// 		if BotResp.Code != 0 {
+	// 			log.Println("Bot returned error:", BotResp.Message)
+	// 		}
+	// 	}(product, id)
+	// }
 }
 
 // @Router /product/get/{id} [get]
@@ -282,38 +287,64 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 			}
 		}
 	}
-	if product.Discount != 0 {
-		BusinessID, code := helper.GetBusnessIdFromToken(c, p.Config)
-		if code != 0 {
-			p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-		}
-		botNotification := entity.BotNotification{
-			Guid:      BusinessID,
-			ProductId: product.ID,
-		}
-		body, err := json.Marshal(botNotification)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
-			return
-		}
-		resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
-			return
-		}
-		var BotResp entity.BotIntegrationResponse
-		if err := json.NewDecoder(resp.Body).Decode(&BotResp); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode response"})
-			return
-		}
-		if BotResp.Code != 0 {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bot start" + BotResp.Message})
-			return
-		}
-		p.handleResponse(c, status_http.OK, "Product updated successfully")
+
+	p.handleResponse(c, status_http.OK, "Product updated successfully")
+}
+
+// @Router /product/update [put]
+// @Summary Update multiple products
+// @Description Update details of multiple products
+// @Tags PRODUCT
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param products body []entity.UpdateProductRequest true "List of products to update"
+// @Success 200 {object} status_http.Response{data=string} "Products updated successfully"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+func (p *productRoutes) updateProducts(c *gin.Context) {
+	var products []entity.UpdateProductRequest
+
+	if err := c.ShouldBindJSON(&products); err != nil {
+		p.handleResponse(c, status_http.BadRequest, "invalid request")
 		return
 	}
-	p.handleResponse(c, status_http.OK, "Product updated successfully")
+
+	for _, product := range products {
+		if product.ID == "" {
+			p.handleResponse(c, status_http.BadRequest, "product ID is required")
+			return
+		}
+
+		err := p.productUscase.Update(c, &product)
+		if err != nil {
+			p.handleResponse(c, status_http.InternalServerError, fmt.Sprintf("error updating product with ID %s", product.ID))
+			return
+		}
+
+		if len(product.Image_url) > 0 {
+			// Delete old images
+			err = p.productUscase.DeletePicture(c, product.ID)
+			if err != nil {
+				p.handleResponse(c, status_http.InternalServerError, fmt.Sprintf("error deleting images for product %s", product.ID))
+				return
+			}
+
+			// Add new images
+			for _, imageURL := range product.Image_url {
+				_, err = p.productUscase.AddPicture(c, &entity.CreateProductImage{
+					ProductId: product.ID,
+					ImageUrl:  imageURL,
+				})
+				if err != nil {
+					p.handleResponse(c, status_http.InternalServerError, fmt.Sprintf("error adding image to product %s", product.ID))
+					return
+				}
+			}
+		}
+	}
+
+	p.handleResponse(c, status_http.OK, "Products updated successfully")
 }
 
 // @Router /product/delete/{id} [delete]
@@ -628,3 +659,35 @@ func (h *productRoutes) handleResponse(c *gin.Context, status status_http.Status
 		CustomMessage: status.CustomMessage,
 	})
 }
+
+// if product.Discount != 0 {
+// 	BusinessID, code := helper.GetBusnessIdFromToken(c, p.Config)
+// 	if code != 0 {
+// 		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+// 	}
+// 	botNotification := entity.BotNotification{
+// 		Guid:      BusinessID,
+// 		ProductId: product.ID,
+// 	}
+// 	body, err := json.Marshal(botNotification)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
+// 		return
+// 	}
+// 	resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
+// 		return
+// 	}
+// 	var BotResp entity.BotIntegrationResponse
+// 	if err := json.NewDecoder(resp.Body).Decode(&BotResp); err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode response"})
+// 		return
+// 	}
+// 	if BotResp.Code != 0 {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bot start" + BotResp.Message})
+// 		return
+// 	}
+// 	p.handleResponse(c, status_http.OK, "Product updated successfully")
+// 	return
+// }

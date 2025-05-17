@@ -622,6 +622,33 @@ definitions:
     - email
     - password
     type: object
+  entity.UpdateProductRequest:
+    properties:
+      category_id:
+        type: string
+      cost:
+        type: integer
+      count:
+        type: integer
+      description:
+        type: string
+      discount:
+        type: integer
+      discount_cost:
+        type: integer
+      id:
+        type: string
+      image_url:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      short_info:
+        type: string
+      status:
+        type: boolean
+    type: object
   entity.UpdateProductRequestForSwagger:
     properties:
       category_id:
@@ -3203,7 +3230,9 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/entity.CreateProductRequestForSwagger'
+          items:
+            $ref: '#/definitions/entity.CreateProductRequestForSwagger'
+          type: array
       produces:
       - application/json
       responses:
@@ -3218,6 +3247,15 @@ paths:
               type: object
         "400":
           description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "401":
+          description: Unauthorized
           schema:
             allOf:
             - $ref: '#/definitions/status_http.Response'
@@ -3588,6 +3626,55 @@ paths:
       security:
       - BearerAuth: []
       summary: Add a picture to a product
+      tags:
+      - PRODUCT
+  /product/update:
+    put:
+      consumes:
+      - application/json
+      description: Update details of multiple products
+      parameters:
+      - description: List of products to update
+        in: body
+        name: products
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/entity.UpdateProductRequest'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Products updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update multiple products
       tags:
       - PRODUCT
   /product/update/{id}:
