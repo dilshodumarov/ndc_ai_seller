@@ -30,9 +30,9 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 	id := uuid.New().String()
 	query := `
 		INSERT INTO product (
-			guid,business_id, name, category_id, short_info, description,
+			guid,business_id, status,name, category_id, short_info, description,
 			cost, count, discount_cost, discount, created_at, updated_at
-		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
 	`
 
 	if product.Discount > 0 {
@@ -44,6 +44,7 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 	_, err := p.db.Exec(ctx, query,
 		id,
 		product.BusinessID,
+		product.Status,
 		product.Name,
 		product.CategoryID,
 		product.ShortInfo,
@@ -191,6 +192,7 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 	%s
 	GROUP BY p.guid, p.business_id, p.status, p.product_id, p.name, p.category_id, p.short_info, p.description,
 	         p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at, c.name
+	ORDER BY GREATEST(p.created_at, p.updated_at) DESC
 	%s
 `, where, limitStmt)
 

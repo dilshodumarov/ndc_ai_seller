@@ -203,3 +203,40 @@ func (r *integrationRepo) GetByOwnerID(ctx context.Context, req *entity.Integrat
 
 	return &res, nil
 }
+
+
+func (r *integrationRepo) CheckIntegrationExistence(ctx context.Context, businessID string) (*entity.IntegrationExistenceResponse, error) {
+	query := fmt.Sprintf(`
+		SELECT integration_type
+		FROM %s 
+		WHERE owner_id = $1 AND deleted_at IS NULL
+	`, r.tableName)
+
+	rows, err := r.db.Query(ctx, query, businessID)
+	if err != nil {
+		return nil, r.db.Error(err)
+	}
+	defer rows.Close()
+
+	var (
+		integrationType string
+		exists          = &entity.IntegrationExistenceResponse{}
+	)
+
+	for rows.Next() {
+		if err := rows.Scan(&integrationType); err != nil {
+			return nil, r.db.Error(err)
+		}
+
+		switch integrationType {
+		case "telegram_account":
+			exists.TelegramAccount = true
+		case "bot":
+			exists.TelegramBot = true
+		case "instagram":
+			exists.Instagram = true
+		}
+	}
+
+	return exists, nil
+}

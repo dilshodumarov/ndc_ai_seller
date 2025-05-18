@@ -61,3 +61,12 @@ func (s *integrationService) GetTokenUsageList(ctx context.Context, req *entity.
 
 	return s.integrationRepo.GetTokenUsageList(ctx, req)
 }
+
+func (s *integrationService) CheckIntegrationExistence(ctx context.Context, businessID string) (*entity.IntegrationExistenceResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
+	defer cancel()
+
+	return s.integrationRepo.CheckIntegrationExistence(ctx, businessID)
+}
+
+

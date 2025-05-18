@@ -108,6 +108,11 @@ type BotIntegrationResponse struct {
 
 
 
+type IntegrationExistenceResponse struct {
+	TelegramAccount bool `json:"telegram_account"`
+	TelegramBot     bool `json:"telegram_bot"`
+	Instagram       bool `json:"instagram"`
+}
 
 
 

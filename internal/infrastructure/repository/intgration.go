@@ -12,4 +12,5 @@ type Integration interface {
 	GetByOwnerID(ctx context.Context, req *entity.IntegrationRequest) (*entity.IntegrationGetResponse, error)
 	UpdateStatus(ctx context.Context, req *entity.IntegrationUpdateStatus) (*entity.IntegrationUpdateStatusResponse, error)
 	GetTokenUsageList(ctx context.Context, req *entity.IntegrationListRequest) (*entity.IntegrationListResponse, error)
+	CheckIntegrationExistence(ctx context.Context, businessID string) (*entity.IntegrationExistenceResponse, error)
 }

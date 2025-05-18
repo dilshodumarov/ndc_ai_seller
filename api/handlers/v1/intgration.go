@@ -10,6 +10,7 @@ import (
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+	"sugurta/internal/pkg/helper"
 	integration "sugurta/internal/usecase/intgration"
 	"time"
 
@@ -42,6 +43,7 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 		integration.GET("/owner/:business_id", r.GetIntegrationByBusinessId)
 		integration.PUT("/status", r.UpdateStatus)
 		integration.GET("/usage/:business_id", r.GetTokenUsageList)
+		integration.GET("/existence", r.CheckIntegrationExistence)
 
 	}
 }
@@ -96,8 +98,8 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 		i.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	id:=c.Param("id")
-	req.ID=id
+	id := c.Param("id")
+	req.ID = id
 	res, err := i.integrationUsecase.Update(c, &req)
 	if err != nil {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -361,6 +363,33 @@ func (i *integrationRoutes) GetTokenUsageList(c *gin.Context) {
 	}
 
 	resp, err := i.integrationUsecase.GetTokenUsageList(c, req)
+	if err != nil {
+		i.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	i.handleResponse(c, status_http.OK, resp)
+}
+
+// CheckIntegrationExistence godoc
+// @Summary Check integration existence by business ID
+// @Description Returns which integrations (Telegram account, Telegram bot, Instagram) exist for a specific business
+// @Tags INTEGRATION
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} status_http.Response{data=entity.IntegrationExistenceResponse} "Integrations found"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
+// @Router /integration/existence [get]
+func (i *integrationRoutes) CheckIntegrationExistence(c *gin.Context) {
+	businessID, code := helper.GetBusnessIdFromToken(c, i.cfg)
+	if code != 0 {
+		i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+		return
+	}
+
+	resp, err := i.integrationUsecase.CheckIntegrationExistence(c, businessID)
 	if err != nil {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
 		return

@@ -221,6 +221,8 @@ definitions:
         type: string
       short_info:
         type: string
+      status:
+        type: boolean
     type: object
   entity.ForgotPasswordRequest:
     properties:
@@ -283,6 +285,15 @@ definitions:
         type: string
       integration_type:
         type: string
+    type: object
+  entity.IntegrationExistenceResponse:
+    properties:
+      instagram:
+        type: boolean
+      telegram_account:
+        type: boolean
+      telegram_bot:
+        type: boolean
     type: object
   entity.IntegrationGetResponse:
     properties:
@@ -2478,6 +2489,47 @@ paths:
       security:
       - BearerAuth: []
       summary: Delete integration
+      tags:
+      - INTEGRATION
+  /integration/existence:
+    get:
+      consumes:
+      - application/json
+      description: Returns which integrations (Telegram account, Telegram bot, Instagram)
+        exist for a specific business
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Integrations found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.IntegrationExistenceResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Check integration existence by business ID
       tags:
       - INTEGRATION
   /integration/owner/{business_id}:

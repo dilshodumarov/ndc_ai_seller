@@ -25836,3 +25836,83 @@ main.main.func1
 2025-05-17T15:33:21.787+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-18T18:11:25.685+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-18T18:11:27.328+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-05-18T18:11:27.341+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-05-18T18:11:27.343+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-05-18T18:11:27.343+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-05-18T18:11:27.509+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-18T18:11:27.520+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/favicon-32x32.png 
+2025-05-18T18:12:01.262+0500	INFO	middleware/logger.go:26	::1 - GET /v1/category/list 
+2025-05-18T18:12:26.191+0500	ERROR	v1/product.go:645	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "Error while creating product", "custom_message": ""}
+sugurta/api/handlers/v1.(*productRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/product.go:645
+sugurta/api/handlers/v1.(*productRoutes).createProduct
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/product.go:86
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-18T18:12:26.191+0500	INFO	middleware/logger.go:26	::1 - POST /v1/product/create 
+2025-05-18T18:12:48.791+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-18T18:12:48.792+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-18T18:12:51.410+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-18T18:12:53.973+0500	INFO	middleware/logger.go:26	::1 - POST /v1/product/create 
+2025-05-18T18:13:03.629+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?limit=20&page=1 
+2025-05-18T18:14:57.275+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-18T18:14:57.285+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-18T18:15:02.685+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-18T18:15:07.832+0500	INFO	middleware/logger.go:26	::1 - GET /v1/product/list?limit=20&page=1 
+2025-05-18T18:15:14.831+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-18T18:15:14.831+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-18T18:31:20.119+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-18T18:31:34.314+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-18T18:32:00.586+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-18T18:32:00.586+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-18T18:32:07.912+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-18T18:32:10.154+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-18T18:32:20.370+0500	INFO	middleware/logger.go:26	::1 - GET /v1/integration/existence 
+2025-05-18T18:32:50.939+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-18T18:32:50.950+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-18T18:32:53.719+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-18T18:32:57.091+0500	INFO	middleware/logger.go:26	::1 - GET /v1/integration/existence 
+2025-05-18T18:33:06.326+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-18T18:33:06.327+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31

@@ -3162,6 +3162,82 @@ const docTemplate = `{
                 }
             }
         },
+        "/integration/existence": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns which integrations (Telegram account, Telegram bot, Instagram) exist for a specific business",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "INTEGRATION"
+                ],
+                "summary": "Check integration existence by business ID",
+                "responses": {
+                    "200": {
+                        "description": "Integrations found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/entity.IntegrationExistenceResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/integration/owner/{business_id}": {
             "get": {
                 "security": [
@@ -6314,6 +6390,9 @@ const docTemplate = `{
                 },
                 "short_info": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
                 }
             }
         },
@@ -6410,6 +6489,20 @@ const docTemplate = `{
                 },
                 "integration_type": {
                     "type": "string"
+                }
+            }
+        },
+        "entity.IntegrationExistenceResponse": {
+            "type": "object",
+            "properties": {
+                "instagram": {
+                    "type": "boolean"
+                },
+                "telegram_account": {
+                    "type": "boolean"
+                },
+                "telegram_bot": {
+                    "type": "boolean"
                 }
             }
         },

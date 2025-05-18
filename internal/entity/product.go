@@ -15,6 +15,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
+		Status       bool   `json:"status"`
 		Image_url    []string
 	}
 	CreateProductImage struct {
@@ -30,6 +31,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
+		Status       bool   `json:"status"`
 		Image_url    []string
 	}
 
