@@ -44,7 +44,7 @@ func NewSettingsRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		settingsai.PUT("/update", r.UpdateSettings)
 		settingsai.DELETE("/delete/:guid", r.DeleteSettings)
 		settingsai.GET("/list", r.ListSettingsByBusinessID)
-		settingsai.GET("/by-name", r.GetSettingsByName)
+		settingsai.GET("/by-businessid", r.GetSettingsByName)
 	}
 
 }
@@ -180,7 +180,7 @@ func (r *settingsRoutes) ListOrderStatus(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param settings body entity.CreateSettingsRequestForSwagger true "Settings create request"
+// @Param settings body entity.CreateSettingsRequest true "Settings create request"
 // @Success 201 {string} string "Created successfully"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
@@ -309,28 +309,23 @@ func (r *settingsRoutes) ListSettingsByBusinessID(c *gin.Context) {
 	r.handleResponse(c, status_http.OK, settings)
 }
 
-// GetSettingsByName godoc
-// @Summary Get settings by name and business ID
-// @Description Retrieves settings by name and business ID
+// GetSettingsByBussnesID godoc
+// @Summary Get settings by  business ID
+// @Description Retrieves settings by  business ID
 // @Tags SETTINGS
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param name query string true "Settings name"
-// @Param business_id query string true "Business ID"
 // @Success 200 {object} entity.Settings "OK"
 // @Failure 404 {object} status_http.Response{data=string} "Not Found"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /settings/ai/by-name [get]
+// @Router /settings/ai/by-businessid [get]
 func (r *settingsRoutes) GetSettingsByName(c *gin.Context) {
-	name := c.Query("name")
-	businessID := c.Query("business_id")
-	if name == "" || businessID == "" {
-		r.handleResponse(c, status_http.BadRequest, "name and business_id query params required")
-		return
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}
-
-	res, err := r.settingsUC.GetSettingsByName(c, name, businessID)
+	res, err := r.settingsUC.GetSettingsBussnesId(c, BusinessID)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return

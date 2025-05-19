@@ -17,5 +17,5 @@ type SettingsStorage interface {
 	UpdateSettings(ctx context.Context, req *entity.UpdateSettingsRequest) error
 	DeleteSettings(ctx context.Context, guid string) error
 	ListSettingsByBusinessID(ctx context.Context, businessID string) ([]*entity.Settings, error)
-	GetSettingsByName(ctx context.Context, name, businessID string) (*entity.Settings, error)
+	GetSettingsBussnesId(ctx context.Context, businessID string) (*entity.Settings, error)
 }

@@ -98,9 +98,9 @@ func (s *settingsService) ListSettingsByBusinessID(ctx context.Context, business
 	return s.settingsRepo.ListSettingsByBusinessID(ctx, businessID)
 }
 
-func (s *settingsService) GetSettingsByName(ctx context.Context, name, businessID string) (*entity.Settings, error) {
+func (s *settingsService)  GetSettingsBussnesId(ctx context.Context, businessID string) (*entity.Settings, error) {
 	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
 	defer cancel()
 
-	return s.settingsRepo.GetSettingsByName(ctx, name, businessID)
+	return s.settingsRepo.GetSettingsBussnesId(ctx,  businessID)
 }

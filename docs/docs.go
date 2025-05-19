@@ -5429,14 +5429,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/settings/ai/by-name": {
+        "/settings/ai/by-businessid": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieves settings by name and business ID",
+                "description": "Retrieves settings by  business ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -5446,23 +5446,7 @@ const docTemplate = `{
                 "tags": [
                     "SETTINGS"
                 ],
-                "summary": "Get settings by name and business ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Settings name",
-                        "name": "name",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Business ID",
-                        "name": "business_id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
+                "summary": "Get settings by  business ID",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -5534,7 +5518,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.CreateSettingsRequestForSwagger"
+                            "$ref": "#/definitions/entity.CreateSettingsRequest"
                         }
                     }
                 ],
@@ -6824,50 +6808,11 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.CreateSettingsRequestForSwagger": {
+        "entity.CreateSettingsRequest": {
             "type": "object",
             "properties": {
-                "business_name": {
+                "business_id": {
                     "type": "string"
-                },
-                "error_message": {
-                    "type": "string"
-                },
-                "first_message": {
-                    "type": "string"
-                },
-                "intelligence_level": {
-                    "type": "integer"
-                },
-                "is_stop": {
-                    "type": "boolean"
-                },
-                "nabrand_nameme": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "prompt_order": {
-                    "type": "string"
-                },
-                "prompt_product": {
-                    "type": "string"
-                },
-                "prompt_text": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "boolean"
-                },
-                "stop_until": {
-                    "type": "integer"
-                },
-                "token_limit": {
-                    "type": "integer"
-                },
-                "waiting_time": {
-                    "type": "integer"
                 }
             }
         },
@@ -7343,46 +7288,61 @@ const docTemplate = `{
         "entity.Settings": {
             "type": "object",
             "properties": {
-                "business_id": {
+                "brandName": {
                     "type": "string"
                 },
-                "created_at": {
+                "businessID": {
                     "type": "string"
                 },
-                "deleted_at": {
+                "businessName": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "errorMessage": {
+                    "type": "string"
+                },
+                "firstMessage": {
                     "type": "string"
                 },
                 "guid": {
                     "type": "string"
                 },
-                "intelligence_level": {
+                "intelligenceLevel": {
                     "type": "integer"
+                },
+                "isStop": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"
                 },
-                "prompt_order": {
+                "promptOrder": {
                     "type": "string"
                 },
-                "prompt_product": {
+                "promptProduct": {
                     "type": "string"
                 },
-                "prompt_text": {
+                "promptText": {
                     "type": "string"
                 },
                 "status": {
                     "type": "boolean"
                 },
-                "stop_until": {
+                "stopUntil": {
                     "type": "integer"
                 },
-                "token_limit": {
+                "tokenLimit": {
                     "type": "integer"
                 },
-                "updated_at": {
+                "updatedAt": {
                     "type": "string"
                 },
-                "waiting_time": {
+                "waitingTime": {
                     "type": "integer"
                 }
             }
@@ -7581,11 +7541,26 @@ const docTemplate = `{
         "entity.UpdateSettingsRequest": {
             "type": "object",
             "properties": {
+                "brandName": {
+                    "type": "string"
+                },
+                "businessName": {
+                    "type": "string"
+                },
+                "errorMessage": {
+                    "type": "string"
+                },
+                "firstMessage": {
+                    "type": "string"
+                },
                 "guid": {
                     "type": "string"
                 },
                 "intelligence_level": {
                     "type": "integer"
+                },
+                "isStop": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"

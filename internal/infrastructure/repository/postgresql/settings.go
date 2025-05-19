@@ -205,16 +205,12 @@ func (r *settingsRepo) GetStatusByName(ctx context.Context, name, bussnesid stri
 func (r *settingsRepo) CreateSettings(ctx context.Context, req *entity.CreateSettingsRequest) error {
 	query := `
 		INSERT INTO settings (
-			name,brand_name,business_name ,error_message,first_message,is_stop,status, business_id, prompt_text, prompt_order,
-			waiting_time, prompt_product, token_limit,
-			intelligence_level, stop_until
+			 business_id
 		)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11,$12,$13)
+		VALUES ($1)
 	`
 	_, err := r.db.Exec(ctx, query,
-		req.Name, req.BrandName,req.BusinessName,req.ErrorMessage, req.FirstMessage, req.IsStop, req.Status, req.BusinessID, req.PromptText,
-		req.PromptOrder, req.WaitingTime, req.PromptProduct,
-		req.TokenLimit, req.IntelligenceLevel, req.StopUntil,
+		req.BusinessID,
 	)
 	if err != nil {
 		return fmt.Errorf("Create settings: %w", err)
@@ -296,6 +292,31 @@ func (r *settingsRepo) UpdateSettings(ctx context.Context, req *entity.UpdateSet
 		args = append(args, req.StopUntil)
 		argID++
 	}
+	if req.BrandName != "" {
+		setParts = append(setParts, fmt.Sprintf("brand_name=$%d", argID))
+		args = append(args, req.BrandName)
+		argID++
+	}
+	if req.BusinessName != "" {
+		setParts = append(setParts, fmt.Sprintf("business_name=$%d", argID))
+		args = append(args, req.BusinessName)
+		argID++
+	}
+	if req.ErrorMessage != "" {
+		setParts = append(setParts, fmt.Sprintf("error_message=$%d", argID))
+		args = append(args, req.ErrorMessage)
+		argID++
+	}
+	if req.FirstMessage != "" {
+		setParts = append(setParts, fmt.Sprintf("first_message=$%d", argID))
+		args = append(args, req.FirstMessage)
+		argID++
+	}
+	if req.IsStop != nil {
+		setParts = append(setParts, fmt.Sprintf("is_stop=$%d", argID))
+		args = append(args, *req.IsStop)
+		argID++
+	}
 
 	// always update updated_at
 	setParts = append(setParts, fmt.Sprintf("updated_at=$%d", argID))
@@ -332,9 +353,10 @@ func (r *settingsRepo) DeleteSettings(ctx context.Context, guid string) error {
 
 func (r *settingsRepo) ListSettingsByBusinessID(ctx context.Context, businessID string) ([]*entity.Settings, error) {
 	query := `
-		SELECT guid, name, status, business_id, prompt_text, prompt_order,
-		       waiting_time, prompt_product, token_limit, intelligence_level,
-		       stop_until, created_at, updated_at, deleted_at
+		SELECT guid, name, brand_name, business_name, status, business_id, 
+		       prompt_text, prompt_order, waiting_time, prompt_product, 
+		       token_limit, intelligence_level, error_message, first_message, 
+		       is_stop, stop_until, created_at, updated_at, deleted_at
 		FROM settings
 		WHERE business_id = $1
 		ORDER BY created_at DESC
@@ -348,45 +370,103 @@ func (r *settingsRepo) ListSettingsByBusinessID(ctx context.Context, businessID 
 
 	var result []*entity.Settings
 	for rows.Next() {
-		var s entity.Settings
+		var (
+			s                                                      entity.Settings
+			name, brandName, businessName, promptText, promptOrder sql.NullString
+			promptProduct, errorMessage, firstMessage              sql.NullString
+			status, isStop                                         sql.NullBool
+			waitingTime, tokenLimit, intelligenceLevel, stopUntil  sql.NullInt32
+			createdAt, updatedAt, deletedAt                        sql.NullTime
+		)
+
 		err := rows.Scan(
-			&s.GUID, &s.Name, &s.Status, &s.BusinessID, &s.PromptText,
-			&s.PromptOrder, &s.WaitingTime, &s.PromptProduct,
-			&s.TokenLimit, &s.IntelligenceLevel, &s.StopUntil,
-			&s.CreatedAt, &s.UpdatedAt, &s.DeletedAt,
+			&s.GUID, &name, &brandName, &businessName, &status, &s.BusinessID,
+			&promptText, &promptOrder, &waitingTime, &promptProduct,
+			&tokenLimit, &intelligenceLevel, &errorMessage, &firstMessage,
+			&isStop, &stopUntil, &createdAt, &updatedAt, &deletedAt,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("List scan: %w", err)
 		}
+
+		s.Name = name.String
+		s.BrandName = brandName.String
+		s.BusinessName = businessName.String
+		s.PromptText = promptText.String
+		s.PromptOrder = promptOrder.String
+		s.PromptProduct = promptProduct.String
+		s.ErrorMessage = errorMessage.String
+		s.FirstMessage = firstMessage.String
+		s.Status = status.Bool
+		s.IsStop = isStop.Bool
+		s.WaitingTime = int(waitingTime.Int32)
+		s.TokenLimit = int(tokenLimit.Int32)
+		s.IntelligenceLevel = int(intelligenceLevel.Int32)
+		s.StopUntil = int(stopUntil.Int32)
+		s.CreatedAt = createdAt.Time
+		s.UpdatedAt = updatedAt.Time
+		if deletedAt.Valid {
+			s.DeletedAt = &deletedAt.Time
+		}
+
 		result = append(result, &s)
 	}
 
 	return result, nil
 }
 
-func (r *settingsRepo) GetSettingsByName(ctx context.Context, name, businessID string) (*entity.Settings, error) {
+func (r *settingsRepo) GetSettingsBussnesId(ctx context.Context, businessID string) (*entity.Settings, error) {
 	query := `
-		SELECT guid, name, status, business_id, prompt_text, prompt_order,
-		       waiting_time, prompt_product, token_limit, intelligence_level,
-		       stop_until, created_at, updated_at, deleted_at
+		SELECT guid, name, brand_name, business_name, status, business_id, 
+		       prompt_text, prompt_order, waiting_time, prompt_product, 
+		       token_limit, intelligence_level, error_message, first_message, 
+		       is_stop, stop_until, created_at, updated_at, deleted_at
 		FROM settings
-		WHERE name = $1 AND business_id = $2
+		WHERE business_id = $1
 	`
 
-	row := r.db.QueryRow(ctx, query, name, businessID)
-	var s entity.Settings
+	row := r.db.QueryRow(ctx, query, businessID)
+
+	var (
+		s                                                      entity.Settings
+		name, brandName, businessName, promptText, promptOrder sql.NullString
+		promptProduct, errorMessage, firstMessage              sql.NullString
+		status, isStop                                         sql.NullBool
+		waitingTime, tokenLimit, intelligenceLevel, stopUntil  sql.NullInt32
+		createdAt, updatedAt, deletedAt                        sql.NullTime
+	)
 
 	err := row.Scan(
-		&s.GUID, &s.Name, &s.Status, &s.BusinessID, &s.PromptText,
-		&s.PromptOrder, &s.WaitingTime, &s.PromptProduct,
-		&s.TokenLimit, &s.IntelligenceLevel, &s.StopUntil,
-		&s.CreatedAt, &s.UpdatedAt, &s.DeletedAt,
+		&s.GUID, &name, &brandName, &businessName, &status, &s.BusinessID,
+		&promptText, &promptOrder, &waitingTime, &promptProduct,
+		&tokenLimit, &intelligenceLevel, &errorMessage, &firstMessage,
+		&isStop, &stopUntil, &createdAt, &updatedAt, &deletedAt,
 	)
 	if err != nil {
 		if err.Error() == "no rows in result set" {
 			return nil, nil
 		}
-		return nil, fmt.Errorf("Get settings by name: %w", err)
+		return nil, fmt.Errorf("Get settings by business_id: %w", err)
+	}
+
+	s.Name = name.String
+	s.BrandName = brandName.String
+	s.BusinessName = businessName.String
+	s.PromptText = promptText.String
+	s.PromptOrder = promptOrder.String
+	s.PromptProduct = promptProduct.String
+	s.ErrorMessage = errorMessage.String
+	s.FirstMessage = firstMessage.String
+	s.Status = status.Bool
+	s.IsStop = isStop.Bool
+	s.WaitingTime = int(waitingTime.Int32)
+	s.TokenLimit = int(tokenLimit.Int32)
+	s.IntelligenceLevel = int(intelligenceLevel.Int32)
+	s.StopUntil = int(stopUntil.Int32)
+	s.CreatedAt = createdAt.Time
+	s.UpdatedAt = updatedAt.Time
+	if deletedAt.Valid {
+		s.DeletedAt = &deletedAt.Time
 	}
 
 	return &s, nil
