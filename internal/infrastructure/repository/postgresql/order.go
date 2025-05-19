@@ -101,6 +101,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			clientName  sql.NullString
 			clientPhone sql.NullString
 			imageurl           sql.NullString
+			primageurl           sql.NullString
 			username    sql.NullString
 		)
 		
@@ -111,10 +112,13 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 		
 			&clientGUID, &clientName, &clientPhone,&username, // client
 		
-			&product.ProductID, &product.Name, &product.ImageURL, &product.Cost,
+			&product.ProductID, &product.Name, &primageurl, &product.Cost,
 			&product.Count, &product.ProductTotalPrice,
 		)
 		
+		if primageurl.Valid{
+			product.ImageURL=primageurl.String
+		}
 		products = append(products, product)
 		if err != nil {
 			return nil, fmt.Errorf("OrderRepo - Get - scan row: %w", err)
