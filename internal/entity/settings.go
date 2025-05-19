@@ -21,6 +21,8 @@ type Settings struct {
 
 type CreateSettingsRequest struct {
 	Name              string `json:"name"`
+	BrandName         string `json:"nabrand_nameme"`
+	BusinessName      string `json:"business_name"`
 	BusinessID        string `json:"business_id"`
 	PromptText        string `json:"prompt_text"`
 	PromptOrder       string `json:"prompt_order"`
@@ -37,6 +39,8 @@ type CreateSettingsRequest struct {
 
 type CreateSettingsRequestForSwagger struct {
 	Name              string `json:"name"`
+	BrandName         string `json:"nabrand_nameme"`
+	BusinessName      string `json:"business_name"`
 	PromptText        string `json:"prompt_text"`
 	PromptOrder       string `json:"prompt_order"`
 	ErrorMessage      string `json:"error_message"`

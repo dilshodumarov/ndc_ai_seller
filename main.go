@@ -9,8 +9,8 @@ import (
 func main() {
 	hashedBytes, err := bcrypt.GenerateFromPassword([]byte("7"), bcrypt.DefaultCost)
 	if err != nil {
-		return 
+		return
 	}
 	fmt.Println(string(hashedBytes))
-}
 
+}

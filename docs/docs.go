@@ -6827,6 +6827,9 @@ const docTemplate = `{
         "entity.CreateSettingsRequestForSwagger": {
             "type": "object",
             "properties": {
+                "business_name": {
+                    "type": "string"
+                },
                 "error_message": {
                     "type": "string"
                 },
@@ -6838,6 +6841,9 @@ const docTemplate = `{
                 },
                 "is_stop": {
                     "type": "boolean"
+                },
+                "nabrand_nameme": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"

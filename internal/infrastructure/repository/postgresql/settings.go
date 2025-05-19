@@ -205,14 +205,14 @@ func (r *settingsRepo) GetStatusByName(ctx context.Context, name, bussnesid stri
 func (r *settingsRepo) CreateSettings(ctx context.Context, req *entity.CreateSettingsRequest) error {
 	query := `
 		INSERT INTO settings (
-			name, error_message,first_message,is_stop,status, business_id, prompt_text, prompt_order,
+			name,brand_name,business_name ,error_message,first_message,is_stop,status, business_id, prompt_text, prompt_order,
 			waiting_time, prompt_product, token_limit,
 			intelligence_level, stop_until
 		)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11,$12,$13)
 	`
 	_, err := r.db.Exec(ctx, query,
-		req.Name, req.ErrorMessage, req.FirstMessage, req.IsStop, req.Status, req.BusinessID, req.PromptText,
+		req.Name, req.BrandName,req.BusinessName,req.ErrorMessage, req.FirstMessage, req.IsStop, req.Status, req.BusinessID, req.PromptText,
 		req.PromptOrder, req.WaitingTime, req.PromptProduct,
 		req.TokenLimit, req.IntelligenceLevel, req.StopUntil,
 	)

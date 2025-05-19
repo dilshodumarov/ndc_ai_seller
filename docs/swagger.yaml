@@ -226,6 +226,8 @@ definitions:
     type: object
   entity.CreateSettingsRequestForSwagger:
     properties:
+      business_name:
+        type: string
       error_message:
         type: string
       first_message:
@@ -234,6 +236,8 @@ definitions:
         type: integer
       is_stop:
         type: boolean
+      nabrand_nameme:
+        type: string
       name:
         type: string
       prompt_order:
