@@ -26154,3 +26154,18 @@ main.main.func1
 2025-05-19T11:15:40.733+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-19T11:17:19.613+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-19T11:17:54.459+0500	INFO	middleware/logger.go:26	::1 - GET /v1/integration/owner/%7Bbusiness_id%7D 
+2025-05-19T11:18:07.846+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-19T11:18:22.313+0500	INFO	middleware/logger.go:26	::1 - GET /v1/integration/owner 
+2025-05-19T13:52:46.276+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-19T13:52:49.253+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-05-19T13:52:49.277+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-05-19T13:52:49.277+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-05-19T13:52:49.279+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-05-19T13:52:49.486+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-19T13:52:49.700+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/favicon-32x32.png 
+2025-05-19T13:54:52.229+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-19T13:54:52.233+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31

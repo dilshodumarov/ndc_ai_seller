@@ -6827,8 +6827,17 @@ const docTemplate = `{
         "entity.CreateSettingsRequestForSwagger": {
             "type": "object",
             "properties": {
+                "error_message": {
+                    "type": "string"
+                },
+                "first_message": {
+                    "type": "string"
+                },
                 "intelligence_level": {
                     "type": "integer"
+                },
+                "is_stop": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"

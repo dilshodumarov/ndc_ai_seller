@@ -24,6 +24,9 @@ type CreateSettingsRequest struct {
 	BusinessID        string `json:"business_id"`
 	PromptText        string `json:"prompt_text"`
 	PromptOrder       string `json:"prompt_order"`
+	ErrorMessage      string `json:"error_message"`
+	FirstMessage      string `json:"first_message"`
+	IsStop            bool   `json:"is_stop"`
 	Status            bool   `json:"status"`
 	WaitingTime       int    `json:"waiting_time"`
 	PromptProduct     string `json:"prompt_product"`
@@ -36,6 +39,9 @@ type CreateSettingsRequestForSwagger struct {
 	Name              string `json:"name"`
 	PromptText        string `json:"prompt_text"`
 	PromptOrder       string `json:"prompt_order"`
+	ErrorMessage      string `json:"error_message"`
+	FirstMessage      string `json:"first_message"`
+	IsStop            bool   `json:"is_stop"`
 	Status            bool   `json:"status"`
 	WaitingTime       int    `json:"waiting_time"`
 	PromptProduct     string `json:"prompt_product"`

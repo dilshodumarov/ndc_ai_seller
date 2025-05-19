@@ -226,8 +226,14 @@ definitions:
     type: object
   entity.CreateSettingsRequestForSwagger:
     properties:
+      error_message:
+        type: string
+      first_message:
+        type: string
       intelligence_level:
         type: integer
+      is_stop:
+        type: boolean
       name:
         type: string
       prompt_order:
