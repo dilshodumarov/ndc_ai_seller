@@ -63,7 +63,6 @@ type PromptOrderResponse struct {
 }
 
 type GetPromptOrdersResponse struct {
-	Prompts     []PromptOrderResponse `json:"prompts"`
 	OrderStatus []*OrderStatus        `json:"order_status"`
 	Id          string                `json:"id"`
 }

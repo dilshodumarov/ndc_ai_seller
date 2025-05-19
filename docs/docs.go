@@ -7094,12 +7094,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/entity.OrderStatus"
                     }
-                },
-                "prompts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/entity.PromptOrderResponse"
-                    }
                 }
             }
         },
@@ -7299,6 +7293,9 @@ const docTemplate = `{
                 "order_count": {
                     "description": "yangi maydon",
                     "type": "integer"
+                },
+                "prompts": {
+                    "$ref": "#/definitions/entity.PromptOrderResponse"
                 },
                 "status_number": {
                     "type": "integer"

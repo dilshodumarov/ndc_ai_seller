@@ -26456,3 +26456,6 @@ net/http.(*conn).serve
 2025-05-20T00:33:09.281+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-20T01:04:24.710+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-20T01:04:54.765+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/prompt-orders 
+2025-05-20T01:08:07.299+0500	INFO	app/main.go:40	api gateway service stops

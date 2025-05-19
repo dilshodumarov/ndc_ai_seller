@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"fmt"
+	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
@@ -414,6 +414,7 @@ func (r *settingsRoutes) GetPromptOrders(c *gin.Context) {
 	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
 	if code != 0 {
 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+		return
 	}
 
 	data, err := r.settingsUC.GetPromptOrders(c, BusinessID)
@@ -425,16 +426,27 @@ func (r *settingsRoutes) GetPromptOrders(c *gin.Context) {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
-	OrderStatus,err:=r.settingsUC.List(c,BusinessID)
+
+	OrderStatus, err := r.settingsUC.List(c, BusinessID)
 	if err != nil {
-		fmt.Println(err)
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
+
+	// Promptlarni StatusNumberga bog‘lash
+	for _, status := range OrderStatus {
+		statusNumberStr := strconv.Itoa(status.StatusNumber)
+		for _, prompt := range data {
+			if prompt.Number == statusNumberStr {
+				status.Prompts =prompt
+				break
+			}
+		}
+	}
+
 	r.handleResponse(c, status_http.OK, entity.GetPromptOrdersResponse{
-		Prompts: data,
 		OrderStatus: OrderStatus,
-		Id:      data[0].Guid,
+		Id:          data[0].Guid,
 	})
 }
 

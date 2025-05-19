@@ -133,6 +133,7 @@ type OrderStatus struct {
 	StatusNumber int    `json:"status_number"`
 	OrderCount   int    `json:"order_count"` // yangi maydon
 	CreatedAt    time.Time `json:"created_at"`
+	Prompts      PromptOrderResponse `json:"prompts"`
 }
 
 

@@ -292,10 +292,6 @@ definitions:
         items:
           $ref: '#/definitions/entity.OrderStatus'
         type: array
-      prompts:
-        items:
-          $ref: '#/definitions/entity.PromptOrderResponse'
-        type: array
     type: object
   entity.IntegrationCreateForSwagger:
     properties:
@@ -426,6 +422,8 @@ definitions:
       order_count:
         description: yangi maydon
         type: integer
+      prompts:
+        $ref: '#/definitions/entity.PromptOrderResponse'
       status_number:
         type: integer
       type_id:
