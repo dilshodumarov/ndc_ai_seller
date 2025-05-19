@@ -284,6 +284,19 @@ definitions:
       userID:
         type: string
     type: object
+  entity.GetPromptOrdersResponse:
+    properties:
+      id:
+        type: string
+      order_status:
+        items:
+          $ref: '#/definitions/entity.OrderStatus'
+        type: array
+      prompts:
+        items:
+          $ref: '#/definitions/entity.PromptOrderResponse'
+        type: array
+    type: object
   entity.IntegrationCreateForSwagger:
     properties:
       integration_token:
@@ -476,6 +489,17 @@ definitions:
       status:
         type: boolean
       updated_at:
+        type: string
+    type: object
+  entity.PromptOrderResponse:
+    properties:
+      guid:
+        type: string
+      number:
+        example: "2"
+        type: string
+      prompt:
+        example: Hello there
         type: string
     type: object
   entity.RegisterRequest:
@@ -702,6 +726,21 @@ definitions:
         type: string
       status:
         type: boolean
+    type: object
+  entity.UpdatePromptOrdersRequest:
+    properties:
+      orderStatus:
+        items:
+          $ref: '#/definitions/entity.UpdateOrderStatusRequest'
+        type: array
+      promt2:
+        type: string
+      promt3:
+        type: string
+      promt4:
+        type: string
+      promt6:
+        type: string
     type: object
   entity.UpdateSettingsRequest:
     properties:
@@ -3998,6 +4037,107 @@ paths:
       security:
       - BearerAuth: []
       summary: List settings by business ID
+      tags:
+      - SETTINGS
+  /settings/ai/prompt-orders:
+    get:
+      consumes:
+      - application/json
+      description: Returns prompt orders (2, 3, 4, 6) from JSONB field
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.GetPromptOrdersResponse'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get prompt orders
+      tags:
+      - SETTINGS
+  /settings/ai/prompt-orders/{guid}:
+    put:
+      consumes:
+      - application/json
+      description: Updates the prompt_orders JSONB field of a specific settings entry
+        by GUID
+      parameters:
+      - description: Settings GUID
+        in: path
+        name: guid
+        required: true
+        type: string
+      - description: Prompt orders map
+        in: body
+        name: prompt_orders
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UpdatePromptOrdersRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Prompt orders updated successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: Settings not found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update only the prompt_orders field
       tags:
       - SETTINGS
   /settings/ai/update:

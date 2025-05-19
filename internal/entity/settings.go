@@ -1,6 +1,8 @@
 package entity
 
-import "time"
+import (
+	"time"
+)
 
 type Settings struct {
 	GUID              string
@@ -24,16 +26,14 @@ type Settings struct {
 	DeletedAt         *time.Time
 }
 
-
 type CreateSettingsRequest struct {
-	BusinessID        string `json:"business_id"`
+	BusinessID string `json:"business_id"`
 }
-
 
 type UpdateSettingsRequest struct {
 	GUID              string `json:"guid"`
 	Name              string `json:"name"`
-	Status            *bool   `json:"status"`
+	Status            *bool  `json:"status"`
 	PromptText        string `json:"prompt_text"`
 	PromptOrder       string `json:"prompt_order"`
 	WaitingTime       int    `json:"waiting_time"`
@@ -41,9 +41,29 @@ type UpdateSettingsRequest struct {
 	TokenLimit        int    `json:"token_limit"`
 	IntelligenceLevel int    `json:"intelligence_level"`
 	StopUntil         int    `json:"stop_until"`
-	BrandName     string
-	BusinessName  string
-	ErrorMessage  string
-	FirstMessage  string
-	IsStop        *bool
+	BrandName         string
+	BusinessName      string
+	ErrorMessage      string
+	FirstMessage      string
+	IsStop            *bool
+}
+
+type UpdatePromptOrdersRequest struct {
+	OrderStatus []UpdateOrderStatusRequest
+	Promt2      string
+	Promt3      string
+	Promt4      string
+	Promt6      string
+}
+
+type PromptOrderResponse struct {
+	Guid   string `json:"guid"`
+	Number string `json:"number" example:"2"`
+	Prompt string `json:"prompt" example:"Hello there"`
+}
+
+type GetPromptOrdersResponse struct {
+	Prompts     []PromptOrderResponse `json:"prompts"`
+	OrderStatus []*OrderStatus        `json:"order_status"`
+	Id          string                `json:"id"`
 }

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
@@ -45,6 +46,8 @@ func NewSettingsRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		settingsai.DELETE("/delete/:guid", r.DeleteSettings)
 		settingsai.GET("/list", r.ListSettingsByBusinessID)
 		settingsai.GET("/by-businessid", r.GetSettingsByName)
+		settingsai.PUT("/prompt-orders/:guid", r.UpdatePromptOrders)
+		settingsai.GET("/prompt-orders", r.GetPromptOrders)
 	}
 
 }
@@ -67,7 +70,7 @@ func (r *settingsRoutes) CreateOrderStatus(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
 	if code != 0 {
 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}
@@ -93,6 +96,7 @@ func (r *settingsRoutes) CreateOrderStatus(c *gin.Context) {
 // @Router /settings/order-status/get/{guid} [get]
 func (r *settingsRoutes) GetOrderStatus(c *gin.Context) {
 	guid := c.Param("guid")
+
 	res, err := r.settingsUC.Get(c, guid)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -336,6 +340,102 @@ func (r *settingsRoutes) GetSettingsByName(c *gin.Context) {
 	}
 
 	r.handleResponse(c, status_http.OK, res)
+}
+
+// UpdatePromptOrders godoc
+// @Summary Update only the prompt_orders field
+// @Description Updates the prompt_orders JSONB field of a specific settings entry by GUID
+// @Tags SETTINGS
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param guid path string true "Settings GUID"
+// @Param prompt_orders body entity.UpdatePromptOrdersRequest true "Prompt orders map"
+// @Success 200 {string} string "Prompt orders updated successfully"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 404 {object} status_http.Response{data=string} "Settings not found"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @Router /settings/ai/prompt-orders/{guid} [put]
+func (r *settingsRoutes) UpdatePromptOrders(c *gin.Context) {
+	guid := c.Param("guid")
+	if guid == "" {
+		r.handleResponse(c, status_http.BadRequest, "GUID is required")
+		return
+	}
+
+	var req entity.UpdatePromptOrdersRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		r.handleResponse(c, status_http.BadRequest, err.Error())
+		return
+	}
+	for i := 0; i < len(req.OrderStatus); i++ {
+		err := r.settingsUC.Update(c, &req.OrderStatus[i])
+		if err != nil {
+			if err.Error() == "no rows affected" {
+				r.handleResponse(c, status_http.NotFound, "Settings not found")
+				return
+			}
+			r.handleResponse(c, status_http.InternalServerError, err.Error())
+			return
+		}
+	}
+	promtOrder := map[string]string{
+		"2": req.Promt2,
+		"3": req.Promt3,
+		"4": req.Promt4,
+		"6": req.Promt6,
+	}
+	err := r.settingsUC.UpdatePromptOrders(c, guid, promtOrder)
+	if err != nil {
+		if err.Error() == "no rows affected" {
+			r.handleResponse(c, status_http.NotFound, "Settings not found")
+			return
+		}
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	r.handleResponse(c, status_http.OK, "Prompt orders updated successfully")
+}
+
+// GetPromptOrders godoc
+// @Summary Get prompt orders
+// @Description Returns prompt orders (2, 3, 4, 6) from JSONB field
+// @Tags SETTINGS
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} entity.GetPromptOrdersResponse
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 404 {object} status_http.Response{data=string} "Not Found"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// @Router /settings/ai/prompt-orders [get]
+func (r *settingsRoutes) GetPromptOrders(c *gin.Context) {
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+
+	data, err := r.settingsUC.GetPromptOrders(c, BusinessID)
+	if err != nil {
+		if err.Error() == "not found" {
+			r.handleResponse(c, status_http.NotFound, "Settings not found")
+			return
+		}
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+	OrderStatus,err:=r.settingsUC.List(c,BusinessID)
+	if err != nil {
+		fmt.Println(err)
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+	r.handleResponse(c, status_http.OK, entity.GetPromptOrdersResponse{
+		Prompts: data,
+		OrderStatus: OrderStatus,
+		Id:      data[0].Guid,
+	})
 }
 
 func (h *settingsRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {

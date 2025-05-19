@@ -18,4 +18,6 @@ type SettingsStorage interface {
 	DeleteSettings(ctx context.Context, guid string) error
 	ListSettingsByBusinessID(ctx context.Context, businessID string) ([]*entity.Settings, error)
 	GetSettingsBussnesId(ctx context.Context, businessID string) (*entity.Settings, error)
+	UpdatePromptOrders(ctx context.Context, guid string, promptOrders map[string]string) error
+	GetPromptOrders(ctx context.Context, guid string) ([]entity.PromptOrderResponse, error)
 }

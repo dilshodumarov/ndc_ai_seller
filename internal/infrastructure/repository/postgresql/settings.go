@@ -3,10 +3,13 @@ package postgresql
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/postgres"
 	"time"
+
+	"github.com/jackc/pgx"
 )
 
 type settingsRepo struct {
@@ -470,4 +473,60 @@ func (r *settingsRepo) GetSettingsBussnesId(ctx context.Context, businessID stri
 	}
 
 	return &s, nil
+}
+
+func (r *settingsRepo) UpdatePromptOrders(ctx context.Context, guid string, promptOrders map[string]string) error {
+	query := `
+		UPDATE settings
+		SET prompt_order = $1, updated_at = NOW()
+		WHERE guid = $2
+	`
+
+	// JSON formatga o‘tkazamiz
+	data, err := json.Marshal(promptOrders)
+	if err != nil {
+		return fmt.Errorf("marshal prompt_orders: %w", err)
+	}
+
+	_, err = r.db.Exec(ctx, query, data, guid)
+	if err != nil {
+		return fmt.Errorf("update prompt_orders: %w", err)
+	}
+
+	return nil
+}
+
+func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]entity.PromptOrderResponse, error) {
+	var rawJSON []byte
+	var id string
+	query := `SELECT guid, prompt_order FROM settings WHERE business_id = $1 AND deleted_at IS NULL`
+
+	err := r.db.QueryRow(ctx, query, guid).Scan(&id, &rawJSON)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, fmt.Errorf("not found")
+		}
+		return nil, fmt.Errorf("scan prompt_order: %w", err)
+	}
+
+	// Agar prompt_order NULL bo‘lsa, bo‘sh map sifatida davolanadi
+	allPrompts := make(map[string]string)
+	if len(rawJSON) > 0 {
+		if err := json.Unmarshal(rawJSON, &allPrompts); err != nil {
+			return nil, fmt.Errorf("unmarshal prompt_order: %w", err)
+		}
+	}
+
+	// Faqat keraklilar: 2, 3, 4, 6
+	keys := []string{"2", "3", "4", "6"}
+	result := make([]entity.PromptOrderResponse, 0, len(keys))
+	for _, k := range keys {
+		result = append(result, entity.PromptOrderResponse{
+			Guid:   id,
+			Number: k,
+			Prompt: allPrompts[k], // agar yo‘q bo‘lsa, avtomatik bo‘sh string bo‘ladi
+		})
+	}
+
+	return result, nil
 }

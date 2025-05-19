@@ -8,8 +8,8 @@ import (
 )
 
 type settingsService struct {
-	ctxTimeout    time.Duration
-	settingsRepo  storage.SettingsStorage
+	ctxTimeout   time.Duration
+	settingsRepo storage.SettingsStorage
 }
 
 func NewSettingsService(ctxTimeout time.Duration, s storage.SettingsStorage) *settingsService {
@@ -54,14 +54,12 @@ func (ss *settingsService) List(ctx context.Context, businessID string) ([]*enti
 	return ss.settingsRepo.List(ctx, businessID)
 }
 
-
-func (ss *settingsService) GetStatusByName(ctx context.Context, name,bussnesid string) (*string, error) {
+func (ss *settingsService) GetStatusByName(ctx context.Context, name, bussnesid string) (*string, error) {
 	ctx, cancel := context.WithTimeout(ctx, ss.ctxTimeout)
 	defer cancel()
 
-	return ss.settingsRepo.GetStatusByName(ctx, name,bussnesid)
+	return ss.settingsRepo.GetStatusByName(ctx, name, bussnesid)
 }
-
 
 func (s *settingsService) CreateSettings(ctx context.Context, req *entity.CreateSettingsRequest) error {
 	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
@@ -98,9 +96,20 @@ func (s *settingsService) ListSettingsByBusinessID(ctx context.Context, business
 	return s.settingsRepo.ListSettingsByBusinessID(ctx, businessID)
 }
 
-func (s *settingsService)  GetSettingsBussnesId(ctx context.Context, businessID string) (*entity.Settings, error) {
+func (s *settingsService) GetSettingsBussnesId(ctx context.Context, businessID string) (*entity.Settings, error) {
 	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
 	defer cancel()
 
-	return s.settingsRepo.GetSettingsBussnesId(ctx,  businessID)
+	return s.settingsRepo.GetSettingsBussnesId(ctx, businessID)
+}
+
+func (s *settingsService) UpdatePromptOrders(ctx context.Context, guid string, promptOrders map[string]string) error {
+	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
+	defer cancel()
+
+	return s.settingsRepo.UpdatePromptOrders(ctx, guid, promptOrders)
+}
+
+func (s *settingsService) GetPromptOrders(ctx context.Context, guid string) ([]entity.PromptOrderResponse, error) {
+	return s.settingsRepo.GetPromptOrders(ctx, guid)
 }
