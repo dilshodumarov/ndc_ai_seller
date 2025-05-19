@@ -40,9 +40,9 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 		integration.POST("/create", r.CreateIntegration)
 		integration.PUT("/update/:id", r.UpdateIntegration)
 		integration.DELETE("/delete/:id", r.DeleteIntegration)
-		integration.GET("/owner/:business_id", r.GetIntegrationByBusinessId)
+		integration.GET("/owner", r.GetIntegrationByBusinessId)
 		integration.PUT("/status", r.UpdateStatus)
-		integration.GET("/usage/:business_id", r.GetTokenUsageList)
+		integration.GET("/usage", r.GetTokenUsageList)
 		integration.GET("/existence", r.CheckIntegrationExistence)
 
 	}
@@ -55,23 +55,22 @@ func NewIntegrationRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerO
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param integration body entity.IntegrationCreate true "Integration data"
+// @Param integration body entity.IntegrationCreateForSwagger true "Integration data"
 // @Success 201 {object} status_http.Response{data=string} "Created"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
 // @Router /integration/create [post]
 func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 	var req entity.IntegrationCreate
-	// bussnesId,code:=helper.GetBusnessIdFromToken(c, i.Config)
-	// if code != 0 {
-	// 	i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	// }
-
+	bussnesId, code := helper.GetBusnessIdFromToken(c, i.cfg)
+	if code != 0 {
+		i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		i.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	//req.BusinessId=bussnesId
+	req.BusinessId = bussnesId
 	if err := i.integrationUsecase.Create(c, &req); err != nil {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
@@ -162,7 +161,7 @@ func (i *integrationRoutes) UpdateStatus(c *gin.Context) {
 		return
 	}
 
-	if res.IntegrationType == "bot" {
+	if req.Status != "" {
 
 		botURL := "http://ai-seller-bot:8081/"
 		if req.Status == "active" {
@@ -242,18 +241,16 @@ func (i *integrationRoutes) DeleteIntegration(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Param business_id path string true "Owner ID"
 // @Success 200 {object} status_http.Response{data=entity.IntegrationGetResponse} "OK"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
-// @Router /integration/owner/{business_id} [get]
+// @Router /integration/owner [get]
 func (i *integrationRoutes) GetIntegrationByBusinessId(c *gin.Context) {
-	ownerID := c.Param("business_id")
-	if ownerID == "" {
-		i.handleResponse(c, status_http.BadRequest, "business_id is required")
-		return
+	bussnesId, code := helper.GetBusnessIdFromToken(c, i.cfg)
+	if code != 0 {
+		i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}
-	req := &entity.IntegrationRequest{BusinessId: ownerID}
+	req := &entity.IntegrationRequest{BusinessId: bussnesId}
 	resp, err := i.integrationUsecase.GetByOwnerID(c, req)
 	if err != nil {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -325,10 +322,9 @@ func (i *integrationRoutes) SendTelegramCode(c *gin.Context) {
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
 // @Router /integration/usage/{business_id} [get]
 func (i *integrationRoutes) GetTokenUsageList(c *gin.Context) {
-	businessID := c.Param("business_id")
-	if businessID == "" {
-		i.handleResponse(c, status_http.BadRequest, "business_id is required")
-		return
+	bussnesId, code := helper.GetBusnessIdFromToken(c, i.cfg)
+	if code != 0 {
+		i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}
 	userAgent := c.Query("User-Agent")
 	fmt.Println(DetectDevice(userAgent))
@@ -356,7 +352,7 @@ func (i *integrationRoutes) GetTokenUsageList(c *gin.Context) {
 	}
 
 	req := &entity.IntegrationListRequest{
-		BusinessID: businessID,
+		BusinessID: bussnesId,
 		SourceType: c.Query("source_type"),
 		FromDate:   fromDate,
 		ToDate:     toDate,

@@ -5,33 +5,20 @@ import "time"
 type IntegrationCreate struct {
 	BusinessId       string `json:"business_id"`
 	IntegrationToken string `json:"integration_token"`
-	IntegrationType  string `json:"integration_type"`
 }
+
 
 type IntegrationCreateForSwagger struct {
 	IntegrationToken string `json:"integration_token"`
-	IntegrationType  string `json:"integration_type"`
 }
 
 type IntegrationUpdate struct {
 	ID                string `json:"id"`
 	Token             string `json:"token"`
-	PromptText        string `json:"prompt_text"`
-	PromptOrder       string `json:"prompt_order"`
-	PromptProduct     string `json:"prompt_product"`
-	TokenLimit        int    `json:"token_limit"`
-	IntelligenceLevel int    `json:"intelligence_level"`
-	StopUntil         int    `json:"stop_until"`
 }
 
 type IntegrationUpdateForSwagger struct {
 	Token             string `json:"token"`
-	PromptText        string `json:"prompt_text"`
-	PromptOrder       string `json:"prompt_order"`
-	PromptProduct     string `json:"prompt_product"`
-	TokenLimit        int    `json:"token_limit"`
-	IntelligenceLevel int    `json:"intelligence_level"`
-	StopUntil         int    `json:"stop_until"`
 }
 
 type IntegrationUpdateStatus struct {
@@ -40,7 +27,6 @@ type IntegrationUpdateStatus struct {
 }
 
 type IntegrationUpdateStatusResponse struct {
-	IntegrationType  string `json:"integration_type"`
 	BusinessId       string `json:"business_id"`
 	IntegrationToken string `json:"integration_token"`
 }
@@ -73,16 +59,9 @@ type TokenUsage struct {
 
 type IntegrationGetResponse struct {
 	Guid              string    `json:"guid"`
-	IntegrationToken  string    `json:"integration_token"`
-	IntegrationType   string    `json:"integration_type"`
 	Status            string    `json:"status"`
 	StartedAt         time.Time `json:"started_at"`
 	StoppedAt         time.Time `json:"stopped_at"`
-	PromptText        string    `json:"prompt_text"`
-	PromtOrder        string    `json:"promt_order"`
-	PromtProduct      string    `json:"promt_product"`
-	TokenLimit        int       `json:"token_limit"`
-	IntelligenceLevel int       `json:"intelligence_level"`
 }
 
 type IntegrationUpdateResponse struct {

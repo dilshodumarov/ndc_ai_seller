@@ -224,6 +224,27 @@ definitions:
       status:
         type: boolean
     type: object
+  entity.CreateSettingsRequestForSwagger:
+    properties:
+      intelligence_level:
+        type: integer
+      name:
+        type: string
+      prompt_order:
+        type: string
+      prompt_product:
+        type: string
+      prompt_text:
+        type: string
+      status:
+        type: boolean
+      stop_until:
+        type: integer
+      token_limit:
+        type: integer
+      waiting_time:
+        type: integer
+    type: object
   entity.ForgotPasswordRequest:
     properties:
       email:
@@ -251,11 +272,13 @@ definitions:
     type: object
   entity.GetAllProductsResponse:
     properties:
+      count:
+        type: integer
       items:
         items:
           $ref: '#/definitions/entity.Product'
         type: array
-      total:
+      totalcount:
         type: integer
     type: object
   entity.GetNotification:
@@ -277,13 +300,9 @@ definitions:
       userID:
         type: string
     type: object
-  entity.IntegrationCreate:
+  entity.IntegrationCreateForSwagger:
     properties:
-      business_id:
-        type: string
       integration_token:
-        type: string
-      integration_type:
         type: string
     type: object
   entity.IntegrationExistenceResponse:
@@ -299,26 +318,12 @@ definitions:
     properties:
       guid:
         type: string
-      integration_token:
-        type: string
-      integration_type:
-        type: string
-      intelligence_level:
-        type: integer
-      prompt_text:
-        type: string
-      promt_order:
-        type: string
-      promt_product:
-        type: string
       started_at:
         type: string
       status:
         type: string
       stopped_at:
         type: string
-      token_limit:
-        type: integer
     type: object
   entity.IntegrationListResponse:
     properties:
@@ -331,20 +336,8 @@ definitions:
     type: object
   entity.IntegrationUpdateForSwagger:
     properties:
-      intelligence_level:
-        type: integer
-      prompt_order:
-        type: string
-      prompt_product:
-        type: string
-      prompt_text:
-        type: string
-      stop_until:
-        type: integer
       token:
         type: string
-      token_limit:
-        type: integer
     type: object
   entity.IntegrationUpdateStatus:
     properties:
@@ -560,6 +553,37 @@ definitions:
       user_id:
         type: string
     type: object
+  entity.Settings:
+    properties:
+      business_id:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      guid:
+        type: string
+      intelligence_level:
+        type: integer
+      name:
+        type: string
+      prompt_order:
+        type: string
+      prompt_product:
+        type: string
+      prompt_text:
+        type: string
+      status:
+        type: boolean
+      stop_until:
+        type: integer
+      token_limit:
+        type: integer
+      updated_at:
+        type: string
+      waiting_time:
+        type: integer
+    type: object
   entity.TokenUsage:
     properties:
       created_at:
@@ -684,6 +708,29 @@ definitions:
         type: string
       status:
         type: boolean
+    type: object
+  entity.UpdateSettingsRequest:
+    properties:
+      guid:
+        type: string
+      intelligence_level:
+        type: integer
+      name:
+        type: string
+      prompt_order:
+        type: string
+      prompt_product:
+        type: string
+      prompt_text:
+        type: string
+      status:
+        type: boolean
+      stop_until:
+        type: integer
+      token_limit:
+        type: integer
+      waiting_time:
+        type: integer
     type: object
   entity.User:
     properties:
@@ -2409,7 +2456,7 @@ paths:
         name: integration
         required: true
         schema:
-          $ref: '#/definitions/entity.IntegrationCreate'
+          $ref: '#/definitions/entity.IntegrationCreateForSwagger'
       produces:
       - application/json
       responses:
@@ -2532,17 +2579,11 @@ paths:
       summary: Check integration existence by business ID
       tags:
       - INTEGRATION
-  /integration/owner/{business_id}:
+  /integration/owner:
     get:
       consumes:
       - application/json
       description: Retrieve integration data by owner ID
-      parameters:
-      - description: Owner ID
-        in: path
-        name: business_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -3772,6 +3813,251 @@ paths:
       summary: Update an existing product
       tags:
       - PRODUCT
+  /settings/ai/{guid}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves settings by GUID
+      parameters:
+      - description: Settings GUID
+        in: path
+        name: guid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.Settings'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get settings by GUID
+      tags:
+      - SETTINGS
+  /settings/ai/by-name:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves settings by name and business ID
+      parameters:
+      - description: Settings name
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: Business ID
+        in: query
+        name: business_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Settings'
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get settings by name and business ID
+      tags:
+      - SETTINGS
+  /settings/ai/create:
+    post:
+      consumes:
+      - application/json
+      description: Creates new settings entry in the database
+      parameters:
+      - description: Settings create request
+        in: body
+        name: settings
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CreateSettingsRequestForSwagger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create new settings
+      tags:
+      - SETTINGS
+  /settings/ai/delete/{guid}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes settings entry by GUID
+      parameters:
+      - description: Settings GUID
+        in: path
+        name: guid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted successfully
+          schema:
+            type: string
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Delete settings by GUID
+      tags:
+      - SETTINGS
+  /settings/ai/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of settings filtered by business ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Settings'
+            type: array
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: List settings by business ID
+      tags:
+      - SETTINGS
+  /settings/ai/update:
+    put:
+      consumes:
+      - application/json
+      description: Updates settings entry by GUID
+      parameters:
+      - description: Settings update request
+        in: body
+        name: settings
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UpdateSettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update existing settings
+      tags:
+      - SETTINGS
   /settings/order-status/create:
     post:
       consumes:

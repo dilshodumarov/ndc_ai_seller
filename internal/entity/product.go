@@ -89,7 +89,8 @@ type (
 
 	GetAllProductsResponse struct {
 		Items []Product `json:"items"`
-		Total uint64    `json:"total"`
+		Count uint64    `json:"count"`
+		TotalCount uint64    `json:"totalcount"`
 	}
 	 ProductFilter struct {
 		OwnerID    string  // majburiy

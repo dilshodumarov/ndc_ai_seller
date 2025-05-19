@@ -3015,7 +3015,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.IntegrationCreate"
+                            "$ref": "#/definitions/entity.IntegrationCreateForSwagger"
                         }
                     }
                 ],
@@ -3238,7 +3238,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/integration/owner/{business_id}": {
+        "/integration/owner": {
             "get": {
                 "security": [
                     {
@@ -3256,15 +3256,6 @@ const docTemplate = `{
                     "INTEGRATION"
                 ],
                 "summary": "Get integration by owner ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Owner ID",
-                        "name": "business_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -5438,6 +5429,443 @@ const docTemplate = `{
                 }
             }
         },
+        "/settings/ai/by-name": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves settings by name and business ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SETTINGS"
+                ],
+                "summary": "Get settings by name and business ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Settings name",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Business ID",
+                        "name": "business_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Settings"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/ai/create": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates new settings entry in the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SETTINGS"
+                ],
+                "summary": "Create new settings",
+                "parameters": [
+                    {
+                        "description": "Settings create request",
+                        "name": "settings",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.CreateSettingsRequestForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/ai/delete/{guid}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Deletes settings entry by GUID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SETTINGS"
+                ],
+                "summary": "Delete settings by GUID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Settings GUID",
+                        "name": "guid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/ai/list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves a list of settings filtered by business ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SETTINGS"
+                ],
+                "summary": "List settings by business ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.Settings"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/ai/update": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Updates settings entry by GUID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SETTINGS"
+                ],
+                "summary": "Update existing settings",
+                "parameters": [
+                    {
+                        "description": "Settings update request",
+                        "name": "settings",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.UpdateSettingsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/settings/ai/{guid}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves settings by GUID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SETTINGS"
+                ],
+                "summary": "Get settings by GUID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Settings GUID",
+                        "name": "guid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/entity.Settings"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/settings/order-status/create": {
             "post": {
                 "security": [
@@ -6396,6 +6824,38 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.CreateSettingsRequestForSwagger": {
+            "type": "object",
+            "properties": {
+                "intelligence_level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prompt_order": {
+                    "type": "string"
+                },
+                "prompt_product": {
+                    "type": "string"
+                },
+                "prompt_text": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "stop_until": {
+                    "type": "integer"
+                },
+                "token_limit": {
+                    "type": "integer"
+                },
+                "waiting_time": {
+                    "type": "integer"
+                }
+            }
+        },
         "entity.ForgotPasswordRequest": {
             "type": "object",
             "required": [
@@ -6438,13 +6898,16 @@ const docTemplate = `{
         "entity.GetAllProductsResponse": {
             "type": "object",
             "properties": {
+                "count": {
+                    "type": "integer"
+                },
                 "items": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/entity.Product"
                     }
                 },
-                "total": {
+                "totalcount": {
                     "type": "integer"
                 }
             }
@@ -6478,16 +6941,10 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.IntegrationCreate": {
+        "entity.IntegrationCreateForSwagger": {
             "type": "object",
             "properties": {
-                "business_id": {
-                    "type": "string"
-                },
                 "integration_token": {
-                    "type": "string"
-                },
-                "integration_type": {
                     "type": "string"
                 }
             }
@@ -6512,24 +6969,6 @@ const docTemplate = `{
                 "guid": {
                     "type": "string"
                 },
-                "integration_token": {
-                    "type": "string"
-                },
-                "integration_type": {
-                    "type": "string"
-                },
-                "intelligence_level": {
-                    "type": "integer"
-                },
-                "prompt_text": {
-                    "type": "string"
-                },
-                "promt_order": {
-                    "type": "string"
-                },
-                "promt_product": {
-                    "type": "string"
-                },
                 "started_at": {
                     "type": "string"
                 },
@@ -6538,9 +6977,6 @@ const docTemplate = `{
                 },
                 "stopped_at": {
                     "type": "string"
-                },
-                "token_limit": {
-                    "type": "integer"
                 }
             }
         },
@@ -6561,26 +6997,8 @@ const docTemplate = `{
         "entity.IntegrationUpdateForSwagger": {
             "type": "object",
             "properties": {
-                "intelligence_level": {
-                    "type": "integer"
-                },
-                "prompt_order": {
-                    "type": "string"
-                },
-                "prompt_product": {
-                    "type": "string"
-                },
-                "prompt_text": {
-                    "type": "string"
-                },
-                "stop_until": {
-                    "type": "integer"
-                },
                 "token": {
                     "type": "string"
-                },
-                "token_limit": {
-                    "type": "integer"
                 }
             }
         },
@@ -6907,6 +7325,53 @@ const docTemplate = `{
                 }
             }
         },
+        "entity.Settings": {
+            "type": "object",
+            "properties": {
+                "business_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "guid": {
+                    "type": "string"
+                },
+                "intelligence_level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prompt_order": {
+                    "type": "string"
+                },
+                "prompt_product": {
+                    "type": "string"
+                },
+                "prompt_text": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "stop_until": {
+                    "type": "integer"
+                },
+                "token_limit": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "waiting_time": {
+                    "type": "integer"
+                }
+            }
+        },
         "entity.TokenUsage": {
             "type": "object",
             "properties": {
@@ -7095,6 +7560,41 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "boolean"
+                }
+            }
+        },
+        "entity.UpdateSettingsRequest": {
+            "type": "object",
+            "properties": {
+                "guid": {
+                    "type": "string"
+                },
+                "intelligence_level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "prompt_order": {
+                    "type": "string"
+                },
+                "prompt_product": {
+                    "type": "string"
+                },
+                "prompt_text": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "stop_until": {
+                    "type": "integer"
+                },
+                "token_limit": {
+                    "type": "integer"
+                },
+                "waiting_time": {
+                    "type": "integer"
                 }
             }
         },

@@ -293,6 +293,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			nullStatusName        sql.NullString
 			clientGUID, clientName, clientPhone sql.NullString
 			imageURL              sql.NullString
+			primageURL              sql.NullString
 			username              sql.NullString
 		)
 
@@ -306,7 +307,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			&order.TotalPrice, &order.PaymentMethod,
 			&nullStatusChangedTime, &order.CreatedAt, &order.UpdatedAt,
 			&nullStatusName,
-			&product.ProductID, &product.Name, &product.ImageURL, &product.Cost,
+			&product.ProductID, &product.Name, &primageURL, &product.Cost,
 			&product.Count, &product.ProductTotalPrice,
 		); err != nil {
 			return nil, r.db.Error(err)
@@ -325,6 +326,9 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		
 		if nullStatusName.Valid {
 			order.AdminStatus = nullStatusName.String
+		}
+		if primageURL.Valid {
+			product.ImageURL = primageURL.String
 		}
 		if imageURL.Valid {
 			order.ImageUrl = imageURL.String

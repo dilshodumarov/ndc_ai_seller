@@ -181,7 +181,6 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		argID += 2
 	}
 
-	// Mahsulotlar ro‘yxatini olish uchun query
 	query := fmt.Sprintf(`
 	SELECT p.guid, p.business_id, p.status, p.product_id, p.name, p.category_id, p.short_info, p.description,
 	       p.cost, p.count, p.discount_cost, p.discount, p.created_at, p.updated_at, c.name,
@@ -248,10 +247,8 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		products.Items = append(products.Items, product)
 	}
 
-	// Umumiy sonini hisoblash (LIMIT va OFFSET ishlatmasdan WHERE bo‘lishi kerak)
+	// Count filtered results
 	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM product p %s`, where)
-
-	// count uchun argumentlarni alohida yig'amiz
 	var countArgs []any
 	if filter.OwnerID != "" {
 		countArgs = append(countArgs, filter.OwnerID)
@@ -273,13 +270,32 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 		countArgs = append(countArgs, searchTerm, searchTerm, searchTerm)
 	}
 
-	var totalCount uint64
-	err = p.db.QueryRow(ctx, countQuery, countArgs...).Scan(&totalCount)
+	var Count uint64
+	err = p.db.QueryRow(ctx, countQuery, countArgs...).Scan(&Count)
 	if err != nil {
 		return nil, p.db.Error(err)
 	}
 
-	products.Total = totalCount
+	// TotalCount: all non-deleted products (optionally filtered by OwnerID)
+	var (
+		TotalCount      uint64
+		totalCountQuery string
+	)
+
+	if filter.OwnerID != "" {
+		totalCountQuery = `SELECT COUNT(*) FROM product WHERE deleted_at IS NULL AND business_id = $1`
+		err = p.db.QueryRow(ctx, totalCountQuery, filter.OwnerID).Scan(&TotalCount)
+	} else {
+		totalCountQuery = `SELECT COUNT(*) FROM product WHERE deleted_at IS NULL`
+		err = p.db.QueryRow(ctx, totalCountQuery).Scan(&TotalCount)
+	}
+	if err != nil {
+		return nil, p.db.Error(err)
+	}
+
+	products.Count = Count
+	products.TotalCount = TotalCount
+
 	return &products, nil
 }
 
@@ -339,7 +355,7 @@ func (p *productRepo) Update(ctx context.Context, product *entity.UpdateProductR
 	args = append(args, time.Now())
 	argID++
 
-	args = append(args, product.ID) 
+	args = append(args, product.ID)
 
 	query := fmt.Sprintf(`UPDATE product SET %s WHERE guid=$%d`,
 		joinStrings(setParts, ", "), argID)
@@ -372,7 +388,7 @@ func join(s []string, sep string) string {
 func (p *productRepo) Delete(ctx context.Context, id string) error {
 	query := `UPDATE  product set deleted_at =$2 WHERE guid = $1`
 
-	res, err := p.db.Exec(ctx, query, id,time.Now())
+	res, err := p.db.Exec(ctx, query, id, time.Now())
 	if err != nil {
 		return p.db.Error(err)
 	}

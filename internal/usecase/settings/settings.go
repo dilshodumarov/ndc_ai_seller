@@ -61,3 +61,46 @@ func (ss *settingsService) GetStatusByName(ctx context.Context, name,bussnesid s
 
 	return ss.settingsRepo.GetStatusByName(ctx, name,bussnesid)
 }
+
+
+func (s *settingsService) CreateSettings(ctx context.Context, req *entity.CreateSettingsRequest) error {
+	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
+	defer cancel()
+
+	return s.settingsRepo.CreateSettings(ctx, req)
+}
+
+func (s *settingsService) GetSettings(ctx context.Context, guid string) (*entity.Settings, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
+	defer cancel()
+
+	return s.settingsRepo.GetSettings(ctx, guid)
+}
+
+func (s *settingsService) UpdateSettings(ctx context.Context, req *entity.UpdateSettingsRequest) error {
+	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
+	defer cancel()
+
+	return s.settingsRepo.UpdateSettings(ctx, req)
+}
+
+func (s *settingsService) DeleteSettings(ctx context.Context, guid string) error {
+	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
+	defer cancel()
+
+	return s.settingsRepo.DeleteSettings(ctx, guid)
+}
+
+func (s *settingsService) ListSettingsByBusinessID(ctx context.Context, businessID string) ([]*entity.Settings, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
+	defer cancel()
+
+	return s.settingsRepo.ListSettingsByBusinessID(ctx, businessID)
+}
+
+func (s *settingsService) GetSettingsByName(ctx context.Context, name, businessID string) (*entity.Settings, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.ctxTimeout)
+	defer cancel()
+
+	return s.settingsRepo.GetSettingsByName(ctx, name, businessID)
+}
