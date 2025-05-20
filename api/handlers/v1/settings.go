@@ -369,15 +369,19 @@ func (r *settingsRoutes) UpdatePromptOrders(c *gin.Context) {
 		return
 	}
 	for i := 0; i < len(req.OrderStatus); i++ {
-		err := r.settingsUC.Update(c, &req.OrderStatus[i])
-		if err != nil {
-			if err.Error() == "no rows affected" {
-				r.handleResponse(c, status_http.NotFound, "Settings not found")
+		if req.OrderStatus[i].GUID != "" {
+
+			err := r.settingsUC.Update(c, &req.OrderStatus[i])
+			if err != nil {
+				if err.Error() == "no rows affected" {
+					r.handleResponse(c, status_http.NotFound, "Settings not found")
+					return
+				}
+				r.handleResponse(c, status_http.InternalServerError, err.Error())
 				return
 			}
-			r.handleResponse(c, status_http.InternalServerError, err.Error())
-			return
 		}
+
 	}
 	promtOrder := map[string]string{
 		"2": req.Promt2,
@@ -438,7 +442,7 @@ func (r *settingsRoutes) GetPromptOrders(c *gin.Context) {
 		statusNumberStr := strconv.Itoa(status.StatusNumber)
 		for _, prompt := range data {
 			if prompt.Number == statusNumberStr {
-				status.Prompts =prompt
+				status.Prompts = prompt
 				break
 			}
 		}

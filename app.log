@@ -26459,3 +26459,54 @@ main.main.func1
 2025-05-20T01:04:24.710+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
 2025-05-20T01:04:54.765+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/prompt-orders 
 2025-05-20T01:08:07.299+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-20T10:41:49.848+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-20T10:41:59.534+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-05-20T10:41:59.544+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-05-20T10:41:59.544+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-05-20T10:41:59.544+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-05-20T10:41:59.761+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-20T10:42:17.786+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-05-20T10:42:47.277+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/prompt-orders 
+2025-05-20T10:43:57.795+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/settings/ai/prompt-orders/f7818c10-5306-49f9-a089-b2be205f51fe 
+2025-05-20T10:45:04.588+0500	ERROR	v1/settings.go:457	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "Update order_status: ERROR: invalid input syntax for type uuid: \"\" (SQLSTATE 22P02)", "custom_message": ""}
+sugurta/api/handlers/v1.(*settingsRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:457
+sugurta/api/handlers/v1.(*settingsRoutes).UpdatePromptOrders
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:378
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-20T10:45:04.588+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/settings/ai/prompt-orders/f7818c10-5306-49f9-a089-b2be205f51fe 
+2025-05-20T10:51:30.812+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-20T10:51:33.991+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/settings/ai/prompt-orders/f7818c10-5306-49f9-a089-b2be205f51fe 
+2025-05-20T10:51:43.252+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-20T10:51:43.253+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
