@@ -7798,9 +7798,6 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "prompt_order": {
-                    "type": "string"
-                },
                 "prompt_product": {
                     "type": "string"
                 },

@@ -265,11 +265,6 @@ func (r *settingsRepo) UpdateSettings(ctx context.Context, req *entity.UpdateSet
 		args = append(args, req.PromptText)
 		argID++
 	}
-	if req.PromptOrder != "" {
-		setParts = append(setParts, fmt.Sprintf("prompt_order=$%d", argID))
-		args = append(args, req.PromptOrder)
-		argID++
-	}
 	if req.WaitingTime != 0 {
 		setParts = append(setParts, fmt.Sprintf("waiting_time=$%d", argID))
 		args = append(args, req.WaitingTime)
@@ -300,21 +295,25 @@ func (r *settingsRepo) UpdateSettings(ctx context.Context, req *entity.UpdateSet
 		args = append(args, req.BrandName)
 		argID++
 	}
+
 	if req.BusinessName != "" {
 		setParts = append(setParts, fmt.Sprintf("business_name=$%d", argID))
 		args = append(args, req.BusinessName)
 		argID++
 	}
+
 	if req.ErrorMessage != "" {
 		setParts = append(setParts, fmt.Sprintf("error_message=$%d", argID))
 		args = append(args, req.ErrorMessage)
 		argID++
 	}
+
 	if req.FirstMessage != "" {
 		setParts = append(setParts, fmt.Sprintf("first_message=$%d", argID))
 		args = append(args, req.FirstMessage)
 		argID++
 	}
+
 	if req.IsStop != nil {
 		setParts = append(setParts, fmt.Sprintf("is_stop=$%d", argID))
 		args = append(args, *req.IsStop)

@@ -91,19 +91,24 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 	var clients []entity.Client
 	for rows.Next() {
 		var c entity.Client
+	
+		var platformID, firstName sql.NullString
+		var phone, location sql.NullString
 		var userName, from, goal, orderStatus sql.NullString
-
+		var createdAt sql.NullTime
+		var isBlock sql.NullBool
+		var clientId sql.NullInt64
+		var id sql.NullString
+	
 		err := rows.Scan(
-			&c.ID,
-			&c.PlatformID,
-			&c.ClientId,
-			&c.FirstName,
-
-			&c.Phone,
-			&c.Location,
-			&c.IsBlock,
-			&c.CreatedAt,
-
+			&id,
+			&platformID,
+			&clientId,
+			&firstName,
+			&phone,
+			&location,
+			&isBlock,
+			&createdAt,
 			&userName,
 			&from,
 			&orderStatus,
@@ -112,7 +117,31 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 		if err != nil {
 			return nil, r.db.Error(err)
 		}
-
+	
+		if id.Valid {
+			c.ID = id.String
+		}
+		if platformID.Valid {
+			c.PlatformID = platformID.String
+		}
+		if clientId.Valid {
+			c.ClientId = int(clientId.Int64)
+		}
+		if firstName.Valid {
+			c.FirstName = firstName.String
+		}
+		if phone.Valid {
+			c.Phone = phone.String
+		}
+		if location.Valid {
+			c.Location = location.String
+		}
+		if isBlock.Valid {
+			c.IsBlock = isBlock.Bool
+		}
+		if createdAt.Valid {
+			c.CreatedAt = createdAt.Time
+		}
 		if userName.Valid {
 			c.UserName = userName.String
 		}
@@ -125,9 +154,10 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 		if goal.Valid {
 			c.Goal = goal.String
 		}
-
+	
 		clients = append(clients, c)
 	}
+	
 
 	// Count query
 	countQuery := `
@@ -199,19 +229,22 @@ func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client
 	`
 
 	var c entity.Client
-	var userName, from, orderStatus, goal sql.NullString
-
+	var (
+		userName, from, orderStatus, goal sql.NullString
+		phone, location                   sql.NullString
+	)
+	
 	err := r.db.QueryRow(ctx, query, id).Scan(
 		&c.ID,
 		&c.PlatformID,
 		&c.ClientId,
 		&c.FirstName,
-
-		&c.Phone,
-		&c.Location,
+	
+		&phone,
+		&location,
 		&c.IsBlock,
 		&c.CreatedAt,
-
+	
 		&userName,
 		&from,
 		&orderStatus,
@@ -223,7 +256,14 @@ func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client
 		}
 		return nil, r.db.Error(err)
 	}
-
+	
+	// Tekshirishlar
+	if phone.Valid {
+		c.Phone = phone.String
+	}
+	if location.Valid {
+		c.Location = location.String
+	}
 	if userName.Valid {
 		c.UserName = userName.String
 	}
@@ -236,6 +276,7 @@ func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client
 	if goal.Valid {
 		c.Goal = goal.String
 	}
+	
 
 	return &c, nil
 }

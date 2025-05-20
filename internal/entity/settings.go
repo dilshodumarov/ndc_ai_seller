@@ -35,7 +35,6 @@ type UpdateSettingsRequest struct {
 	Name              string `json:"name"`
 	Status            *bool  `json:"status"`
 	PromptText        string `json:"prompt_text"`
-	PromptOrder       string `json:"prompt_order"`
 	WaitingTime       int    `json:"waiting_time"`
 	PromptProduct     string `json:"prompt_product"`
 	TokenLimit        int    `json:"token_limit"`

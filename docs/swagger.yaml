@@ -751,8 +751,6 @@ definitions:
         type: boolean
       name:
         type: string
-      prompt_order:
-        type: string
       prompt_product:
         type: string
       prompt_text:
