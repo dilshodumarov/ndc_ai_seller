@@ -124,7 +124,7 @@ type Client struct {
 }
 
 type ListClients struct {
-	Clients []Client `json:"clients"`
+	Items   []Client `json:"items"`
 	Count   int      `json:"count"`
 	Page    int      `json:"page"`
 	Limit   int      `json:"limit"`

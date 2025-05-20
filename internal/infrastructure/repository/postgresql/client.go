@@ -156,7 +156,7 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 	}
 
 	return &entity.ListClients{
-		Clients: clients,
+		Items: clients,
 		Count:   totalCount,
 		Page:    page,
 		Limit:   limit,
