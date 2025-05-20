@@ -509,7 +509,7 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 		return nil, fmt.Errorf("scan prompt_order: %w", err)
 	}
 
-	// Agar prompt_order NULL bo‘lsa, bo‘sh map sifatida davolanadi
+	// DBdan kelgan prompt_order ni map qilib olish
 	allPrompts := make(map[string]string)
 	if len(rawJSON) > 0 {
 		if err := json.Unmarshal(rawJSON, &allPrompts); err != nil {
@@ -517,15 +517,44 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 		}
 	}
 
-	// Faqat keraklilar: 2, 3, 4, 6
+	// Har bir raqamga mos json namunalarini saqlaymiz
+	staticJsons := map[string]string{
+		"2": `{
+  "action": "set_payment_method",
+  "method": "...",
+  "order_id": "...",
+  "user_message": "Buyurtma uchun to'lov turi tanlandi"
+}`,
+		"3": `{
+  "action": "confirm_payment",
+  "order_id": "...",
+  "payment_screenshot_url": "...",
+  "user_message": "To'lov tasdiqlandi"
+}`,
+		"4": `{
+  "action": "set_order_location",
+  "order_id": "...",
+  "location_url": "URL/manzil",
+  "user_message": "Buyurtma uchun manzil qabul qilindi"
+}`,
+		"6": `{
+  "action": "cancel_order",
+  "order_id": "...",
+  "reason": "Bekor qilish sababi",
+  "user_message": "Buyurtma bekor qilindi"
+}`,
+	}
+
+	// Faqat keraklilar
 	keys := []string{"2", "3", "4", "6"}
 	result := make([]entity.PromptOrderResponse, 0, len(keys))
 	for _, k := range keys {
 		result = append(result, entity.PromptOrderResponse{
-			Guid:   id,
-			Number: k,
-			Prompt: allPrompts[k], // agar yo‘q bo‘lsa, avtomatik bo‘sh string bo‘ladi
-			IsHave: true,
+			Guid:      id,
+			Number:    k,
+			Prompt:    allPrompts[k],       // bazadan kelgan matn
+			IsHave:    allPrompts[k] != "", // mavjud yoki yo‘qligini tekshir
+			PromtJson: staticJsons[k],      // statik JSON namunasi
 		})
 	}
 

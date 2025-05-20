@@ -78,7 +78,7 @@ func NewAuthRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) 
 		authGroup.GET("/clients/:id", r.GetClientByID)
 		authGroup.GET("/users/:id", r.GetUserByID)
 		authGroup.GET("/users/list", r.ListUsers)
-		authGroup.PUT("/clients/block", r.BlockClient)
+		authGroup.PUT("/clients/update", r.UpdateClient)
 		authGroup.PUT("/clients/pause", r.PauseClientChat)
 
 	}
@@ -571,7 +571,7 @@ func (a *authRoutes) deleteAccount(c *gin.Context) {
 // @Tags AUTH
 // @Accept json
 // @Produce json
-// @Param name query string false "Filter by name"
+// @Param search query string false "Filter by search"
 // @Param phone query string false "Filter by phone"
 // @Param from query string false "Filter by source (from)"
 // @Param goal query string false "Filter by goal"
@@ -584,7 +584,7 @@ func (a *authRoutes) deleteAccount(c *gin.Context) {
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (r *authRoutes) ListClients(c *gin.Context) {
 	filter := entity.ClientFilter{
-		Name:        c.DefaultQuery("name", ""),
+		Search:        c.DefaultQuery("search", ""),
 		Phone:       c.DefaultQuery("phone", ""),
 		From:        c.DefaultQuery("from", ""),
 		Goal:        c.DefaultQuery("goal", ""),
@@ -608,7 +608,12 @@ func (r *authRoutes) ListClients(c *gin.Context) {
 
 	filter.Limit = limit
 	filter.Page = page
-
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+		return
+	}
+	filter.BussinesID=BusinessID
 	clients, err := r.userUseCase.ListClients(c, filter)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -646,42 +651,47 @@ func (r *authRoutes) GetClientByID(c *gin.Context) {
 	r.handleResponse(c, status_http.OK, client)
 }
 
-// @Router /auth/clients/block [put]
-// @Summary Block or unblock a client
-// @Description Block or unblock a client by business ID and platform ID
+// @Router /auth/clients/update [put]
+// @Summary Update client
+// @Description Update a client by   ID
 // @Security BearerAuth
 // @Tags AUTH
 // @Accept json
 // @Produce json
-// @Param data body entity.BlockUser true "Block User Request"
+// @Param data body entity.UpdateUserForSwagger true "Update Client Request"
 // @Success 200 {object} status_http.Response{data=string} "Success"
 // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-func (r *authRoutes) BlockClient(c *gin.Context) {
-	var req entity.BlockUser
+func (r *authRoutes) UpdateClient(c *gin.Context) {
+	var req entity.UpdateUser
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		r.handleResponse(c, status_http.BadRequest, "Invalid request payload")
 		return
 	}
-
-	if req.PlatformId == "" || req.BusinessID == "" {
-		r.handleResponse(c, status_http.BadRequest, "Missing required fields: platform_id or business_id")
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 		return
 	}
 
+	if req.Id == ""{
+		r.handleResponse(c, status_http.BadRequest, "Missing required field: id")
+		return
+	}
+	req.BusinessID=BusinessID
 	err := r.userUseCase.BlockUser(c, req)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
 
-	action := "unblocked"
-	if req.Block {
-		action = "blocked"
-	}
+	// action := "unblocked"
+	// if *req.Block {
+	// 	action = "blocked"
+	// }
 
-	r.handleResponse(c, status_http.OK, fmt.Sprintf("Client successfully %s", action))
+	r.handleResponse(c, status_http.OK,"Client successfully Updated")
 }
 
 // @Router /auth/clients/pause [put]

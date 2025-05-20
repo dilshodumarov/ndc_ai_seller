@@ -5,33 +5,48 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 	"sugurta/internal/entity"
+	"time"
 
 	"github.com/jackc/pgx"
 )
 
 func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) (*entity.ListClients, error) {
+	fmt.Println(filter)
 	query := `
 		SELECT guid, platform_id, client_id,first_name, phone,location,is_block, created_at,
 		       user_name, from_chanel, order_status, goal
 		FROM client
-		WHERE 1=1
+		WHERE bussnes_id=$1
 	`
 
 	args := []interface{}{}
 	argIdx := 1
-
+	args=append(args, filter.BussinesID)
+	argIdx++
 	// Filtrlash
-	if filter.ClientId >0 {
+	if filter.ClientId > 0 {
 		query += fmt.Sprintf(" AND client_id = $%d", argIdx)
 		args = append(args, filter.ClientId)
 		argIdx++
 	}
-	if filter.Name != "" {
-		query += fmt.Sprintf(" AND first_name ILIKE $%d", argIdx)
-		args = append(args, "%"+filter.Name+"%")
+	if filter.Search != "" {
+		searchParam := "%" + filter.Search + "%"
+		query += fmt.Sprintf(` AND (
+			first_name ILIKE $%d OR 
+			phone ILIKE $%d OR 
+			user_name ILIKE $%d OR 
+			from_chanel ILIKE $%d OR 
+			order_status ILIKE $%d OR 
+			location ILIKE $%d OR 
+			goal ILIKE $%d
+		)`, argIdx, argIdx, argIdx, argIdx, argIdx, argIdx, argIdx)
+
+		args = append(args, searchParam)
 		argIdx++
 	}
+
 	if filter.Phone != "" {
 		query += fmt.Sprintf(" AND phone ILIKE $%d", argIdx)
 		args = append(args, "%"+filter.Phone+"%")
@@ -118,16 +133,28 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 	countQuery := `
 		SELECT COUNT(*)
 		FROM client
-		WHERE 1=1
+		WHERE bussnes_id=$1
 	`
 	argsCount := []interface{}{}
 	countArgIdx := 1
+	argsCount=append(argsCount, filter.BussinesID)
+	countArgIdx++
+	if filter.Search != "" {
+		searchParam := "%" + filter.Search + "%"
+		countQuery += fmt.Sprintf(` AND (
+			first_name ILIKE $%d OR 
+			phone ILIKE $%d OR 
+			user_name ILIKE $%d OR 
+			from_chanel ILIKE $%d OR 
+			order_status ILIKE $%d OR 
+			location ILIKE $%d OR 
+			goal ILIKE $%d
+		)`, countArgIdx, countArgIdx, countArgIdx, countArgIdx, countArgIdx, countArgIdx, countArgIdx)
 
-	if filter.Name != "" {
-		countQuery += fmt.Sprintf(" AND first_name ILIKE $%d", countArgIdx)
-		argsCount = append(argsCount, "%"+filter.Name+"%")
+		argsCount = append(argsCount, searchParam)
 		countArgIdx++
 	}
+
 	if filter.Phone != "" {
 		countQuery += fmt.Sprintf(" AND phone ILIKE $%d", countArgIdx)
 		argsCount = append(argsCount, "%"+filter.Phone+"%")
@@ -157,9 +184,9 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 
 	return &entity.ListClients{
 		Items: clients,
-		Count:   totalCount,
-		Page:    page,
-		Limit:   limit,
+		Count: totalCount,
+		Page:  page,
+		Limit: limit,
 	}, nil
 }
 
@@ -213,20 +240,71 @@ func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client
 	return &c, nil
 }
 
-func (r *userRepo) BlockUser(ctx context.Context, req entity.BlockUser) error {
-	query := `
-		UPDATE client
-		SET is_block = $1
-		WHERE bussnes_id = $2 AND platform_id = $3
-	`
+func (r *userRepo) BlockUser(ctx context.Context, req entity.UpdateUser) error {
+	setParts := []string{}
+	args := []interface{}{}
+	argID := 1
 
-	_, err := r.db.Exec(ctx, query, req.Block, req.BusinessID, req.PlatformId)
+	if req.FirstName != "" {
+		setParts = append(setParts, fmt.Sprintf("first_name = $%d", argID))
+		args = append(args, req.FirstName)
+		argID++
+	}
+	if req.Phone != "" {
+		setParts = append(setParts, fmt.Sprintf("phone = $%d", argID))
+		args = append(args, req.Phone)
+		argID++
+	}
+	if req.UserName != "" {
+		setParts = append(setParts, fmt.Sprintf("user_name = $%d", argID))
+		args = append(args, req.UserName)
+		argID++
+	}
+	if req.OrderStatus != "" {
+		setParts = append(setParts, fmt.Sprintf("order_status = $%d", argID))
+		args = append(args, req.OrderStatus)
+		argID++
+	}
+	if req.Location != "" {
+		setParts = append(setParts, fmt.Sprintf("location = $%d", argID))
+		args = append(args, req.Location)
+		argID++
+	}
+	if req.Goal != "" {
+		setParts = append(setParts, fmt.Sprintf("goal = $%d", argID))
+		args = append(args, req.Goal)
+		argID++
+	}
+	if req.Block != nil {
+		setParts = append(setParts, fmt.Sprintf("is_block = $%d", argID))
+		args = append(args, *req.Block)
+		argID++
+	}
+
+	// always update updated_at
+	setParts = append(setParts, fmt.Sprintf("updated_at = $%d", argID))
+	args = append(args, time.Now())
+	argID++
+
+	// WHERE conditions
+	args = append(args, req.BusinessID, req.Id)
+
+	query := fmt.Sprintf(`
+		UPDATE client
+		SET %s
+		WHERE bussnes_id = $%d AND guid = $%d
+	`, strings.Join(setParts, ", "), argID, argID+1)
+
+	res, err := r.db.Exec(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("userRepo - BlockUser - Exec: %w", err)
 	}
-
+	if res.RowsAffected() == 0 {
+		return fmt.Errorf("userRepo - BlockUser: no rows updated")
+	}
 	return nil
 }
+
 
 func (r *userRepo) PauzChat(ctx context.Context, req entity.PauzeChat) error {
 	query := `

@@ -97,7 +97,7 @@ type (
 
 // entity.ClientFilter
 type ClientFilter struct {
-	Name        string `json:"name"`
+	Search      string `json:"search"`
 	ClientId    int `json:"client_id"`
 	Phone       string `json:"phone"`
 	From        string `json:"from"`
@@ -105,6 +105,7 @@ type ClientFilter struct {
 	OrderStatus string `json:"order_status"`
 	Page        int    `json:"page"`
 	Limit       int    `json:"limit"`
+	BussinesID    string
 }
 
 // entity.Client
@@ -131,11 +132,31 @@ type ListClients struct {
 }
 
 
-type BlockUser struct {
-	PlatformId string `json:"platform_id"`
-	BusinessID string `json:"business_id"`
-	Block      bool   `json:"block"`
+type UpdateUser struct {
+	FirstName   string `json:"first_name"`
+	Phone       string `json:"phone"`
+	UserName    string `json:"user_name"`
+	OrderStatus string `json:"order_status"`
+	Location    string `json:"location"`
+	Goal        string `json:"goal"`
+	Block       *bool  `json:"is_block"`
+
+	BusinessID  string `json:"business_id"`
+	Id  string         `json:"id"`
 }
+
+type UpdateUserForSwagger struct {
+	FirstName   string `json:"first_name"`
+	Phone       string `json:"phone"`
+	UserName    string `json:"user_name"`
+	OrderStatus string `json:"order_status"`
+	Location    string `json:"location"`
+	Goal        string `json:"goal"`
+	Block       *bool  `json:"is_block"`
+	Id          string  `json:"id"`
+}
+
+
 
 
 type PauzeChat struct {

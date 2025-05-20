@@ -5,15 +5,6 @@ definitions:
       access_token:
         type: string
     type: object
-  entity.BlockUser:
-    properties:
-      block:
-        type: boolean
-      business_id:
-        type: string
-      platform_id:
-        type: string
-    type: object
   entity.BotCommandRequest:
     properties:
       command:
@@ -495,11 +486,15 @@ definitions:
     properties:
       guid:
         type: string
+      is_have:
+        type: boolean
       number:
         example: "2"
         type: string
       prompt:
         example: Hello there
+        type: string
+      promt_json:
         type: string
     type: object
   entity.RegisterRequest:
@@ -771,6 +766,25 @@ definitions:
       waiting_time:
         type: integer
     type: object
+  entity.UpdateUserForSwagger:
+    properties:
+      first_name:
+        type: string
+      goal:
+        type: string
+      id:
+        type: string
+      is_block:
+        type: boolean
+      location:
+        type: string
+      order_status:
+        type: string
+      phone:
+        type: string
+      user_name:
+        type: string
+    type: object
   entity.User:
     properties:
       access_token:
@@ -888,53 +902,6 @@ paths:
       summary: Get client by ID
       tags:
       - AUTH
-  /auth/clients/block:
-    put:
-      consumes:
-      - application/json
-      description: Block or unblock a client by business ID and platform ID
-      parameters:
-      - description: Block User Request
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/entity.BlockUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Success
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: Block or unblock a client
-      tags:
-      - AUTH
   /auth/clients/list:
     get:
       consumes:
@@ -942,9 +909,9 @@ paths:
       description: Get a list of clients with optional filtering by name, phone, from,
         goal, order_status and pagination
       parameters:
-      - description: Filter by name
+      - description: Filter by search
         in: query
-        name: name
+        name: search
         type: string
       - description: Filter by phone
         in: query
@@ -1054,6 +1021,53 @@ paths:
       security:
       - BearerAuth: []
       summary: Pause or unpause chat for a client
+      tags:
+      - AUTH
+  /auth/clients/update:
+    put:
+      consumes:
+      - application/json
+      description: Update a client by   ID
+      parameters:
+      - description: Update Client Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UpdateUserForSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update client
       tags:
       - AUTH
   /auth/delete/{id}:

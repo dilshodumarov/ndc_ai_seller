@@ -15,93 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/clients/block": {
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Block or unblock a client by business ID and platform ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AUTH"
-                ],
-                "summary": "Block or unblock a client",
-                "parameters": [
-                    {
-                        "description": "Block User Request",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entity.BlockUser"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/status_http.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/status_http.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/status_http.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "/auth/clients/list": {
             "get": {
                 "security": [
@@ -123,8 +36,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Filter by name",
-                        "name": "name",
+                        "description": "Filter by search",
+                        "name": "search",
                         "in": "query"
                     },
                     {
@@ -289,6 +202,93 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/clients/update": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a client by   ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AUTH"
+                ],
+                "summary": "Update client",
+                "parameters": [
+                    {
+                        "description": "Update Client Request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.UpdateUserForSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
                         "schema": {
                             "allOf": [
                                 {
@@ -6658,20 +6658,6 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.BlockUser": {
-            "type": "object",
-            "properties": {
-                "block": {
-                    "type": "boolean"
-                },
-                "business_id": {
-                    "type": "string"
-                },
-                "platform_id": {
-                    "type": "string"
-                }
-            }
-        },
         "entity.BotCommandRequest": {
             "type": "object",
             "properties": {
@@ -7412,6 +7398,9 @@ const docTemplate = `{
                 "guid": {
                     "type": "string"
                 },
+                "is_have": {
+                    "type": "boolean"
+                },
                 "number": {
                     "type": "string",
                     "example": "2"
@@ -7419,6 +7408,9 @@ const docTemplate = `{
                 "prompt": {
                     "type": "string",
                     "example": "Hello there"
+                },
+                "promt_json": {
+                    "type": "string"
                 }
             }
         },
@@ -7826,6 +7818,35 @@ const docTemplate = `{
                 },
                 "waiting_time": {
                     "type": "integer"
+                }
+            }
+        },
+        "entity.UpdateUserForSwagger": {
+            "type": "object",
+            "properties": {
+                "first_name": {
+                    "type": "string"
+                },
+                "goal": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_block": {
+                    "type": "boolean"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "order_status": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
                 }
             }
         },

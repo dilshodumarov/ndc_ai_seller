@@ -53,13 +53,14 @@ type UpdatePromptOrdersRequest struct {
 }
 
 type PromptOrderResponse struct {
-	Guid   string `json:"guid"`
-	Number string `json:"number" example:"2"`
-	Prompt string `json:"prompt" example:"Hello there"`
-	IsHave bool   `json:"is_have"`
+	Guid      string `json:"guid"`
+	Number    string `json:"number" example:"2"`
+	Prompt    string `json:"prompt" example:"Hello there"`
+	IsHave    bool   `json:"is_have"`
+	PromtJson string `json:"promt_json"`
 }
 
 type GetPromptOrdersResponse struct {
-	OrderStatus []*OrderStatus        `json:"order_status"`
-	Id          string                `json:"id"`
+	OrderStatus []*OrderStatus `json:"order_status"`
+	Id          string         `json:"id"`
 }

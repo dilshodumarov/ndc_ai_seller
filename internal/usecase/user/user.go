@@ -248,7 +248,7 @@ func (u *userService) GetClientByID(ctx context.Context, id string) (*entity.Cli
 	return user, nil
 }
 
-func (u *userService) BlockUser(ctx context.Context, req entity.BlockUser) error {
+func (u *userService) BlockUser(ctx context.Context, req entity.UpdateUser) error {
 	ctx, cancel := context.WithTimeout(ctx, u.ctxTimeout)
 	defer cancel()
 
