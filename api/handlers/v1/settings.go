@@ -363,13 +363,13 @@ func (r *settingsRoutes) UpdatePromptOrders(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, "GUID is required")
 		return
 	}
-	fmt.Println(111,c.Request)
+	
 	var req entity.UpdatePromptOrdersRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-
+	fmt.Println(111,req)
 	promptOrderMap := make(map[string]string)
 
 	for _, status := range req.OrderStatus {
@@ -391,7 +391,7 @@ func (r *settingsRoutes) UpdatePromptOrders(c *gin.Context) {
 			promptOrderMap[key] = status.Promt
 		}
 	}
-
+	fmt.Println(2222,promptOrderMap)
 	err := r.settingsUC.UpdatePromptOrders(c, guid, promptOrderMap)
 	if err != nil {
 		if err.Error() == "no rows affected" {
