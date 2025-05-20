@@ -146,6 +146,12 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "integer",
+                        "description": "Filter by client id",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "Filter by order status",
                         "name": "order_status",
@@ -6737,6 +6743,9 @@ const docTemplate = `{
         "entity.Client": {
             "type": "object",
             "properties": {
+                "client_id": {
+                    "type": "integer"
+                },
                 "created_at": {
                     "type": "string"
                 },

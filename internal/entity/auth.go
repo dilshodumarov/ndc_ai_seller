@@ -98,6 +98,7 @@ type (
 // entity.ClientFilter
 type ClientFilter struct {
 	Name        string `json:"name"`
+	ClientId    int `json:"client_id"`
 	Phone       string `json:"phone"`
 	From        string `json:"from"`
 	Goal        string `json:"goal"`
@@ -110,6 +111,7 @@ type ClientFilter struct {
 type Client struct {
 	ID          string    `json:"id"`
 	PlatformID  string    `json:"platform_id"`
+	ClientId    int    `json:"client_id"`
 	FirstName   string    `json:"first_name"`
 	Phone       string    `json:"phone"`
 	CreatedAt   time.Time `json:"created_at"`

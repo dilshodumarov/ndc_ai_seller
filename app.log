@@ -26516,3 +26516,73 @@ main.main.func1
 2025-05-20T11:06:27.741+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-20T11:08:10.293+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-20T11:08:39.768+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/clients/list?limit=10&page=1 
+2025-05-20T11:13:03.642+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/clients/list?limit=10&page=1 
+2025-05-20T11:13:43.028+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-20T11:13:43.028+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-20T11:13:47.709+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-20T11:14:25.651+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/settings/ai/prompt-orders/f7818c10-5306-49f9-a089-b2be205f51fe 
+2025-05-20T11:14:33.430+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/prompt-orders 
+2025-05-20T11:15:06.563+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-20T11:15:06.564+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-20T11:26:05.527+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-20T11:26:10.560+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-20T11:26:43.261+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-20T11:26:43.261+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-20T11:26:55.681+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-20T11:26:59.898+0500	ERROR	v1/auth.go:816	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "ERROR: column \"client_id\" does not exist (SQLSTATE 42703)", "custom_message": ""}
+sugurta/api/handlers/v1.(*authRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:816
+sugurta/api/handlers/v1.(*authRoutes).ListClients
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/auth.go:614
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-20T11:26:59.899+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/clients/list?limit=10&page=1 
+2025-05-20T11:27:33.707+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/clients/list?limit=10&page=1 
+2025-05-20T11:27:44.262+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/clients/list?client_id=4&limit=10&page=1 
+2025-05-20T11:28:06.413+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/clients/4437e044-8d94-4b59-83b8-a93fc9a57e2a 
+2025-05-20T11:28:18.165+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-20T11:28:18.165+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-20T11:31:16.049+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-20T11:31:24.377+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/prompt-orders 
+2025-05-20T11:31:41.797+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-20T11:31:41.797+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31

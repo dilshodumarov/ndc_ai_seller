@@ -12,7 +12,7 @@ import (
 
 func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) (*entity.ListClients, error) {
 	query := `
-		SELECT guid, platform_id, first_name, phone,location,is_block, created_at,
+		SELECT guid, platform_id, client_id,first_name, phone,location,is_block, created_at,
 		       user_name, from_chanel, order_status, goal
 		FROM client
 		WHERE 1=1
@@ -22,6 +22,11 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 	argIdx := 1
 
 	// Filtrlash
+	if filter.ClientId >0 {
+		query += fmt.Sprintf(" AND client_id = $%d", argIdx)
+		args = append(args, filter.ClientId)
+		argIdx++
+	}
 	if filter.Name != "" {
 		query += fmt.Sprintf(" AND first_name ILIKE $%d", argIdx)
 		args = append(args, "%"+filter.Name+"%")
@@ -76,6 +81,7 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 		err := rows.Scan(
 			&c.ID,
 			&c.PlatformID,
+			&c.ClientId,
 			&c.FirstName,
 
 			&c.Phone,
@@ -159,7 +165,7 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 
 func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client, error) {
 	query := `
-		SELECT guid, platform_id, first_name, phone, location,is_block,created_at, 
+		SELECT guid, platform_id, client_id,first_name, phone, location,is_block,created_at, 
 		       user_name, from_chanel, order_status, goal
 		FROM client
 		WHERE guid = $1
@@ -171,6 +177,7 @@ func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client
 	err := r.db.QueryRow(ctx, query, id).Scan(
 		&c.ID,
 		&c.PlatformID,
+		&c.ClientId,
 		&c.FirstName,
 
 		&c.Phone,

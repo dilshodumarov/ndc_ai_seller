@@ -56,6 +56,7 @@ type PromptOrderResponse struct {
 	Guid   string `json:"guid"`
 	Number string `json:"number" example:"2"`
 	Prompt string `json:"prompt" example:"Hello there"`
+	IsHave bool   `json:"is_have"`
 }
 
 type GetPromptOrdersResponse struct {

@@ -525,6 +525,7 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 			Guid:   id,
 			Number: k,
 			Prompt: allPrompts[k], // agar yo‘q bo‘lsa, avtomatik bo‘sh string bo‘ladi
+			IsHave: true,
 		})
 	}
 

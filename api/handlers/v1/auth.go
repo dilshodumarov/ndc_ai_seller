@@ -575,6 +575,7 @@ func (a *authRoutes) deleteAccount(c *gin.Context) {
 // @Param phone query string false "Filter by phone"
 // @Param from query string false "Filter by source (from)"
 // @Param goal query string false "Filter by goal"
+// @Param client_id query int false "Filter by client id"
 // @Param order_status query string false "Filter by order status"
 // @Param limit query int false "Limit the number of clients" default(10)
 // @Param page query int false "Page number for pagination" default(1)
@@ -589,11 +590,16 @@ func (r *authRoutes) ListClients(c *gin.Context) {
 		Goal:        c.DefaultQuery("goal", ""),
 		OrderStatus: c.DefaultQuery("order_status", ""),
 	}
-
+	clientid, err := strconv.Atoi(c.DefaultQuery("client_id", "0"))
+	if err != nil {
+		clientid = 0
+	}
+	filter.ClientId=clientid
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	if err != nil {
 		limit = 10
 	}
+	
 
 	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
 	if err != nil {
