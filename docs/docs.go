@@ -7656,6 +7656,12 @@ const docTemplate = `{
                 },
                 "guid": {
                     "type": "string"
+                },
+                "promt": {
+                    "type": "string"
+                },
+                "promt_number": {
+                    "type": "integer"
                 }
             }
         },
@@ -7761,18 +7767,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/entity.UpdateOrderStatusRequest"
                     }
-                },
-                "promt2": {
-                    "type": "string"
-                },
-                "promt3": {
-                    "type": "string"
-                },
-                "promt4": {
-                    "type": "string"
-                },
-                "promt6": {
-                    "type": "string"
                 }
             }
         },

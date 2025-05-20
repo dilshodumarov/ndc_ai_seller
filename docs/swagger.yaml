@@ -662,6 +662,10 @@ definitions:
         type: string
       guid:
         type: string
+      promt:
+        type: string
+      promt_number:
+        type: integer
     type: object
   entity.UpdatePasswordRequest:
     properties:
@@ -731,14 +735,6 @@ definitions:
         items:
           $ref: '#/definitions/entity.UpdateOrderStatusRequest'
         type: array
-      promt2:
-        type: string
-      promt3:
-        type: string
-      promt4:
-        type: string
-      promt6:
-        type: string
     type: object
   entity.UpdateSettingsRequest:
     properties:

@@ -50,10 +50,6 @@ type UpdateSettingsRequest struct {
 
 type UpdatePromptOrdersRequest struct {
 	OrderStatus []UpdateOrderStatusRequest
-	Promt2      string
-	Promt3      string
-	Promt4      string
-	Promt6      string
 }
 
 type PromptOrderResponse struct {

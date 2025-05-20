@@ -368,10 +368,12 @@ func (r *settingsRoutes) UpdatePromptOrders(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	for i := 0; i < len(req.OrderStatus); i++ {
-		if req.OrderStatus[i].GUID != "" {
 
-			err := r.settingsUC.Update(c, &req.OrderStatus[i])
+	promptOrderMap := make(map[string]string)
+
+	for _, status := range req.OrderStatus {
+		if status.GUID != "" {
+			err := r.settingsUC.Update(c, &status)
 			if err != nil {
 				if err.Error() == "no rows affected" {
 					r.handleResponse(c, status_http.NotFound, "Settings not found")
@@ -382,14 +384,14 @@ func (r *settingsRoutes) UpdatePromptOrders(c *gin.Context) {
 			}
 		}
 
+		// Agar promt_number ixtiyoriy >0 bo‘lsa va promt bo‘sh bo‘lmasa — mapga qo‘shamiz
+		if status.PromtNumber > 0 && status.Promt != "" {
+			key := strconv.Itoa(status.PromtNumber)
+			promptOrderMap[key] = status.Promt
+		}
 	}
-	promtOrder := map[string]string{
-		"2": req.Promt2,
-		"3": req.Promt3,
-		"4": req.Promt4,
-		"6": req.Promt6,
-	}
-	err := r.settingsUC.UpdatePromptOrders(c, guid, promtOrder)
+
+	err := r.settingsUC.UpdatePromptOrders(c, guid, promptOrderMap)
 	if err != nil {
 		if err.Error() == "no rows affected" {
 			r.handleResponse(c, status_http.NotFound, "Settings not found")
@@ -401,6 +403,7 @@ func (r *settingsRoutes) UpdatePromptOrders(c *gin.Context) {
 
 	r.handleResponse(c, status_http.OK, "Prompt orders updated successfully")
 }
+
 
 // GetPromptOrders godoc
 // @Summary Get prompt orders

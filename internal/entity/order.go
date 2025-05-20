@@ -151,4 +151,6 @@ type CreateOrderStatusRequestForswagger struct {
 type UpdateOrderStatusRequest struct {
 	GUID       string `json:"guid"`
 	CustomName string `json:"custom_name"`
+	PromtNumber int   `json:"promt_number"`
+	Promt       string `json:"promt"`
 }

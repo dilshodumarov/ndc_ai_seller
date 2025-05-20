@@ -26510,3 +26510,9 @@ net/http.(*conn).serve
 2025-05-20T10:51:43.253+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-20T11:05:44.723+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-20T11:05:48.456+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-20T11:06:27.740+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-20T11:06:27.741+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
