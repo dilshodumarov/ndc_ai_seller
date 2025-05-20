@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
@@ -362,7 +363,7 @@ func (r *settingsRoutes) UpdatePromptOrders(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, "GUID is required")
 		return
 	}
-
+	fmt.Println(111,c.Request)
 	var req entity.UpdatePromptOrdersRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
