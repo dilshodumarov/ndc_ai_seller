@@ -32,7 +32,7 @@ func NewSettingsRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 
 	settings := apiV1Group.Group("/settings/order-status")
 	{
-		settings.POST("/create", r.CreateOrderStatus)
+		//settings.POST("/create", r.CreateOrderStatus)
 		settings.GET("/get/:guid", r.GetOrderStatus)
 		settings.PUT("/update/:guid", r.UpdateOrderStatus)
 		settings.DELETE("/delete/:guid", r.DeleteOrderStatus)
@@ -40,7 +40,7 @@ func NewSettingsRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 	}
 	settingsai := apiV1Group.Group("settings/ai")
 	{
-		settingsai.POST("/create", r.CreateSettings)
+		//settingsai.POST("/create", r.CreateSettings)
 		settingsai.GET("/get/:guid", r.GetSettings)
 		settingsai.PUT("/update", r.UpdateSettings)
 		settingsai.DELETE("/delete/:guid", r.DeleteSettings)
@@ -52,35 +52,35 @@ func NewSettingsRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 
 }
 
-// CreateOrderStatus godoc
-// @Summary Create a new order status
-// @Description Creates a new order status for the given business
-// @Tags SETTINGS
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param order_status body entity.CreateOrderStatusRequestForswagger true "Order Status"
-// @Success 201 {object} status_http.Response{data=string} "Created"
-// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
-// @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /settings/order-status/create [post]
-func (r *settingsRoutes) CreateOrderStatus(c *gin.Context) {
-	var req entity.CreateOrderStatusRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		r.handleResponse(c, status_http.BadRequest, err.Error())
-		return
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
-	if code != 0 {
-		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	}
-	req.BusinessID = BusinessID
-	if err := r.settingsUC.Create(c, &req); err != nil {
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
-	r.handleResponse(c, status_http.Created, "Order status created successfully")
-}
+// // CreateOrderStatus godoc
+// // @Summary Create a new order status
+// // @Description Creates a new order status for the given business
+// // @Tags SETTINGS
+// // @Accept json
+// // @Produce json
+// // @Security BearerAuth
+// // @Param order_status body entity.CreateOrderStatusRequestForswagger true "Order Status"
+// // @Success 201 {object} status_http.Response{data=string} "Created"
+// // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// // @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// // @Router /settings/order-status/create [post]
+// func (r *settingsRoutes) CreateOrderStatus(c *gin.Context) {
+// 	var req entity.CreateOrderStatusRequest
+// 	if err := c.ShouldBindJSON(&req); err != nil {
+// 		r.handleResponse(c, status_http.BadRequest, err.Error())
+// 		return
+// 	}
+// 	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
+// 	if code != 0 {
+// 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+// 	}
+// 	req.BusinessID = BusinessID
+// 	if err := r.settingsUC.Create(c, &req); err != nil {
+// 		r.handleResponse(c, status_http.InternalServerError, err.Error())
+// 		return
+// 	}
+// 	r.handleResponse(c, status_http.Created, "Order status created successfully")
+// }
 
 // GetOrderStatus godoc
 // @Summary Get a specific order status
@@ -177,37 +177,37 @@ func (r *settingsRoutes) ListOrderStatus(c *gin.Context) {
 	r.handleResponse(c, status_http.OK, res)
 }
 
-// CreateSettings godoc
-// @Summary Create new settings
-// @Description Creates new settings entry in the database
-// @Tags SETTINGS
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param settings body entity.CreateSettingsRequest true "Settings create request"
-// @Success 201 {string} string "Created successfully"
-// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
-// @Failure 500 {object} status_http.Response{data=string} "Server Error"
-// @Router /settings/ai/create [post]
-func (r *settingsRoutes) CreateSettings(c *gin.Context) {
-	var req entity.CreateSettingsRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		r.handleResponse(c, status_http.BadRequest, err.Error())
-		return
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
-	if code != 0 {
-		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	}
-	req.BusinessID = BusinessID
+// // CreateSettings godoc
+// // @Summary Create new settings
+// // @Description Creates new settings entry in the database
+// // @Tags SETTINGS
+// // @Accept json
+// // @Produce json
+// // @Security BearerAuth
+// // @Param settings body entity.CreateSettingsRequest true "Settings create request"
+// // @Success 201 {string} string "Created successfully"
+// // @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// // @Failure 500 {object} status_http.Response{data=string} "Server Error"
+// // @Router /settings/ai/create [post]
+// func (r *settingsRoutes) CreateSettings(c *gin.Context) {
+// 	var req entity.CreateSettingsRequest
+// 	if err := c.ShouldBindJSON(&req); err != nil {
+// 		r.handleResponse(c, status_http.BadRequest, err.Error())
+// 		return
+// 	}
+// 	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
+// 	if code != 0 {
+// 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+// 	}
+// 	req.BusinessID = BusinessID
 
-	if err := r.settingsUC.CreateSettings(c, &req); err != nil {
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
+// 	if err := r.settingsUC.CreateSettings(c, &req); err != nil {
+// 		r.handleResponse(c, status_http.InternalServerError, err.Error())
+// 		return
+// 	}
 
-	r.handleResponse(c, status_http.Created, "Created successfully")
-}
+// 	r.handleResponse(c, status_http.Created, "Created successfully")
+// }
 
 // GetSettings godoc
 // @Summary Get settings by GUID

@@ -33,6 +33,24 @@ func (r *settingsRepo) Create(ctx context.Context, req *entity.CreateOrderStatus
 	return nil
 }
 
+func (r *settingsRepo) CreateDefaultOrderStatuses(ctx context.Context, businessID string) error {
+	query := `
+		INSERT INTO order_status (business_id, type_id, custom_name)
+		SELECT $1, ost.guid, ost.name
+		FROM order_status_type ost
+		WHERE NOT EXISTS (
+			SELECT 1 FROM order_status os
+			WHERE os.business_id = $1 AND os.type_id = ost.guid
+		)
+	`
+	_, err := r.db.Exec(ctx, query, businessID)
+	if err != nil {
+		return fmt.Errorf("Create default order_statuses: %w", err)
+	}
+	return nil
+}
+
+
 // Get retrieves a specific order status with type name.
 func (r *settingsRepo) Get(ctx context.Context, guid string) (*entity.OrderStatus, error) {
 	query := `
@@ -559,3 +577,6 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 
 	return result, nil
 }
+
+
+

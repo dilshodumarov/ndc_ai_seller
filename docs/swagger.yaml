@@ -178,13 +178,6 @@ definitions:
       total_price:
         type: number
     type: object
-  entity.CreateOrderStatusRequestForswagger:
-    properties:
-      custom_name:
-        type: string
-      type_id:
-        type: string
-    type: object
   entity.CreateProductImage:
     properties:
       imageUrl:
@@ -216,11 +209,6 @@ definitions:
         type: string
       status:
         type: boolean
-    type: object
-  entity.CreateSettingsRequest:
-    properties:
-      business_id:
-        type: string
     type: object
   entity.ForgotPasswordRequest:
     properties:
@@ -3949,48 +3937,6 @@ paths:
       summary: Get settings by  business ID
       tags:
       - SETTINGS
-  /settings/ai/create:
-    post:
-      consumes:
-      - application/json
-      description: Creates new settings entry in the database
-      parameters:
-      - description: Settings create request
-        in: body
-        name: settings
-        required: true
-        schema:
-          $ref: '#/definitions/entity.CreateSettingsRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created successfully
-          schema:
-            type: string
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: Create new settings
-      tags:
-      - SETTINGS
   /settings/ai/delete/{guid}:
     delete:
       consumes:
@@ -4201,53 +4147,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Update existing settings
-      tags:
-      - SETTINGS
-  /settings/order-status/create:
-    post:
-      consumes:
-      - application/json
-      description: Creates a new order status for the given business
-      parameters:
-      - description: Order Status
-        in: body
-        name: order_status
-        required: true
-        schema:
-          $ref: '#/definitions/entity.CreateOrderStatusRequestForswagger'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: Create a new order status
       tags:
       - SETTINGS
   /settings/order-status/delete/{guid}:

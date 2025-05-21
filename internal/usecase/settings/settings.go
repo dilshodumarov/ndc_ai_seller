@@ -113,3 +113,8 @@ func (s *settingsService) UpdatePromptOrders(ctx context.Context, guid string, p
 func (s *settingsService) GetPromptOrders(ctx context.Context, guid string) ([]entity.PromptOrderResponse, error) {
 	return s.settingsRepo.GetPromptOrders(ctx, guid)
 }
+
+
+func (s *settingsService) CreateDefaultOrderStatuses(ctx context.Context, businessID string) error {
+	return s.settingsRepo.CreateDefaultOrderStatuses(ctx, businessID)
+}

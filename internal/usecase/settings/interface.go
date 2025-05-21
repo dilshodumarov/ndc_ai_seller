@@ -20,4 +20,5 @@ type SettingsStorage interface {
 	GetSettingsBussnesId(ctx context.Context, businessID string) (*entity.Settings, error)
 	UpdatePromptOrders(ctx context.Context, guid string, promptOrders map[string]string) error
 	GetPromptOrders(ctx context.Context, guid string) ([]entity.PromptOrderResponse, error)
+	CreateDefaultOrderStatuses(ctx context.Context, businessID string) error
 }

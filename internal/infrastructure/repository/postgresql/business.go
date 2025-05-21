@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"sugurta/internal/entity"
+
+	"github.com/google/uuid"
 )
 
 const (
@@ -29,23 +31,25 @@ func NewBusinessRepo(db *postgres.Postgres) *businessRepo {
 }
 
 // CreateBusiness creates a new business record.
-func (p *businessRepo) Create(ctx context.Context, b *entity.CreateBusinessRequest) error {
+func (p *businessRepo) Create(ctx context.Context, b *entity.CreateBusinessRequest) (string,error) {
+	id:=uuid.NewString()
 	query := fmt.Sprintf(
-		`INSERT INTO %s (owner_id, name, description) 
-		 VALUES ($1, $2, $3)`,
+		`INSERT INTO %s (guid,owner_id, name, description) 
+		 VALUES ($1, $2, $3,$4)`,
 		p.tableName,
 	)
 
 	_, err := p.db.Exec(ctx, query,
+		id,
 		b.OwnerID,
 		b.Name,
 		b.Description,
 	)
 	if err != nil {
-		return p.db.Error(err)
+		return "",p.db.Error(err)
 	}
 
-	return nil
+	return id,nil
 }
 
 // GetBusiness retrieves a business record by ID.

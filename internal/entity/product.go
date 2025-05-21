@@ -8,7 +8,7 @@ type (
 	CreateProductRequest struct {
 		BusinessID   string `json:"business_id"`
 		Name         string `json:"name"`
-		CategoryID   string `json:"category_id"`
+		CategoryID   *string `json:"category_id"`
 		ShortInfo    string `json:"short_info"`
 		Description  string `json:"description"`
 		Cost         int    `json:"cost"`
@@ -24,7 +24,7 @@ type (
 	}
 	CreateProductRequestForSwagger struct {
 		Name         string `json:"name"`
-		CategoryID   string `json:"category_id"`
+		CategoryID   *string `json:"category_id"`
 		ShortInfo    string `json:"short_info"`
 		Description  string `json:"description"`
 		Cost         int    `json:"cost"`

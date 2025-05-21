@@ -20,7 +20,7 @@ func NewbusinessService(ctxTimeout time.Duration, b repository.Business) Busines
 	}
 }
 
-func (bu *businessService) Create(ctx context.Context, b *entity.CreateBusinessRequest) error {
+func (bu *businessService) Create(ctx context.Context, b *entity.CreateBusinessRequest) (string,error) {
 	ctx, cancel := context.WithTimeout(ctx, bu.ctxTimeout)
 	defer cancel()
 

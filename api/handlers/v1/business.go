@@ -12,6 +12,7 @@ import (
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
 	"sugurta/internal/usecase/business"
+	"sugurta/internal/usecase/settings"
 
 	"net/http"
 	"net/url"
@@ -27,6 +28,7 @@ type businessRoutes struct {
 	cfg           *config.Config
 	enforcer      *casbin.CachedEnforcer
 	bussnesUscase business.Business
+	settingsUscase settings.SettingsStorage
 }
 
 // NewAuthRoutes creates a new auth routes controller
@@ -36,6 +38,8 @@ func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		cfg:           option.Config,
 		enforcer:      option.Enforcer,
 		bussnesUscase: option.Business,
+		settingsUscase: option.Settings,
+		
 	}
 
 	business := apiV1Group.Group("/business")
@@ -82,11 +86,23 @@ func (b *businessRoutes) CreateBusiness(c *gin.Context) {
 		b.handleResponse(c, status_http.BadRequest, "description is required")
 	}
 
-	if err := b.bussnesUscase.Create(c, &business); err != nil {
+	id, err := b.bussnesUscase.Create(c, &business)
+	if err != nil {
 		b.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
-
+	err=b.settingsUscase.CreateDefaultOrderStatuses(c,id)
+	if err != nil {
+		fmt.Println(err)
+		b.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+	err=b.settingsUscase.CreateSettings(c,&entity.CreateSettingsRequest{BusinessID: id})
+	if err != nil {
+		fmt.Println(err)
+		b.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
 	b.handleResponse(c, status_http.Created, "Business created successfully")
 }
 

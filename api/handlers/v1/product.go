@@ -47,7 +47,7 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 		productGroup.POST("/picture", r.addProductPicture)
 		productGroup.GET("/export", r.ExportProducts)
 		productGroup.GET("/export-csv", r.ExportProductsCSV)
-		
+
 	}
 
 }
@@ -80,7 +80,11 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 
 	for _, product := range products {
 		product.BusinessID = businessID
-
+		if product.CategoryID != nil {
+			if *product.CategoryID == "" {
+				product.CategoryID = nil
+			}
+		}
 		id, err := p.productUscase.Create(c, &product)
 		if err != nil {
 			p.handleResponse(c, status_http.InternalServerError, "Error while creating product")

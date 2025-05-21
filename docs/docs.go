@@ -5499,81 +5499,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/settings/ai/create": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Creates new settings entry in the database",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "SETTINGS"
-                ],
-                "summary": "Create new settings",
-                "parameters": [
-                    {
-                        "description": "Settings create request",
-                        "name": "settings",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entity.CreateSettingsRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/status_http.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/status_http.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "/settings/ai/delete/{guid}": {
             "delete": {
                 "security": [
@@ -6001,93 +5926,6 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/status_http.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/status_http.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/settings/order-status/create": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Creates a new order status for the given business",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "SETTINGS"
-                ],
-                "summary": "Create a new order status",
-                "parameters": [
-                    {
-                        "description": "Order Status",
-                        "name": "order_status",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entity.CreateOrderStatusRequestForswagger"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/status_http.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
                         "schema": {
                             "allOf": [
                                 {
@@ -6925,17 +6763,6 @@ const docTemplate = `{
                 }
             }
         },
-        "entity.CreateOrderStatusRequestForswagger": {
-            "type": "object",
-            "properties": {
-                "custom_name": {
-                    "type": "string"
-                },
-                "type_id": {
-                    "type": "string"
-                }
-            }
-        },
         "entity.CreateProductImage": {
             "type": "object",
             "properties": {
@@ -6982,14 +6809,6 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "boolean"
-                }
-            }
-        },
-        "entity.CreateSettingsRequest": {
-            "type": "object",
-            "properties": {
-                "business_id": {
-                    "type": "string"
                 }
             }
         },

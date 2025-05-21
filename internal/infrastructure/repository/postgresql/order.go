@@ -299,6 +299,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			imageURL              sql.NullString
 			primageURL              sql.NullString
 			username              sql.NullString
+			paymentMethod         sql.NullString
 		)
 
 		if err := rows.Scan(
@@ -308,7 +309,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			&imageURL,
 			&clientGUID, &clientName, &clientPhone,&username,
 			&order.BusinessID, &order.Platform, &order.LocationURL, &order.Status,
-			&order.TotalPrice, &order.PaymentMethod,
+			&order.TotalPrice, &paymentMethod,
 			&nullStatusChangedTime, &order.CreatedAt, &order.UpdatedAt,
 			&nullStatusName,
 			&product.ProductID, &product.Name, &primageURL, &product.Cost,
@@ -326,7 +327,9 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		if nullStatusChangedTime.Valid {
 			order.StatusChangedTime = &nullStatusChangedTime.Time
 		}
-		
+		if paymentMethod.Valid {
+			order.PaymentMethod = paymentMethod.String
+		}
 		
 		if nullStatusName.Valid {
 			order.AdminStatus = nullStatusName.String
