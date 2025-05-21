@@ -89,6 +89,25 @@ type (
 		Search        string
 		Daye          int
 	}
+	 OrderProductBuOrderID struct {
+		ProductID             string
+		Name                  string
+		ImageURL              string
+		Cost                  int
+		Status                bool
+		Discount              int
+		DiscountCost          int
+		ShortInfo             string
+		Description           string
+		CreatedAt             time.Time
+		UpdatedAt             time.Time
+	
+		Count                 int
+		Price                 float64
+		ProductTotalPrice     float64
+		OrderProductCreatedAt time.Time
+	}
+	
 	
 )
 

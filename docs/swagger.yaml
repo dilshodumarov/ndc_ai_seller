@@ -390,6 +390,39 @@ definitions:
         description: order_products.price
         type: integer
     type: object
+  entity.OrderProductBuOrderID:
+    properties:
+      cost:
+        type: integer
+      count:
+        type: integer
+      createdAt:
+        type: string
+      description:
+        type: string
+      discount:
+        type: integer
+      discountCost:
+        type: integer
+      imageURL:
+        type: string
+      name:
+        type: string
+      orderProductCreatedAt:
+        type: string
+      price:
+        type: number
+      productID:
+        type: string
+      productTotalPrice:
+        type: number
+      shortInfo:
+        type: string
+      status:
+        type: boolean
+      updatedAt:
+        type: string
+    type: object
   entity.OrderStatus:
     properties:
       business_id:
@@ -1316,6 +1349,50 @@ paths:
       security:
       - BearerAuth: []
       summary: Update password
+      tags:
+      - AUTH
+  /auth/user:
+    get:
+      consumes:
+      - application/json
+      description: Get user Data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/entity.User'
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: User Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get user info
       tags:
       - AUTH
   /auth/users/{id}:
@@ -3306,6 +3383,49 @@ paths:
       security:
       - BearerAuth: []
       summary: List Orders
+      tags:
+      - Orders
+  /orders/products/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get list of products related to a specific order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.OrderProductBuOrderID'
+            type: array
+        "404":
+          description: Order Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get Products By Order ID
       tags:
       - Orders
   /orders/update/{id}:

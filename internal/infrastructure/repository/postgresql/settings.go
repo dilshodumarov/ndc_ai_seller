@@ -537,33 +537,43 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 	// Har bir raqamga mos json namunalarini saqlaymiz
 	staticJsons := map[string]string{
 		"2": `{
-  "action": "set_payment_method",
-  "method": "...",
-  "order_id": "...",
-  "user_message": "Buyurtma uchun to'lov turi tanlandi"
-}`,
+	  "action": "confirm_order",
+	  "products": [
+		{"product_id": int id , "count": MIQDOR}
+	  ],
+	  "user_message": "Buyurtma xabari",
+	  "message_id": int id
+	}`,
 		"3": `{
-  "action": "confirm_payment",
-  "order_id": "...",
-  "payment_screenshot_url": "...",
-  "user_message": "To'lov tasdiqlandi"
-}`,
+	  "action": "set_payment_method",
+	  "method": "...",
+	  "order_id": "...",
+	  "user_message": "Buyurtma uchun to'lov turi tanlandi"
+	}`,
 		"4": `{
-  "action": "set_order_location",
-  "order_id": "...",
-  "location_url": "URL/manzil",
-  "user_message": "Buyurtma uchun manzil qabul qilindi"
-}`,
-		"6": `{
-  "action": "cancel_order",
-  "order_id": "...",
-  "reason": "Bekor qilish sababi",
-  "user_message": "Buyurtma bekor qilindi"
-}`,
+	  "action": "confirm_payment",
+	  "order_id": "...",
+	  "payment_screenshot_url": "...",
+	  "user_message": "To'lov tasdiqlandi"
+	}`,
+		"5": `{
+	  "action": "set_order_location",
+	  "order_id": "...",
+	  "location_url": "URL/manzil",
+	  "user_message": "Buyurtma uchun manzil qabul qilindi"
+	}`,
+		"7": `{
+	  "action": "cancel_order",
+	  "order_id": "...",
+	  "reason": "Bekor qilish sababi",
+	  "user_message": "Buyurtma bekor qilindi"
+	}`,
 	}
+	
 
 	// Faqat keraklilar
-	keys := []string{"2", "3", "4", "6"}
+	keys := []string{"2", "3", "4", "5", "7"}
+
 	result := make([]entity.PromptOrderResponse, 0, len(keys))
 	for _, k := range keys {
 		result = append(result, entity.PromptOrderResponse{

@@ -504,9 +504,77 @@ func buildWhereClause(filter *entity.OrderFilter, alias string) (string, []inter
 	return "", args
 }
 
-func boolToInt(b bool) int {
-	if b {
-		return 1
+
+func (r *OrderRepo) GetProductsByOrderID(ctx context.Context, orderID string) ([]entity.OrderProductBuOrderID, error) {
+	query := `
+	SELECT 
+		p.guid, p.name, p.image_url, p.cost, p.status, p.discount_cost, p.discount,
+		p.short_info, p.description, p.created_at, p.updated_at,
+
+		op.count, op.price, op.total_price, op.created_at
+	FROM order_products op
+	JOIN product p ON op.product_id = p.guid
+	WHERE op.order_id = $1
+	`
+
+	rows, err := r.db.Query(ctx, query, orderID)
+	if err != nil {
+		return nil, fmt.Errorf("OrderRepo - GetProductsByOrderID - query: %w", err)
 	}
-	return 0
+	defer rows.Close()
+
+	var products []entity.OrderProductBuOrderID
+
+	for rows.Next() {
+		var (
+			product entity.OrderProductBuOrderID
+
+			imageURL, shortInfo, description sql.NullString
+			status                           sql.NullBool
+			discountCost, discount           sql.NullInt64
+			productCreatedAt, productUpdatedAt, opCreatedAt sql.NullTime
+		)
+
+		err := rows.Scan(
+			&product.ProductID, &product.Name, &imageURL, &product.Cost, &status, &discountCost, &discount,
+			&shortInfo, &description, &productCreatedAt, &productUpdatedAt,
+
+			&product.Count, &product.Price, &product.ProductTotalPrice, &opCreatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("OrderRepo - GetProductsByOrderID - scan: %w", err)
+		}
+
+		if imageURL.Valid {
+			product.ImageURL = imageURL.String
+		}
+		if shortInfo.Valid {
+			product.ShortInfo = shortInfo.String
+		}
+		if description.Valid {
+			product.Description = description.String
+		}
+		if status.Valid {
+			product.Status = status.Bool
+		}
+		if discount.Valid {
+			product.Discount = int(discount.Int64)
+		}
+		if discountCost.Valid {
+			product.DiscountCost = int(discountCost.Int64)
+		}
+		if productCreatedAt.Valid {
+			product.CreatedAt = productCreatedAt.Time
+		}
+		if productUpdatedAt.Valid {
+			product.UpdatedAt = productUpdatedAt.Time
+		}
+		if opCreatedAt.Valid {
+			product.OrderProductCreatedAt = opCreatedAt.Time
+		}
+
+		products = append(products, product)
+	}
+
+	return products, nil
 }

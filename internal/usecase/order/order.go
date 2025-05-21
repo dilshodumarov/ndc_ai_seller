@@ -69,3 +69,15 @@ func (o *orderService) Delete(ctx context.Context, id string) error {
 
 	return o.orderService.Delete(ctx, id)
 }
+
+func (o *orderService) GetProductsByOrderID(ctx context.Context, orderID string) ([]entity.OrderProductBuOrderID, error) {
+	ctx, cancel := context.WithTimeout(ctx, o.ctxTimeout)
+	defer cancel()
+
+	order, err := o.orderService.GetProductsByOrderID(ctx, orderID)
+	if err != nil {
+		return nil, err
+	}
+
+	return order, nil
+}

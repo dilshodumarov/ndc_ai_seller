@@ -3,6 +3,8 @@ package v1
 import (
 	"bytes"
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -17,6 +19,7 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/xuri/excelize/v2"
 	"go.uber.org/zap"
 )
@@ -52,7 +55,8 @@ func NewOrderRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption)
 		orderGroup.PUT("/update/:id", r.updateOrder)
 		orderGroup.DELETE("/delete/:id", r.deleteOrder)
 		orderGroup.GET("/export", r.exportOrders)
-
+		orderGroup.GET("/products/:id", r.getOrderProductsByOrderID)
+		
 	}
 }
 
@@ -182,7 +186,7 @@ func (r *OrderRoutes) exportOrders(c *gin.Context) {
 	if code != 0 {
 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}
-	
+
 	filter := &entity.OrderFilter{
 		ClientID:      c.Query("client_id"),
 		BusinessID:    BusinessID,
@@ -221,7 +225,7 @@ func (r *OrderRoutes) updateOrder(c *gin.Context) {
 	if code != 0 {
 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}
-	req.BussnesId=BusinessID
+	req.BussnesId = BusinessID
 	if err := c.ShouldBindJSON(&req); err != nil {
 		r.handleResponse(c, status_http.BadRequest, "Invalid request: "+err.Error())
 		return
@@ -241,7 +245,7 @@ func (r *OrderRoutes) updateOrder(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, "Noto‘g‘ri status qiymati")
 		return
 	}
-	
+
 	statusID, err := r.SettingsUScase.GetStatusByName(c, req.Status, req.BussnesId)
 	if err != nil {
 		r.handleResponse(c, status_http.BadRequest, "Failed to get status ID: "+err.Error())
@@ -279,6 +283,36 @@ func (r *OrderRoutes) deleteOrder(c *gin.Context) {
 	}
 
 	r.handleResponse(c, status_http.OK, "Order deleted successfully")
+}
+
+// @Router /orders/products/{id} [get]
+// @Summary Get Products By Order ID
+// @Description Get list of products related to a specific order
+// @Tags Orders
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path string true "Order ID"
+// @Success 200 {array} entity.OrderProductBuOrderID
+// @Failure 404 {object} status_http.Response{data=string} "Order Not Found"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+func (r *OrderRoutes) getOrderProductsByOrderID(c *gin.Context) {
+	id := c.Param("id")
+	if _, err := uuid.Parse(id); err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
+		return
+	}
+	products, err := r.OrderUseCase.GetProductsByOrderID(c, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			r.handleResponse(c, status_http.NotFound, "Order Not Found")
+			return
+		}
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	r.handleResponse(c, status_http.OK, products)
 }
 
 func (h *OrderRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {

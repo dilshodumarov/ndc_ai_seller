@@ -77,10 +77,11 @@ func NewAuthRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) 
 		authGroup.GET("/clients/list", r.ListClients)
 		authGroup.GET("/clients/:id", r.GetClientByID)
 		authGroup.GET("/users/:id", r.GetUserByID)
+		authGroup.GET("/user", r.GetUserInfo)
 		authGroup.GET("/users/list", r.ListUsers)
 		authGroup.PUT("/clients/update", r.UpdateClient)
 		authGroup.PUT("/clients/pause", r.PauseClientChat)
-
+	
 	}
 }
 
@@ -801,6 +802,41 @@ func (r *authRoutes) GetUserByID(c *gin.Context) {
 	id := c.Param("id")
 
 	users, err := r.userUseCase.GetByIDs(c, id)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			r.handleResponse(c, status_http.NotFound, err.Error())
+			return
+		}
+		r.handleResponse(c, status_http.InternalServerError, err.Error())
+		return
+	}
+
+	if len(users) == 0 {
+		r.handleResponse(c, status_http.NotFound, "user not found")
+		return
+	}
+
+	r.handleResponse(c, status_http.OK, users[0])
+}
+
+// @Router /auth/user [get]
+// @Summary Get user info
+// @Description Get user Data
+// @Security BearerAuth
+// @Tags AUTH
+// @Accept json
+// @Produce json
+// @Success 200 {object} entity.User "Success"
+// @Failure 400 {object} status_http.Response{data=string} "Bad Request"
+// @Failure 404 {object} status_http.Response{data=string} "User Not Found"
+// @Failure 500 {object} status_http.Response{data=string} "Server Error"
+func (r *authRoutes) GetUserInfo(c *gin.Context) {
+	UserId, code := helper.GetUserIdFromToken(c, r.cfg)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	
+	users, err := r.userUseCase.GetByIDs(c, UserId)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
 			r.handleResponse(c, status_http.NotFound, err.Error())

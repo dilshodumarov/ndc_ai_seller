@@ -27185,3 +27185,75 @@ net/http.(*conn).serve
 2025-05-21T11:30:28.872+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-21T14:08:39.244+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-21T14:08:41.761+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-21T14:09:00.317+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/user 
+2025-05-21T14:09:07.244+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-05-21T14:09:23.154+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/user 
+2025-05-21T14:09:56.331+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-21T14:09:56.342+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-21T14:09:59.291+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-21T14:10:01.311+0500	INFO	middleware/logger.go:26	::1 - GET /v1/auth/user 
+2025-05-21T14:13:10.529+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-21T14:13:10.530+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-21T14:22:56.005+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-21T14:23:14.135+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-21T14:23:14.354+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-21T14:23:39.677+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0&day=7 
+2025-05-21T14:23:59.976+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0&day=7&status=yangi 
+2025-05-21T14:24:21.940+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/products/9c84234c-0a69-485e-9296-21e8b0e0b5bc 
+2025-05-21T14:24:40.991+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-21T14:24:40.992+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-21T14:26:43.590+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-21T14:26:45.401+0500	ERROR	v1/order.go:322	response	{"code": 400, "status": "BAD_REQUEST", "description": "The server could not understand the request due to invalid syntax", "data": "Invalid UUID format", "custom_message": ""}
+sugurta/api/handlers/v1.(*OrderRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/order.go:322
+sugurta/api/handlers/v1.(*OrderRoutes).getOrderProductsByOrderID
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/order.go:302
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-05-21T14:26:45.401+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/products/9c84234c-0a69-485e-9296-21e8b0e0b5b 
+2025-05-21T14:27:29.189+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-21T14:27:29.189+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-21T15:08:51.316+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-21T15:09:03.898+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/prompt-orders 
+2025-05-21T15:12:39.595+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-21T15:12:39.596+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
