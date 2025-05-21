@@ -16,6 +16,7 @@ import (
 	"sugurta/internal/usecase/category"
 	"sugurta/internal/usecase/chat"
 	clienttype "sugurta/internal/usecase/client-type"
+	"sugurta/internal/usecase/database"
 	"sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/notification"
 	"sugurta/internal/usecase/order"
@@ -53,6 +54,7 @@ type HandlerOption struct {
 	Telegram    telegram.TelegramAccount
 	Notification notification.Notification
 	Settings     settings.SettingsStorage
+	Database    database.Database
 }
 
 type BaseHandler struct {

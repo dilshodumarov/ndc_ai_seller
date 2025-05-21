@@ -27257,3 +27257,30 @@ main.main.func1
 2025-05-21T15:12:39.596+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-21T16:43:32.506+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-21T16:43:35.619+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-05-21T16:43:35.634+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-05-21T16:43:35.634+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-05-21T16:43:35.636+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-05-21T16:43:35.773+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-21T16:43:35.968+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/favicon-32x32.png 
+2025-05-21T16:43:53.013+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-05-21T16:44:16.223+0500	INFO	middleware/logger.go:26	::1 - GET /v1/database/list 
+2025-05-21T16:45:03.127+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-21T16:45:03.127+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-21T16:45:06.377+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-21T16:45:07.326+0500	INFO	middleware/logger.go:26	::1 - GET /v1/database/list 
+2025-05-21T16:45:14.102+0500	INFO	middleware/logger.go:26	::1 - POST /v1/database/create 
+2025-05-21T16:45:18.313+0500	INFO	middleware/logger.go:26	::1 - GET /v1/database/list 
+2025-05-21T16:45:29.140+0500	INFO	middleware/logger.go:26	::1 - GET /v1/database/get/2a6e3f06-9fde-4d5b-b2b4-7dc7db05b265 
+2025-05-21T16:45:36.619+0500	INFO	middleware/logger.go:26	::1 - DELETE /v1/database/delete/2a6e3f06-9fde-4d5b-b2b4-7dc7db05b265 
+2025-05-21T16:45:43.481+0500	INFO	middleware/logger.go:26	::1 - POST /v1/database/create 
+2025-05-21T16:45:53.276+0500	INFO	middleware/logger.go:26	::1 - GET /v1/database/get/1e27fb94-d2c9-4398-9576-0ca5bd5caf99 
+2025-05-21T16:46:15.749+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/database/update/1e27fb94-d2c9-4398-9576-0ca5bd5caf99 
+2025-05-21T16:46:20.685+0500	INFO	middleware/logger.go:26	::1 - GET /v1/database/get/1e27fb94-d2c9-4398-9576-0ca5bd5caf99 
+2025-05-21T16:46:27.717+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-21T16:46:27.717+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31

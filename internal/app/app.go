@@ -21,6 +21,7 @@ import (
 	"sugurta/internal/usecase/category"
 	"sugurta/internal/usecase/chat"
 	clienttype "sugurta/internal/usecase/client-type"
+	"sugurta/internal/usecase/database"
 	integration "sugurta/internal/usecase/intgration"
 	"sugurta/internal/usecase/notification"
 	"sugurta/internal/usecase/order"
@@ -61,6 +62,7 @@ type App struct {
 	Telegram     telegram.TelegramAccount
 	Notification notification.Notification
 	Settings     settings.SettingsStorage
+	Database     database.Database
 }
 
 func NewApp(cfg config.Config) (*App, error) {
@@ -152,6 +154,11 @@ func NewApp(cfg config.Config) (*App, error) {
 	SettingsRepo := postgresql.NewSettingsRepo(db)
 	SettingsUScase := settings.NewSettingsService(contextTimeout, SettingsRepo)
 	
+		
+	DatabaseRepo := postgresql.NewDatabaseRepo(db)
+	DatabaseUScase := database.NewDatabaseService(contextTimeout, DatabaseRepo)
+	
+
 
 	fmt.Println("order repo: ", orderUseCase)
 	fmt.Println("here 3")
@@ -177,6 +184,8 @@ func NewApp(cfg config.Config) (*App, error) {
 		Telegram:    TelegramUscase,
 		Notification: NotificationUscase,
 		Settings:    SettingsUScase,
+		Database: DatabaseUScase,
+		
 		// BrokerProducer: event.NewBrokerProducer(cfg.Kafka.Brokers, cfg.Kafka.Topic),
 	}, nil
 }
@@ -222,6 +231,7 @@ func (a *App) Run() error {
 		Telegram:    a.Telegram,
 		Notification: a.Notification,
 		Settings:    a.Settings,
+		Database:    a.Database,
 	})
 
 	fmt.Println("here 5")

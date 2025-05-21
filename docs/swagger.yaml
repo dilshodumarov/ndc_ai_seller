@@ -139,6 +139,15 @@ definitions:
     required:
     - name
     type: object
+  entity.CreateDatabaseRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      tokens:
+        type: integer
+    type: object
   entity.CreateNotificationRequest:
     properties:
       message:
@@ -209,6 +218,21 @@ definitions:
         type: string
       status:
         type: boolean
+    type: object
+  entity.Database:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      guid:
+        type: string
+      name:
+        type: string
+      tokens:
+        type: integer
+      updated_at:
+        type: string
     type: object
   entity.ForgotPasswordRequest:
     properties:
@@ -658,6 +682,17 @@ definitions:
     required:
     - id
     - name
+    type: object
+  entity.UpdateDatabaseRequest:
+    properties:
+      description:
+        type: string
+      guid:
+        type: string
+      name:
+        type: string
+      tokens:
+        type: integer
     type: object
   entity.UpdateNotificationRequest:
     properties:
@@ -2565,6 +2600,233 @@ paths:
       summary: Update ClientType
       tags:
       - CLIENT TYPE
+  /database/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new database entry with given details
+      parameters:
+      - description: Database details
+        in: body
+        name: database
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CreateDatabaseRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created successfully with GUID
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new database record
+      tags:
+      - DATABASE
+  /database/delete/{id}:
+    delete:
+      description: Delete database entry by GUID
+      parameters:
+      - description: Database GUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a database record by ID
+      tags:
+      - DATABASE
+  /database/get/{id}:
+    get:
+      description: Get database details by GUID
+      parameters:
+      - description: Database GUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Database details
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.Database'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get a database record by ID
+      tags:
+      - DATABASE
+  /database/list:
+    get:
+      description: Get list of all database entries
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of databases
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.Database'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: List all databases
+      tags:
+      - DATABASE
+  /database/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update database details by GUID
+      parameters:
+      - description: Database GUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated database details
+        in: body
+        name: database
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UpdateDatabaseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/status_http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update an existing database record
+      tags:
+      - DATABASE
   /integration/create:
     post:
       consumes:

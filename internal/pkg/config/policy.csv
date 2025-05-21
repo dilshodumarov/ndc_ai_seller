@@ -51,6 +51,8 @@ p, admin,  /v1/minio/*, GET|POST|PUT|DELETE
 p, user,  /v1/settings/*, GET|POST|PUT|DELETE
 p, admin,  /v1/settings/*, GET|POST|PUT|DELETE
 
+p, user,  /v1/database/*, GET|POST|PUT|DELETE
+p, admin,  /v1/database/*, GET|POST|PUT|DELETE
 
 p, unauthorized, /v1/websocket/*, GET|POST
 
