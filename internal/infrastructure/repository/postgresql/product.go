@@ -65,9 +65,6 @@ func (p *productRepo) Create(ctx context.Context, product *entity.CreateProductR
 }
 
 func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, error) {
-	var (
-		picturesting string
-	)
 	query := `
 	SELECT 
 		p.guid, 
@@ -88,37 +85,94 @@ func (p *productRepo) Get(ctx context.Context, id string) (*entity.Product, erro
 		COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls
 	FROM product p
 	LEFT JOIN product_pictures pp ON p.guid = pp.product_id
-	LEFT JOIN category c ON p.category_id = c.guid  -- category jadvali bilan bog'lanmoqda
-	WHERE p.guid = $1 AND p.deleted_at is null
+	LEFT JOIN category c ON p.category_id = c.guid
+	WHERE p.guid = $1 AND p.deleted_at IS NULL
 	GROUP BY p.guid, c.name
-`
+	`
 
-	var product entity.Product
+	var (
+		product                       entity.Product
+		idDB, businessIDDB, nameDB    sql.NullString
+		categoryIDDB, shortInfoDB     sql.NullString
+		descriptionDB, categoryNameDB sql.NullString
+		imageUrlsStrDB                sql.NullString
+		costDB, countDB               sql.NullInt64
+		discountCostDB, discountDB    sql.NullInt64
+		productIDDB                   sql.NullInt64
+		statusDB                      sql.NullBool
+		createdAtDB, updatedAtDB      sql.NullTime
+	)
+
 	err := p.db.QueryRow(ctx, query, id).Scan(
-		&product.ID,
-		&product.BusinessID,
-		&product.Status,
-		&product.ProductId,
-		&product.Name,
-		&product.CategoryID,
-		&product.ShortInfo,
-		&product.Description,
-		&product.Cost,
-		&product.Count,
-		&product.DiscountCost,
-		&product.Discount,
-		&product.CreatedAt,
-		&product.UpdatedAt,
-		&product.CategoryName,
-		&picturesting,
+		&idDB,
+		&businessIDDB,
+		&statusDB,
+		&productIDDB,
+		&nameDB,
+		&categoryIDDB,
+		&shortInfoDB,
+		&descriptionDB,
+		&costDB,
+		&countDB,
+		&discountCostDB,
+		&discountDB,
+		&createdAtDB,
+		&updatedAtDB,
+		&categoryNameDB,
+		&imageUrlsStrDB,
 	)
 	if err != nil {
 		return nil, p.db.Error(err)
 	}
 
-	// image_urlsni vergul bo'yicha ajratamiz
-	if len(picturesting) > 0 {
-		product.Image_urls = strings.Split(picturesting, ",")
+	// Valid qiymatlarni set qilish
+	if idDB.Valid {
+		product.ID = idDB.String
+	}
+	if businessIDDB.Valid {
+		product.BusinessID = businessIDDB.String
+	}
+	if statusDB.Valid {
+		product.Status = statusDB.Bool
+	}
+	if productIDDB.Valid {
+		product.ProductId = int(productIDDB.Int64)
+	}
+	if nameDB.Valid {
+		product.Name = nameDB.String
+	}
+	if categoryIDDB.Valid {
+		product.CategoryID = categoryIDDB.String
+	}
+	if shortInfoDB.Valid {
+		product.ShortInfo = shortInfoDB.String
+	}
+	if descriptionDB.Valid {
+		product.Description = descriptionDB.String
+	}
+	if costDB.Valid {
+		product.Cost = int(costDB.Int64)
+	}
+	if countDB.Valid {
+		product.Count = int(countDB.Int64)
+	}
+	if discountCostDB.Valid {
+		product.DiscountCost = int(discountCostDB.Int64)
+	}
+	if discountDB.Valid {
+		product.Discount = int(discountDB.Int64)
+	}
+	if createdAtDB.Valid {
+		product.CreatedAt = createdAtDB.Time
+	}
+	if updatedAtDB.Valid {
+		product.UpdatedAt = updatedAtDB.Time
+	}
+	if categoryNameDB.Valid {
+		product.CategoryName = categoryNameDB.String
+	}
+	if imageUrlsStrDB.Valid && imageUrlsStrDB.String != "" {
+		product.Image_urls = strings.Split(imageUrlsStrDB.String, ",")
 	}
 
 	return &product, nil
@@ -202,46 +256,90 @@ func (p *productRepo) List(ctx context.Context, filter entity.ProductFilter) (*e
 	defer rows.Close()
 
 	var products entity.GetAllProductsResponse
+
 	for rows.Next() {
 		var (
-			product        entity.Product
-			discountCostDB sql.NullInt64
-			discountDB     sql.NullInt64
-			imageUrlsStr   string
+			product                       entity.Product
+			idDB, businessIDDB, nameDB    sql.NullString
+			categoryIDDB, shortInfoDB     sql.NullString
+			descriptionDB, categoryNameDB sql.NullString
+			imageUrlsStrDB                sql.NullString
+			costDB, countDB               sql.NullInt64
+			discountCostDB, discountDB    sql.NullInt64
+			productIDDB                   sql.NullInt64
+			statusDB                      sql.NullBool
+			createdAtDB, updatedAtDB      sql.NullTime
 		)
 
 		if err := rows.Scan(
-			&product.ID,
-			&product.BusinessID,
-			&product.Status,
-			&product.ProductId,
-			&product.Name,
-			&product.CategoryID,
-			&product.ShortInfo,
-			&product.Description,
-			&product.Cost,
-			&product.Count,
+			&idDB,
+			&businessIDDB,
+			&statusDB,
+			&productIDDB,
+			&nameDB,
+			&categoryIDDB,
+			&shortInfoDB,
+			&descriptionDB,
+			&costDB,
+			&countDB,
 			&discountCostDB,
 			&discountDB,
-			&product.CreatedAt,
-			&product.UpdatedAt,
-			&product.CategoryName,
-			&imageUrlsStr,
+			&createdAtDB,
+			&updatedAtDB,
+			&categoryNameDB,
+			&imageUrlsStrDB,
 		); err != nil {
 			return nil, p.db.Error(err)
 		}
 
-		// Discount values
+		// Assign values if valid
+		if idDB.Valid {
+			product.ID = idDB.String
+		}
+		if businessIDDB.Valid {
+			product.BusinessID = businessIDDB.String
+		}
+		if statusDB.Valid {
+			product.Status = statusDB.Bool
+		}
+		if productIDDB.Valid {
+			product.ProductId = int(productIDDB.Int64)
+		}
+		if nameDB.Valid {
+			product.Name = nameDB.String
+		}
+		if categoryIDDB.Valid {
+			product.CategoryID = categoryIDDB.String
+		}
+		if shortInfoDB.Valid {
+			product.ShortInfo = shortInfoDB.String
+		}
+		if descriptionDB.Valid {
+			product.Description = descriptionDB.String
+		}
+		if costDB.Valid {
+			product.Cost = int(costDB.Int64)
+		}
+		if countDB.Valid {
+			product.Count = int(countDB.Int64)
+		}
 		if discountCostDB.Valid {
 			product.DiscountCost = int(discountCostDB.Int64)
 		}
 		if discountDB.Valid {
 			product.Discount = int(discountDB.Int64)
 		}
-
-		// Split image URLs if they exist
-		if imageUrlsStr != "" {
-			product.Image_urls = strings.Split(imageUrlsStr, ",")
+		if createdAtDB.Valid {
+			product.CreatedAt = createdAtDB.Time
+		}
+		if updatedAtDB.Valid {
+			product.UpdatedAt = updatedAtDB.Time
+		}
+		if categoryNameDB.Valid {
+			product.CategoryName = categoryNameDB.String
+		}
+		if imageUrlsStrDB.Valid && imageUrlsStrDB.String != "" {
+			product.Image_urls = strings.Split(imageUrlsStrDB.String, ",")
 		}
 
 		products.Items = append(products.Items, product)

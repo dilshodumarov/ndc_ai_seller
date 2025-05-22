@@ -219,7 +219,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	LEFT JOIN order_products op ON o.guid = op.order_id
 	LEFT JOIN product p ON p.guid = op.product_id
 	LEFT JOIN client c ON o.client_id = c.guid
-	%s
+	%s 
 	ORDER BY o.guid, o.created_at DESC
 `, r.tableName, whereClause)
 

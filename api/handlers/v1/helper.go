@@ -9,8 +9,8 @@ import (
 	"sugurta/internal/entity"
 )
 
-const pythonBaseURL = "http://telegram-fastapi:8000"
-//const pythonBaseURL = "http://localhost:8000"
+// const pythonBaseURL = "http://telegram-fastapi:8000"
+const pythonBaseURL = "http://localhost:8000"
 // SendTelegramCode sends a phone number to the Python backend and returns the response
 func SendTelegramCode(phone entity.PhoneNumber) (*entity.BotIntegrationResponse, error) {
 	body, err := json.Marshal(phone)
