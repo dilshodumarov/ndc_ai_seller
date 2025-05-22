@@ -78,7 +78,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 	LEFT JOIN order_products op ON o.guid = op.order_id
 	LEFT JOIN product p ON p.guid = op.product_id
 	LEFT JOIN client c ON o.client_id = c.guid
-	WHERE o.guid = $1
+	WHERE o.guid = $1 and o.deleted_at is null
 `
 
 
@@ -103,12 +103,13 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			imageurl           sql.NullString
 			primageurl           sql.NullString
 			username    sql.NullString
+			paymentMethod         sql.NullString
 		)
 		
 
 		err = rows.Scan(
 			&o.ID,  &o.OrderId,&o.StatusNumber,&imageurl,&o.BusinessID, &o.Platform,&o.LocationURL, &o.Status, &o.TotalPrice,
-			&o.PaymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,
+			&paymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,
 		
 			&clientGUID, &clientName, &clientPhone,&username, // client
 		
@@ -132,6 +133,9 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 		}
 		if clientGUID.Valid{
 			order.Client.GUID=clientGUID.String
+		}
+		if paymentMethod.Valid {
+			order.PaymentMethod = paymentMethod.String
 		}
 		if username.Valid{
 			order.Client.UserName=username.String
@@ -264,22 +268,23 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	inClause = inClause[:len(inClause)-1]
 
 	fullQuery := fmt.Sprintf(`
-		SELECT 
-			o.guid, o.order_id, o.status_number, o.image_url,
-			c.guid, c.first_name, c.phone,c.user_name,
-			o.business_id, o.platform, o.location_url, o.status, o.total_price,
-			o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
-			os.custom_name,
-			p.guid, p.name, p.image_url, p.cost,
-			op.count, op.total_price
-		FROM %s o
-		LEFT JOIN order_status os ON o.order_status_id = os.guid
-		INNER JOIN order_products op ON o.guid = op.order_id
-		INNER JOIN product p ON p.guid = op.product_id
-		INNER JOIN client c ON o.client_id = c.guid
-		WHERE o.guid IN (%s)
-		ORDER BY o.created_at DESC
-	`, r.tableName, inClause)
+	SELECT 
+		o.guid, o.order_id, o.status_number, o.image_url,
+		c.guid, c.first_name, c.phone, c.user_name,
+		o.business_id, o.platform, o.location_url, o.status, o.total_price,
+		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
+		os.custom_name,
+		p.guid, p.name, p.image_url, p.cost,
+		op.count, op.total_price
+	FROM %s o
+	LEFT JOIN order_status os ON o.order_status_id = os.guid
+	INNER JOIN order_products op ON o.guid = op.order_id
+	INNER JOIN product p ON p.guid = op.product_id
+	INNER JOIN client c ON o.client_id = c.guid
+	WHERE o.guid IN (%s) AND o.deleted_at IS NULL
+	ORDER BY o.created_at DESC
+`, r.tableName, inClause)
+
 
 	rows, err := r.db.Query(ctx, fullQuery, inArgs...)
 	if err != nil {
@@ -371,7 +376,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	LEFT JOIN order_products op ON o.guid = op.order_id
 	LEFT JOIN product p ON p.guid = op.product_id
 	LEFT JOIN client c ON o.client_id = c.guid
-	%s`, r.tableName, countWhere)
+	%s AND o.deleted_at is null`, r.tableName, countWhere)
 
 	var totalCount uint64
 	if err := r.db.QueryRow(ctx, countQuery, countArgs...).Scan(&totalCount); err != nil {
