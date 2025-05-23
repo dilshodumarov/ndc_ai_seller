@@ -451,7 +451,7 @@ func (r *settingsRepo) ListSettingsByBusinessID(ctx context.Context, businessID 
 
 func (r *settingsRepo) GetSettingsBussnesId(ctx context.Context, businessID string) (*entity.Settings, error) {
 	query := `
-		SELECT guid, name, brand_name, business_name, status, business_id, 
+		SELECT guid, name, brand_name, business_name, chat_token,status, business_id, 
 		       prompt_text, prompt_order, waiting_time, prompt_product, 
 		       token_limit, intelligence_level, error_message, first_message, 
 		       is_stop, stop_until, created_at, updated_at, deleted_at
@@ -471,7 +471,7 @@ func (r *settingsRepo) GetSettingsBussnesId(ctx context.Context, businessID stri
 	)
 
 	err := row.Scan(
-		&s.GUID, &name, &brandName, &businessName, &status, &s.BusinessID,
+		&s.GUID, &name, &brandName, &businessName, &s.ChatToken,&status, &s.BusinessID,
 		&promptText, &promptOrder, &waitingTime, &promptProduct,
 		&tokenLimit, &intelligenceLevel, &errorMessage, &firstMessage,
 		&isStop, &stopUntil, &createdAt, &updatedAt, &deletedAt,
