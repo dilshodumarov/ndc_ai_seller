@@ -9,6 +9,7 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
@@ -85,7 +86,10 @@ func (r *databaseRoutes) GetDatabase(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, "id is required")
 		return
 	}
-
+	if _, err := uuid.Parse(id); err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
+		return
+	}
 	db, err := r.dbUsecase.GetByID(c, id)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -118,7 +122,10 @@ func (r *databaseRoutes) UpdateDatabase(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, "id is required")
 		return
 	}
-
+	if _, err := uuid.Parse(id); err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
+		return
+	}
 	var req entity.UpdateDatabaseRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
@@ -152,7 +159,10 @@ func (r *databaseRoutes) DeleteDatabase(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, "id is required")
 		return
 	}
-
+	if _, err := uuid.Parse(id); err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
+		return
+	}
 	if err := r.dbUsecase.Delete(c, id); err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return

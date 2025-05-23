@@ -311,7 +311,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			location      sql.NullString
 			description   sql.NullString
 		)
-
+	
 		if err := rows.Scan(
 			&order.ID,
 			&order.OrderId,

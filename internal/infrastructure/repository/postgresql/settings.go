@@ -566,10 +566,14 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 	  "user_message": "To'lov tasdiqlandi"
 	}`,
 		"5": `{
+	 	{
 	  "action": "set_order_location",
 	  "order_id": "...",
-	  "location_url": "URL/manzil",
+	  "location_url": "URL",
+	  "location": "manzil",//optional
+	  "user_note":"qo'shimcha malumot"//optional
 	  "user_message": "Buyurtma uchun manzil qabul qilindi"
+	}
 	}`,
 		"7": `{
 	  "action": "cancel_order",
@@ -588,7 +592,7 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 			Guid:      id,
 			Number:    k,
 			Prompt:    allPrompts[k],       // bazadan kelgan matn
-			IsHave:    allPrompts[k] != "", // mavjud yoki yo‘qligini tekshir
+			IsHave:    true , 
 			PromtJson: staticJsons[k],      // statik JSON namunasi
 		})
 	}

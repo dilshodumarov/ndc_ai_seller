@@ -16,6 +16,7 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/xuri/excelize/v2"
 	"go.uber.org/zap"
 )
@@ -154,7 +155,10 @@ func (p *productRoutes) getProductByID(c *gin.Context) {
 		p.handleResponse(c, status_http.BadRequest, "Product ID is required")
 		return
 	}
-
+	if _, err := uuid.Parse(id); err != nil {
+		p.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
+		return
+	}
 	product, err := p.productUscase.Get(c, id)
 	if err != nil {
 		fmt.Println(err)
@@ -264,7 +268,10 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.BadRequest, "invalid request")
 		return
 	}
-
+	if _, err := uuid.Parse(id); err != nil {
+		p.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
+		return
+	}
 	product.ID = id
 	err := p.productUscase.Update(c, &product)
 	if err != nil {
@@ -367,6 +374,10 @@ func (p *productRoutes) deleteProduct(c *gin.Context) {
 
 	if id == "" {
 		p.handleResponse(c, status_http.BadRequest, "Product ID is required")
+		return
+	}
+	if _, err := uuid.Parse(id); err != nil {
+		p.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
 		return
 	}
 

@@ -100,6 +100,10 @@ func (r *OrderRoutes) createOrder(c *gin.Context) {
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (r *OrderRoutes) getOrder(c *gin.Context) {
 	id := c.Param("id")
+	if _, err := uuid.Parse(id); err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
+		return
+	}
 	order, err := r.OrderUseCase.Get(c, id)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -220,6 +224,10 @@ func (r *OrderRoutes) exportOrders(c *gin.Context) {
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (r *OrderRoutes) updateOrder(c *gin.Context) {
 	id := c.Param("id")
+	if _, err := uuid.Parse(id); err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
+		return
+	}
 	var req entity.OrderUpdate
 	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
 	if code != 0 {
@@ -276,6 +284,10 @@ func (r *OrderRoutes) updateOrder(c *gin.Context) {
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 func (r *OrderRoutes) deleteOrder(c *gin.Context) {
 	id := c.Param("id")
+	if _, err := uuid.Parse(id); err != nil {
+		r.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
+		return
+	}
 	err := r.OrderUseCase.Delete(c, id)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
