@@ -39,6 +39,7 @@ type (
 		StatusChangedTime *time.Time
 		CreatedAt         time.Time
 		UpdatedAt         time.Time
+		Location          string
 		Products          []OrderProduct // <--- Products field qo‘shamiz
 	}
 
