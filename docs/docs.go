@@ -7178,6 +7178,9 @@ const docTemplate = `{
                 "location": {
                     "type": "string"
                 },
+                "location_text": {
+                    "type": "string"
+                },
                 "order_status": {
                     "type": "string"
                 },
@@ -8350,6 +8353,9 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "location": {
+                    "type": "string"
+                },
+                "location_text": {
                     "type": "string"
                 },
                 "order_status": {

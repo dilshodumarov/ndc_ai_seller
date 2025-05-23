@@ -15,7 +15,7 @@ import (
 func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) (*entity.ListClients, error) {
 	fmt.Println(filter)
 	query := `
-		SELECT guid, platform_id, client_id,first_name, phone,location,is_block, created_at,
+		SELECT guid, platform_id, client_id,first_name, phone,location_text,location,is_block, created_at,
 		       user_name, from_chanel, order_status, goal
 		FROM client
 		WHERE bussnes_id=$1
@@ -23,7 +23,7 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 
 	args := []interface{}{}
 	argIdx := 1
-	args=append(args, filter.BussinesID)
+	args = append(args, filter.BussinesID)
 	argIdx++
 	// Filtrlash
 	if filter.ClientId > 0 {
@@ -91,21 +91,22 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 	var clients []entity.Client
 	for rows.Next() {
 		var c entity.Client
-	
+
 		var platformID, firstName sql.NullString
-		var phone, location sql.NullString
+		var phone, location, location_text sql.NullString
 		var userName, from, goal, orderStatus sql.NullString
 		var createdAt sql.NullTime
 		var isBlock sql.NullBool
 		var clientId sql.NullInt64
 		var id sql.NullString
-	
+
 		err := rows.Scan(
 			&id,
 			&platformID,
 			&clientId,
 			&firstName,
 			&phone,
+			&location_text,
 			&location,
 			&isBlock,
 			&createdAt,
@@ -117,7 +118,7 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 		if err != nil {
 			return nil, r.db.Error(err)
 		}
-	
+
 		if id.Valid {
 			c.ID = id.String
 		}
@@ -135,6 +136,9 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 		}
 		if location.Valid {
 			c.Location = location.String
+		}
+		if location_text.Valid {
+			c.LocationText = location_text.String
 		}
 		if isBlock.Valid {
 			c.IsBlock = isBlock.Bool
@@ -154,10 +158,9 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 		if goal.Valid {
 			c.Goal = goal.String
 		}
-	
+
 		clients = append(clients, c)
 	}
-	
 
 	// Count query
 	countQuery := `
@@ -167,7 +170,7 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 	`
 	argsCount := []interface{}{}
 	countArgIdx := 1
-	argsCount=append(argsCount, filter.BussinesID)
+	argsCount = append(argsCount, filter.BussinesID)
 	countArgIdx++
 	if filter.Search != "" {
 		searchParam := "%" + filter.Search + "%"
@@ -222,7 +225,7 @@ func (r *userRepo) ListClients(ctx context.Context, filter entity.ClientFilter) 
 
 func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client, error) {
 	query := `
-		SELECT guid, platform_id, client_id,first_name, phone, location,is_block,created_at, 
+		SELECT guid, platform_id, client_id,first_name, phone, location_text,location,is_block,created_at, 
 		       user_name, from_chanel, order_status, goal
 		FROM client
 		WHERE guid = $1
@@ -231,20 +234,21 @@ func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client
 	var c entity.Client
 	var (
 		userName, from, orderStatus, goal sql.NullString
-		phone, location                   sql.NullString
+		phone, location, location_text    sql.NullString
 	)
-	
+
 	err := r.db.QueryRow(ctx, query, id).Scan(
 		&c.ID,
 		&c.PlatformID,
 		&c.ClientId,
 		&c.FirstName,
-	
+
 		&phone,
+		&location_text,
 		&location,
 		&c.IsBlock,
 		&c.CreatedAt,
-	
+
 		&userName,
 		&from,
 		&orderStatus,
@@ -256,13 +260,16 @@ func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client
 		}
 		return nil, r.db.Error(err)
 	}
-	
+
 	// Tekshirishlar
 	if phone.Valid {
 		c.Phone = phone.String
 	}
 	if location.Valid {
 		c.Location = location.String
+	}
+	if location_text.Valid {
+		c.LocationText = location_text.String
 	}
 	if userName.Valid {
 		c.UserName = userName.String
@@ -276,7 +283,6 @@ func (r *userRepo) GetClientByID(ctx context.Context, id string) (*entity.Client
 	if goal.Valid {
 		c.Goal = goal.String
 	}
-	
 
 	return &c, nil
 }
@@ -309,6 +315,11 @@ func (r *userRepo) BlockUser(ctx context.Context, req entity.UpdateUser) error {
 	if req.Location != "" {
 		setParts = append(setParts, fmt.Sprintf("location = $%d", argID))
 		args = append(args, req.Location)
+		argID++
+	}
+	if req.LocationText != "" {
+		setParts = append(setParts, fmt.Sprintf("location_text = $%d", argID))
+		args = append(args, req.LocationText)
 		argID++
 	}
 	if req.Goal != "" {
@@ -345,7 +356,6 @@ func (r *userRepo) BlockUser(ctx context.Context, req entity.UpdateUser) error {
 	}
 	return nil
 }
-
 
 func (r *userRepo) PauzChat(ctx context.Context, req entity.PauzeChat) error {
 	query := `

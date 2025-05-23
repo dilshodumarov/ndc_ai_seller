@@ -98,51 +98,52 @@ type (
 // entity.ClientFilter
 type ClientFilter struct {
 	Search      string `json:"search"`
-	ClientId    int `json:"client_id"`
+	ClientId    int    `json:"client_id"`
 	Phone       string `json:"phone"`
 	From        string `json:"from"`
 	Goal        string `json:"goal"`
 	OrderStatus string `json:"order_status"`
 	Page        int    `json:"page"`
 	Limit       int    `json:"limit"`
-	BussinesID    string
+	BussinesID  string
 }
 
 // entity.Client
 type Client struct {
-	ID          string    `json:"id"`
-	PlatformID  string    `json:"platform_id"`
-	ClientId    int    `json:"client_id"`
-	FirstName   string    `json:"first_name"`
-	Phone       string    `json:"phone"`
-	CreatedAt   time.Time `json:"created_at"`
-	UserName    string    `json:"user_name"`
-	From        string    `json:"from"`
-	OrderStatus string    `json:"order_status"`
-	Goal        string    `json:"goal"`
-	IsBlock     bool      `json:"is_block"`
-	Location    string    `json:"location"`
+	ID           string    `json:"id"`
+	PlatformID   string    `json:"platform_id"`
+	ClientId     int       `json:"client_id"`
+	FirstName    string    `json:"first_name"`
+	Phone        string    `json:"phone"`
+	CreatedAt    time.Time `json:"created_at"`
+	UserName     string    `json:"user_name"`
+	From         string    `json:"from"`
+	OrderStatus  string    `json:"order_status"`
+	Goal         string    `json:"goal"`
+	IsBlock      bool      `json:"is_block"`
+	Location     string    `json:"location"`
+	LocationText string    `json:"location_text"`
 }
 
 type ListClients struct {
-	Items   []Client `json:"items"`
-	Count   int      `json:"count"`
-	Page    int      `json:"page"`
-	Limit   int      `json:"limit"`
+	Items []Client `json:"items"`
+	Count int      `json:"count"`
+	Page  int      `json:"page"`
+	Limit int      `json:"limit"`
 }
 
-
 type UpdateUser struct {
-	FirstName   string `json:"first_name"`
-	Phone       string `json:"phone"`
-	UserName    string `json:"user_name"`
-	OrderStatus string `json:"order_status"`
-	Location    string `json:"location"`
-	Goal        string `json:"goal"`
-	Block       *bool  `json:"is_block"`
+	FirstName    string `json:"first_name"`
+	Phone        string `json:"phone"`
+	UserName     string `json:"user_name"`
+	OrderStatus  string `json:"order_status"`
+	Location     string `json:"location"`
+	LocationText string `json:"location_text"`
+	Goal         string `json:"goal"`
+	Block        *bool  `json:"is_block"`
 
-	BusinessID  string `json:"business_id"`
-	Id  string         `json:"id"`
+	BusinessID string `json:"business_id"`
+	Id         string `json:"id"`
 }
 
 type UpdateUserForSwagger struct {
@@ -151,13 +152,11 @@ type UpdateUserForSwagger struct {
 	UserName    string `json:"user_name"`
 	OrderStatus string `json:"order_status"`
 	Location    string `json:"location"`
+	LocationText string `json:"location_text"`
 	Goal        string `json:"goal"`
 	Block       *bool  `json:"is_block"`
-	Id          string  `json:"id"`
+	Id          string `json:"id"`
 }
-
-
-
 
 type PauzeChat struct {
 	PlatformId string `json:"platform_id"`

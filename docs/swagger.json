@@ -7171,6 +7171,9 @@
                 "location": {
                     "type": "string"
                 },
+                "location_text": {
+                    "type": "string"
+                },
                 "order_status": {
                     "type": "string"
                 },
@@ -8343,6 +8346,9 @@
                     "type": "boolean"
                 },
                 "location": {
+                    "type": "string"
+                },
+                "location_text": {
                     "type": "string"
                 },
                 "order_status": {

@@ -67,6 +67,8 @@ definitions:
         type: boolean
       location:
         type: string
+      location_text:
+        type: string
       order_status:
         type: string
       phone:
@@ -835,6 +837,8 @@ definitions:
       is_block:
         type: boolean
       location:
+        type: string
+      location_text:
         type: string
       order_status:
         type: string
