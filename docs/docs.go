@@ -6712,6 +6712,14 @@ const docTemplate = `{
                     "SETTINGS"
                 ],
                 "summary": "List all order statuses for a business",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "status name",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

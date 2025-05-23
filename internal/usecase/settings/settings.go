@@ -47,11 +47,11 @@ func (ss *settingsService) Delete(ctx context.Context, guid string) error {
 	return ss.settingsRepo.Delete(ctx, guid)
 }
 
-func (ss *settingsService) List(ctx context.Context, businessID string) ([]*entity.OrderStatus, error) {
+func (ss *settingsService)  List(ctx context.Context, req entity.OrderStatusFilter) ([]*entity.OrderStatus, error) {
 	ctx, cancel := context.WithTimeout(ctx, ss.ctxTimeout)
 	defer cancel()
 
-	return ss.settingsRepo.List(ctx, businessID)
+	return ss.settingsRepo.List(ctx, req)
 }
 
 func (ss *settingsService) GetStatusByName(ctx context.Context, name, bussnesid string) (*string, error) {

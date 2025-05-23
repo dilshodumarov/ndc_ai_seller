@@ -50,7 +50,6 @@ func (r *settingsRepo) CreateDefaultOrderStatuses(ctx context.Context, businessI
 	return nil
 }
 
-
 // Get retrieves a specific order status with type name.
 func (r *settingsRepo) Get(ctx context.Context, guid string) (*entity.OrderStatus, error) {
 	query := `
@@ -97,22 +96,34 @@ func (r *settingsRepo) Delete(ctx context.Context, guid string) error {
 }
 
 // List returns all order statuses with their type names for a business.
-func (r *settingsRepo) List(ctx context.Context, businessID string) ([]*entity.OrderStatus, error) {
-	// Step 1: Tekshir order_status mavjudmi
+func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) ([]*entity.OrderStatus, error) {
 	checkQuery := `
 		SELECT EXISTS (
 			SELECT 1 FROM order_status WHERE business_id = $1
 		)
 	`
 	var exists bool
-	if err := r.db.QueryRow(ctx, checkQuery, businessID).Scan(&exists); err != nil {
+	if err := r.db.QueryRow(ctx, checkQuery, req.BusinessID).Scan(&exists); err != nil {
 		return nil, fmt.Errorf("check order_status exists: %w", err)
 	}
 
-	var query string
+	var (
+		query          string
+		args           = []interface{}{req.BusinessID}
+		countCondition string
+	)
+
+	if req.Status != "" {
+
+		countCondition = "CASE WHEN o.status = $2 AND o.deleted_at IS NULL THEN o.guid END"
+		args = append(args, req.Status)
+	} else {
+
+		countCondition = "CASE WHEN o.deleted_at IS NULL THEN o.guid END"
+	}
+
 	if exists {
-		// order_status mavjud bo‘lsa
-		query = `
+		query = fmt.Sprintf(`
 			SELECT 
 				os.guid,
 				os.business_id,
@@ -121,7 +132,7 @@ func (r *settingsRepo) List(ctx context.Context, businessID string) ([]*entity.O
 				ost.name as type_name,
 				ost.status_number,
 				os.created_at,
-				COUNT(o.guid) AS order_count
+				COUNT(%s) AS order_count
 			FROM order_status_type ost
 			LEFT JOIN order_status os 
 				ON os.type_id = ost.guid AND os.business_id = $1
@@ -130,10 +141,9 @@ func (r *settingsRepo) List(ctx context.Context, businessID string) ([]*entity.O
 			GROUP BY os.guid, os.business_id, os.type_id, os.custom_name, os.created_at,
 			         ost.name, ost.status_number
 			ORDER BY ost.status_number
-		`
+		`, countCondition)
 	} else {
-		// order_status yo‘q bo‘lsa
-		query = `
+		query = fmt.Sprintf(`
 			SELECT 
 				NULL AS guid,
 				NULL AS business_id,
@@ -142,16 +152,16 @@ func (r *settingsRepo) List(ctx context.Context, businessID string) ([]*entity.O
 				ost.name AS type_name,
 				ost.status_number,
 				NULL AS created_at,
-				COUNT(o.guid) AS order_count
+				COUNT(%s) AS order_count
 			FROM order_status_type ost
 			LEFT JOIN "order" o 
 				ON o.status = ost.name AND o.business_id = $1
 			GROUP BY ost.name, ost.status_number
 			ORDER BY ost.status_number
-		`
+		`, countCondition)
 	}
 
-	rows, err := r.db.Query(ctx, query, businessID)
+	rows, err := r.db.Query(ctx, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("List order_status: %w", err)
 	}
@@ -179,7 +189,6 @@ func (r *settingsRepo) List(ctx context.Context, businessID string) ([]*entity.O
 			return nil, fmt.Errorf("List scan: %w", err)
 		}
 
-		// Null bo'lishini tekshiramiz va kerakli structga o‘tkazamiz
 		if guid.Valid {
 			status.GUID = guid.String
 		}
@@ -569,7 +578,6 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 	  "user_message": "Buyurtma bekor qilindi"
 	}`,
 	}
-	
 
 	// Faqat keraklilar
 	keys := []string{"2", "3", "4", "5", "7"}
@@ -587,6 +595,3 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 
 	return result, nil
 }
-
-
-

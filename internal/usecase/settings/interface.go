@@ -10,7 +10,7 @@ type SettingsStorage interface {
 	Get(ctx context.Context, guid string) (*entity.OrderStatus, error)
 	Update(ctx context.Context, req *entity.UpdateOrderStatusRequest) error
 	Delete(ctx context.Context, guid string) error
-	List(ctx context.Context, businessID string) ([]*entity.OrderStatus, error)
+	List(ctx context.Context, req entity.OrderStatusFilter) ([]*entity.OrderStatus, error)
 	GetStatusByName(ctx context.Context, name,bussnesid string) (*string, error)
 	CreateSettings(ctx context.Context, req *entity.CreateSettingsRequest) error
 	GetSettings(ctx context.Context, guid string) (*entity.Settings, error)

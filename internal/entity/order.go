@@ -155,6 +155,11 @@ type OrderStatus struct {
 	Prompts      PromptOrderResponse `json:"prompts"`
 }
 
+type OrderStatusFilter struct {
+	BusinessID string
+	Status     string
+}
+
 
 type CreateOrderStatusRequest struct {
 	BusinessID string `json:"business_id"`

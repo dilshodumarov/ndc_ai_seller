@@ -161,15 +161,20 @@ func (r *settingsRoutes) DeleteOrderStatus(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Security BearerAuth
+// @Param status query string false "status name"
 // @Success 200 {object} status_http.Response{data=[]entity.OrderStatus} "OK"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 // @Router /settings/order-status/list [get]
 func (r *settingsRoutes) ListOrderStatus(c *gin.Context) {
+	Status:=c.Query("status")
 	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
 	if code != 0 {
 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}
-	res, err := r.settingsUC.List(c, BusinessID)
+	res, err := r.settingsUC.List(c, entity.OrderStatusFilter{
+		BusinessID: BusinessID,
+		Status: Status,
+	})
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
@@ -433,7 +438,7 @@ func (r *settingsRoutes) GetPromptOrders(c *gin.Context) {
 		return
 	}
 
-	OrderStatus, err := r.settingsUC.List(c, BusinessID)
+	OrderStatus, err := r.settingsUC.List(c, entity.OrderStatusFilter{BusinessID: BusinessID})
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
