@@ -370,9 +370,13 @@ definitions:
         $ref: '#/definitions/entity.ClientInfo'
       createdAt:
         type: string
+      description:
+        type: string
       id:
         type: string
       imageUrl:
+        type: string
+      location:
         type: string
       locationURL:
         type: string

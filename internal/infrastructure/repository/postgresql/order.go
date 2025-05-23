@@ -68,7 +68,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 	query := `
 	SELECT 
 		o.guid, o.order_id,o.status_number,o.image_url,o.business_id,o.platform,o.location_url, o.status, o.total_price, 
-		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,o.location,
+		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,o.location,o.user_note,
 
 		c.guid, c.first_name, c.phone, c.user_name,
 
@@ -104,11 +104,12 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 			username      sql.NullString
 			paymentMethod sql.NullString
 			location      sql.NullString
+			description   sql.NullString
 		)
 
 		err = rows.Scan(
 			&o.ID, &o.OrderId, &o.StatusNumber, &imageurl, &o.BusinessID, &o.Platform, &o.LocationURL, &o.Status, &o.TotalPrice,
-			&paymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,&location,
+			&paymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,&location,&description,
 
 			&clientGUID, &clientName, &clientPhone, &username, // client
 
@@ -135,6 +136,9 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 		}
 		if location.Valid {
 			order.Location = location.String
+		}
+		if description.Valid {
+			order.Description = description.String
 		}
 		if paymentMethod.Valid {
 			order.PaymentMethod = paymentMethod.String
@@ -272,7 +276,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		o.guid, o.order_id, o.status_number, o.image_url,
 		c.guid, c.first_name, c.phone, c.user_name,
 		o.business_id, o.platform, o.location_url, o.status, o.total_price,
-		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,
+		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,o.location,o.user_note,
 		os.custom_name,
 		p.guid, p.name, p.image_url, p.cost,
 		op.count, op.total_price
@@ -304,6 +308,8 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			primageURL                          sql.NullString
 			username                            sql.NullString
 			paymentMethod                       sql.NullString
+			location      sql.NullString
+			description   sql.NullString
 		)
 
 		if err := rows.Scan(
@@ -314,7 +320,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			&clientGUID, &clientName, &clientPhone, &username,
 			&order.BusinessID, &order.Platform, &order.LocationURL, &order.Status,
 			&order.TotalPrice, &paymentMethod,
-			&nullStatusChangedTime, &order.CreatedAt, &order.UpdatedAt,
+			&nullStatusChangedTime, &order.CreatedAt, &order.UpdatedAt,&location,&description,
 			&nullStatusName,
 			&product.ProductID, &product.Name, &primageURL, &product.Cost,
 			&product.Count, &product.ProductTotalPrice,
@@ -333,6 +339,12 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		}
 		if paymentMethod.Valid {
 			order.PaymentMethod = paymentMethod.String
+		}
+		if location.Valid {
+			order.Location = location.String
+		}
+		if description.Valid {
+			order.Description = description.String
 		}
 
 		if nullStatusName.Valid {

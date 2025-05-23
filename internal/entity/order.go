@@ -2,8 +2,6 @@ package entity
 
 import "time"
 
-
-
 type (
 	// Order
 
@@ -40,37 +38,38 @@ type (
 		CreatedAt         time.Time
 		UpdatedAt         time.Time
 		Location          string
+		Description       string
 		Products          []OrderProduct // <--- Products field qo‘shamiz
+		
 	}
 
 	ClientInfo struct {
-		GUID  string
-		Name  string
-		Phone string
+		GUID     string
+		Name     string
+		Phone    string
 		UserName string
 	}
-	
+
 	OrderProduct struct {
-		ProductID        string
-		Name             string
-		ImageURL         string
-		Cost             int
-		Count            int
+		ProductID         string
+		Name              string
+		ImageURL          string
+		Cost              int
+		Count             int
 		ProductTotalPrice int // order_products.price
 	}
-	
 
 	OrderUpdate struct {
 		ID            string `json:"id"`
 		Status        string `json:"status"`
 		LocationURL   string `json:"location_url"`
 		PaymentMethod string `json:"payment_method"`
-		BussnesId     string  
+		BussnesId     string
 		StatusNumber  int
 		StatusID      *string
 	}
 	OrderUpdateForSwagger struct {
-		Status        string `json:"status"`
+		Status string `json:"status"`
 		// LocationURL   string `json:"location_url"`
 		// PaymentMethod string `json:"payment_method"`
 	}
@@ -90,28 +89,25 @@ type (
 		Search        string
 		Daye          int
 	}
-	 OrderProductBuOrderID struct {
-		ProductID             string
-		Name                  string
-		ImageURL              string
-		Cost                  int
-		Status                bool
-		Discount              int
-		DiscountCost          int
-		ShortInfo             string
-		Description           string
-		CreatedAt             time.Time
-		UpdatedAt             time.Time
-	
+	OrderProductBuOrderID struct {
+		ProductID    string
+		Name         string
+		ImageURL     string
+		Cost         int
+		Status       bool
+		Discount     int
+		DiscountCost int
+		ShortInfo    string
+		Description  string
+		CreatedAt    time.Time
+		UpdatedAt    time.Time
+
 		Count                 int
 		Price                 float64
 		ProductTotalPrice     float64
 		OrderProductCreatedAt time.Time
 	}
-	
-	
 )
-
 
 type (
 	// OrderProducts
@@ -143,16 +139,15 @@ type (
 	}
 )
 
-
 type OrderStatus struct {
-	GUID         string `json:"guid"`
-	BusinessID   string `json:"business_id"`
-	TypeID       string `json:"type_id"`
-	CustomName   string `json:"custom_name"`
-	TypeName     string `json:"type_name"`
-	StatusNumber int    `json:"status_number"`
-	OrderCount   int    `json:"order_count"` // yangi maydon
-	CreatedAt    time.Time `json:"created_at"`
+	GUID         string              `json:"guid"`
+	BusinessID   string              `json:"business_id"`
+	TypeID       string              `json:"type_id"`
+	CustomName   string              `json:"custom_name"`
+	TypeName     string              `json:"type_name"`
+	StatusNumber int                 `json:"status_number"`
+	OrderCount   int                 `json:"order_count"` // yangi maydon
+	CreatedAt    time.Time           `json:"created_at"`
 	Prompts      PromptOrderResponse `json:"prompts"`
 }
 
@@ -160,7 +155,6 @@ type OrderStatusFilter struct {
 	BusinessID string
 	Status     string
 }
-
 
 type CreateOrderStatusRequest struct {
 	BusinessID string `json:"business_id"`
@@ -174,8 +168,8 @@ type CreateOrderStatusRequestForswagger struct {
 }
 
 type UpdateOrderStatusRequest struct {
-	GUID       string `json:"guid"`
-	CustomName string `json:"custom_name"`
-	PromtNumber int   `json:"promt_number"`
+	GUID        string `json:"guid"`
+	CustomName  string `json:"custom_name"`
+	PromtNumber int    `json:"promt_number"`
 	Promt       string `json:"promt"`
 }

@@ -7647,10 +7647,16 @@ const docTemplate = `{
                 "createdAt": {
                     "type": "string"
                 },
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
                 "imageUrl": {
+                    "type": "string"
+                },
+                "location": {
                     "type": "string"
                 },
                 "locationURL": {
