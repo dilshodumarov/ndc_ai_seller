@@ -8299,6 +8299,12 @@ const docTemplate = `{
                 "businessName": {
                     "type": "string"
                 },
+                "chatTokenInt": {
+                    "type": "integer"
+                },
+                "chat_token": {
+                    "type": "string"
+                },
                 "errorMessage": {
                     "type": "string"
                 },

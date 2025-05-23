@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
@@ -259,8 +260,14 @@ func (r *settingsRoutes) UpdateSettings(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-
-	err := r.settingsUC.UpdateSettings(c, &req)
+	TokenInt,err:=strconv.Atoi(req.ChatToken)
+	if err!=nil{
+		fmt.Println(err)
+		r.handleResponse(c, status_http.BadRequest, err.Error())
+		return
+	}
+	req.ChatTokenInt=TokenInt
+	err = r.settingsUC.UpdateSettings(c, &req)
 	if err != nil {
 		if err.Error() == "no rows affected" {
 			r.handleResponse(c, status_http.NotFound, "Settings not found")

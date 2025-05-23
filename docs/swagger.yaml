@@ -801,6 +801,10 @@ definitions:
         type: string
       businessName:
         type: string
+      chat_token:
+        type: string
+      chatTokenInt:
+        type: integer
       errorMessage:
         type: string
       firstMessage:

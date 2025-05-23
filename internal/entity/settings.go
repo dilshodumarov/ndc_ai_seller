@@ -24,6 +24,7 @@ type Settings struct {
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
 	DeletedAt         *time.Time
+	ChatToken         string `json:"chat_token"`
 }
 
 type CreateSettingsRequest struct {
@@ -40,6 +41,8 @@ type UpdateSettingsRequest struct {
 	TokenLimit        int    `json:"token_limit"`
 	IntelligenceLevel int    `json:"intelligence_level"`
 	StopUntil         int    `json:"stop_until"`
+	ChatToken         string `json:"chat_token"`
+	ChatTokenInt      int
 	BrandName         string
 	BusinessName      string
 	ErrorMessage      string

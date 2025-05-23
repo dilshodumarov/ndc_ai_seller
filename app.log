@@ -27602,3 +27602,18 @@ main.main.func1
 2025-05-23T18:36:43.588+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-23T18:47:28.756+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-23T18:47:41.717+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-23T18:47:41.717+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-05-23T18:47:47.788+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-23T18:47:49.064+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-05-23T18:48:15.235+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/list 
+2025-05-23T18:51:47.031+0500	INFO	app/main.go:40	api gateway service stops
+2025-05-23T18:51:52.482+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-05-23T18:51:55.345+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/list 
+2025-05-23T18:52:39.044+0500	INFO	middleware/logger.go:26	::1 - PUT /v1/settings/ai/update 
+2025-05-23T18:52:53.542+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/f7818c10-5306-49f9-a089-b2be205f51fe 
+2025-05-23T18:53:06.952+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/ai/list 
+2025-05-23T18:53:12.201+0500	INFO	app/main.go:40	api gateway service stops

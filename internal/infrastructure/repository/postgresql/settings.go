@@ -250,7 +250,7 @@ func (r *settingsRepo) CreateSettings(ctx context.Context, req *entity.CreateSet
 
 func (r *settingsRepo) GetSettings(ctx context.Context, guid string) (*entity.Settings, error) {
 	query := `
-		SELECT guid, name, status, business_id, prompt_text, prompt_order,
+		SELECT guid, name, status, business_id, chat_token,prompt_text, prompt_order,
 		       waiting_time, prompt_product, token_limit, intelligence_level,
 		       stop_until, created_at, updated_at, deleted_at
 		FROM settings
@@ -261,7 +261,7 @@ func (r *settingsRepo) GetSettings(ctx context.Context, guid string) (*entity.Se
 	var s entity.Settings
 
 	err := row.Scan(
-		&s.GUID, &s.Name, &s.Status, &s.BusinessID, &s.PromptText,
+		&s.GUID, &s.Name, &s.Status, &s.BusinessID, &s.ChatToken,&s.PromptText,
 		&s.PromptOrder, &s.WaitingTime, &s.PromptProduct,
 		&s.TokenLimit, &s.IntelligenceLevel, &s.StopUntil,
 		&s.CreatedAt, &s.UpdatedAt, &s.DeletedAt,
@@ -305,6 +305,11 @@ func (r *settingsRepo) UpdateSettings(ctx context.Context, req *entity.UpdateSet
 	if req.TokenLimit != 0 {
 		setParts = append(setParts, fmt.Sprintf("token_limit=$%d", argID))
 		args = append(args, req.TokenLimit)
+		argID++
+	}
+	if req.ChatTokenInt != 0 {
+		setParts = append(setParts, fmt.Sprintf("chat_token=$%d", argID))
+		args = append(args, req.ChatTokenInt)
 		argID++
 	}
 	if req.IntelligenceLevel != 0 {
@@ -382,7 +387,7 @@ func (r *settingsRepo) DeleteSettings(ctx context.Context, guid string) error {
 
 func (r *settingsRepo) ListSettingsByBusinessID(ctx context.Context, businessID string) ([]*entity.Settings, error) {
 	query := `
-		SELECT guid, name, brand_name, business_name, status, business_id, 
+		SELECT guid, name, brand_name, business_name, chat_token,status, business_id, 
 		       prompt_text, prompt_order, waiting_time, prompt_product, 
 		       token_limit, intelligence_level, error_message, first_message, 
 		       is_stop, stop_until, created_at, updated_at, deleted_at
@@ -409,7 +414,7 @@ func (r *settingsRepo) ListSettingsByBusinessID(ctx context.Context, businessID 
 		)
 
 		err := rows.Scan(
-			&s.GUID, &name, &brandName, &businessName, &status, &s.BusinessID,
+			&s.GUID, &name, &brandName, &businessName, &s.ChatToken,&status, &s.BusinessID,
 			&promptText, &promptOrder, &waitingTime, &promptProduct,
 			&tokenLimit, &intelligenceLevel, &errorMessage, &firstMessage,
 			&isStop, &stopUntil, &createdAt, &updatedAt, &deletedAt,
