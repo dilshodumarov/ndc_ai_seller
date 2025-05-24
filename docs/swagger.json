@@ -7045,8 +7045,7 @@
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/entity.BotIntegrationResponse"
                         }
                     },
                     "400": {
@@ -7123,6 +7122,17 @@
                     "type": "string"
                 },
                 "response": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.BotIntegrationResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
                     "type": "string"
                 }
             }
@@ -7777,6 +7787,9 @@
                 "custom_name": {
                     "type": "string"
                 },
+                "fon_color": {
+                    "type": "string"
+                },
                 "guid": {
                     "type": "string"
                 },
@@ -8008,6 +8021,9 @@
                 "businessName": {
                     "type": "string"
                 },
+                "chat_token": {
+                    "type": "string"
+                },
                 "createdAt": {
                     "type": "string"
                 },
@@ -8165,6 +8181,9 @@
             "type": "object",
             "properties": {
                 "custom_name": {
+                    "type": "string"
+                },
+                "fon_color": {
                     "type": "string"
                 },
                 "guid": {

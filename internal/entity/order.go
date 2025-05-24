@@ -40,7 +40,7 @@ type (
 		Location          string
 		Description       string
 		Products          []OrderProduct // <--- Products field qo‘shamiz
-		
+
 	}
 
 	ClientInfo struct {
@@ -146,6 +146,7 @@ type OrderStatus struct {
 	CustomName   string              `json:"custom_name"`
 	TypeName     string              `json:"type_name"`
 	StatusNumber int                 `json:"status_number"`
+	FonColor     string              `json:"fon_color"`
 	OrderCount   int                 `json:"order_count"` // yangi maydon
 	CreatedAt    time.Time           `json:"created_at"`
 	Prompts      PromptOrderResponse `json:"prompts"`
@@ -172,4 +173,5 @@ type UpdateOrderStatusRequest struct {
 	CustomName  string `json:"custom_name"`
 	PromtNumber int    `json:"promt_number"`
 	Promt       string `json:"promt"`
+	FonColor    string `json:"fon_color"`
 }

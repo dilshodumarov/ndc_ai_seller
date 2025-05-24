@@ -7052,8 +7052,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/entity.BotIntegrationResponse"
                         }
                     },
                     "400": {
@@ -7130,6 +7129,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "response": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.BotIntegrationResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
                     "type": "string"
                 }
             }
@@ -7784,6 +7794,9 @@ const docTemplate = `{
                 "custom_name": {
                     "type": "string"
                 },
+                "fon_color": {
+                    "type": "string"
+                },
                 "guid": {
                     "type": "string"
                 },
@@ -8015,6 +8028,9 @@ const docTemplate = `{
                 "businessName": {
                     "type": "string"
                 },
+                "chat_token": {
+                    "type": "string"
+                },
                 "createdAt": {
                     "type": "string"
                 },
@@ -8172,6 +8188,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "custom_name": {
+                    "type": "string"
+                },
+                "fon_color": {
                     "type": "string"
                 },
                 "guid": {

@@ -109,7 +109,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 
 		err = rows.Scan(
 			&o.ID, &o.OrderId, &o.StatusNumber, &imageurl, &o.BusinessID, &o.Platform, &o.LocationURL, &o.Status, &o.TotalPrice,
-			&paymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt,&location,&description,
+			&paymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt, &location, &description,
 
 			&clientGUID, &clientName, &clientPhone, &username, // client
 
@@ -308,10 +308,10 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			primageURL                          sql.NullString
 			username                            sql.NullString
 			paymentMethod                       sql.NullString
-			location      sql.NullString
-			description   sql.NullString
+			location                            sql.NullString
+			description                         sql.NullString
 		)
-	
+
 		if err := rows.Scan(
 			&order.ID,
 			&order.OrderId,
@@ -320,7 +320,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			&clientGUID, &clientName, &clientPhone, &username,
 			&order.BusinessID, &order.Platform, &order.LocationURL, &order.Status,
 			&order.TotalPrice, &paymentMethod,
-			&nullStatusChangedTime, &order.CreatedAt, &order.UpdatedAt,&location,&description,
+			&nullStatusChangedTime, &order.CreatedAt, &order.UpdatedAt, &location, &description,
 			&nullStatusName,
 			&product.ProductID, &product.Name, &primageURL, &product.Cost,
 			&product.Count, &product.ProductTotalPrice,
@@ -522,13 +522,14 @@ func buildWhereClause(filter *entity.OrderFilter, alias string) (string, []inter
 func (r *OrderRepo) GetProductsByOrderID(ctx context.Context, orderID string) ([]entity.OrderProductBuOrderID, error) {
 	query := `
 	SELECT 
-		p.guid, p.name, p.image_url, p.cost, p.status, p.discount_cost, p.discount,
+	p.guid, p.name, p.image_url, p.cost, p.status, p.discount_cost, p.discount,
 		p.short_info, p.description, p.created_at, p.updated_at,
-
 		op.count, op.price, op.total_price, op.created_at
-	FROM order_products op
+	FROM "order" o
+	JOIN "order" parent_order ON parent_order.guid = o.order_guid
+	JOIN order_products op ON parent_order.guid = op.order_id
 	JOIN product p ON op.product_id = p.guid
-	WHERE op.order_id = $1
+	WHERE o.guid = $1;
 	`
 
 	rows, err := r.db.Query(ctx, query, orderID)

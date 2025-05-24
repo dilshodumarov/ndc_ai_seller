@@ -13,16 +13,16 @@ import (
 
 type telegramRoutes struct {
 	handlers.BaseHandler
-	log *zap.Logger
-	cfg *config.Config
+	log      *zap.Logger
+	cfg      *config.Config
 	telegram telegram.TelegramAccount
 }
 
 // NewTelegramRoutes registers Telegram-related routes
 func NewTelegramRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) {
 	r := &telegramRoutes{
-		log: option.Logger,
-		cfg: option.Config,
+		log:      option.Logger,
+		cfg:      option.Config,
 		telegram: option.Telegram,
 	}
 
@@ -32,7 +32,7 @@ func NewTelegramRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		telegram.POST("/verify", r.SendTelegramVerify)
 		telegram.POST("/start-session", r.StartTelegramSession)
 		telegram.POST("/stop-session", r.StopTelegramSession)
-	
+
 	}
 }
 
@@ -72,7 +72,7 @@ func (h *telegramRoutes) SendTelegramCode(c *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Param verify body entity.CodeInput true "Verification input"
-// @Success 200 {object} map[string]interface{} "Success"
+// @Success 200 {object} entity.BotIntegrationResponse "Success"
 // @Failure 400 {object} map[string]interface{} "Bad Request"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /telegram/verify [post]
@@ -87,9 +87,9 @@ func (h *telegramRoutes) SendTelegramVerify(c *gin.Context) {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-	if resp.Code == 0{
-		_,err:=h.telegram.Create(c,entity.CreateTelegramAccountRequest{
-			Number: input.Phone,
+	if resp.Code == 0 {
+		_, err := h.telegram.Create(c, entity.CreateTelegramAccountRequest{
+			Number:     input.Phone,
 			BusinessID: input.BussnesId,
 		})
 		if err != nil {
@@ -102,8 +102,6 @@ func (h *telegramRoutes) SendTelegramVerify(c *gin.Context) {
 
 	c.JSON(200, resp)
 }
-
-
 
 // StartTelegramSession godoc
 // @Summary Start Telegram session
@@ -130,8 +128,8 @@ func (h *telegramRoutes) StartTelegramSession(c *gin.Context) {
 		return
 	}
 
-	err=h.telegram.Update(c,entity.UpdateTelegramAccountRequest{
-		Phone: input.Phone,
+	err = h.telegram.Update(c, entity.UpdateTelegramAccountRequest{
+		Phone:  input.Phone,
 		Status: "start",
 	})
 
@@ -141,7 +139,6 @@ func (h *telegramRoutes) StartTelegramSession(c *gin.Context) {
 	}
 	c.JSON(200, resp)
 }
-
 
 // StopTelegramSession godoc
 // @Summary Stop Telegram session
@@ -166,18 +163,17 @@ func (h *telegramRoutes) StopTelegramSession(c *gin.Context) {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-	err=h.telegram.Update(c,entity.UpdateTelegramAccountRequest{
-		Phone: input.Phone,
+	err = h.telegram.Update(c, entity.UpdateTelegramAccountRequest{
+		Phone:  input.Phone,
 		Status: "stop",
 	})
-	
+
 	if err != nil {
 		c.JSON(500, "server error")
 		return
 	}
 	c.JSON(200, resp)
 }
-
 
 // // ListTelegramSessions godoc
 // // @Summary List all active Telegram sessions

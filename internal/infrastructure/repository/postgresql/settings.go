@@ -73,14 +73,37 @@ func (r *settingsRepo) Get(ctx context.Context, guid string) (*entity.OrderStatu
 
 // Update modifies an existing order status.
 func (r *settingsRepo) Update(ctx context.Context, req *entity.UpdateOrderStatusRequest) error {
-	query := `
+	setParts := []string{}
+	args := []interface{}{}
+	argID := 1
+
+	if req.CustomName != "" {
+		setParts = append(setParts, fmt.Sprintf("custom_name = $%d", argID))
+		args = append(args, req.CustomName)
+		argID++
+	}
+
+	if req.FonColor != "" {
+		setParts = append(setParts, fmt.Sprintf("fon_color = $%d", argID))
+		args = append(args, req.FonColor)
+		argID++
+	}
+
+
+	args = append(args, req.GUID)
+
+	query := fmt.Sprintf(`
 		UPDATE order_status
-		SET custom_name = $1
-		WHERE guid = $2
-	`
-	_, err := r.db.Exec(ctx, query, req.CustomName, req.GUID)
+		SET %s
+		WHERE guid = $%d
+	`, joinStrings(setParts, ", "), argID)
+
+	res, err := r.db.Exec(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("Update order_status: %w", err)
+	}
+	if res.RowsAffected() == 0 {
+		return fmt.Errorf("no rows affected")
 	}
 	return nil
 }
@@ -127,6 +150,7 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 			SELECT 
 				os.guid,
 				os.business_id,
+				os.fon_color,
 				os.type_id,
 				os.custom_name,
 				ost.name as type_name,
@@ -147,6 +171,7 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 			SELECT 
 				NULL AS guid,
 				NULL AS business_id,
+				NULL AS fon_color,
 				NULL AS type_id,
 				NULL AS custom_name,
 				ost.name AS type_name,
@@ -170,7 +195,7 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 	var result []*entity.OrderStatus
 	for rows.Next() {
 		var (
-			guid, businessID, typeID, customName sql.NullString
+			guid, businessID, typeID, customName,fonColor sql.NullString
 			createdAt                            sql.NullTime
 			status                               entity.OrderStatus
 		)
@@ -178,6 +203,7 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 		err := rows.Scan(
 			&guid,
 			&businessID,
+			&fonColor,
 			&typeID,
 			&customName,
 			&status.TypeName,
@@ -197,6 +223,9 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 		}
 		if typeID.Valid {
 			status.TypeID = typeID.String
+		}
+		if fonColor.Valid {
+			status.FonColor = fonColor.String
 		}
 		if customName.Valid {
 			status.CustomName = customName.String
@@ -261,7 +290,7 @@ func (r *settingsRepo) GetSettings(ctx context.Context, guid string) (*entity.Se
 	var s entity.Settings
 
 	err := row.Scan(
-		&s.GUID, &s.Name, &s.Status, &s.BusinessID, &s.ChatToken,&s.PromptText,
+		&s.GUID, &s.Name, &s.Status, &s.BusinessID, &s.ChatToken, &s.PromptText,
 		&s.PromptOrder, &s.WaitingTime, &s.PromptProduct,
 		&s.TokenLimit, &s.IntelligenceLevel, &s.StopUntil,
 		&s.CreatedAt, &s.UpdatedAt, &s.DeletedAt,
@@ -414,7 +443,7 @@ func (r *settingsRepo) ListSettingsByBusinessID(ctx context.Context, businessID 
 		)
 
 		err := rows.Scan(
-			&s.GUID, &name, &brandName, &businessName, &s.ChatToken,&status, &s.BusinessID,
+			&s.GUID, &name, &brandName, &businessName, &s.ChatToken, &status, &s.BusinessID,
 			&promptText, &promptOrder, &waitingTime, &promptProduct,
 			&tokenLimit, &intelligenceLevel, &errorMessage, &firstMessage,
 			&isStop, &stopUntil, &createdAt, &updatedAt, &deletedAt,
@@ -471,7 +500,7 @@ func (r *settingsRepo) GetSettingsBussnesId(ctx context.Context, businessID stri
 	)
 
 	err := row.Scan(
-		&s.GUID, &name, &brandName, &businessName, &s.ChatToken,&status, &s.BusinessID,
+		&s.GUID, &name, &brandName, &businessName, &s.ChatToken, &status, &s.BusinessID,
 		&promptText, &promptOrder, &waitingTime, &promptProduct,
 		&tokenLimit, &intelligenceLevel, &errorMessage, &firstMessage,
 		&isStop, &stopUntil, &createdAt, &updatedAt, &deletedAt,
@@ -575,8 +604,8 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 	  "action": "set_order_location",
 	  "order_id": "...",
 	  "location_url": "URL",
-	  "location": "manzil",//optional
-	  "user_note":"qo'shimcha malumot"//optional
+	  "location": "manzil",
+	  "user_note":"qo'shimcha malumot",
 	  "user_message": "Buyurtma uchun manzil qabul qilindi"
 	}
 	}`,
@@ -596,9 +625,9 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 		result = append(result, entity.PromptOrderResponse{
 			Guid:      id,
 			Number:    k,
-			Prompt:    allPrompts[k],       // bazadan kelgan matn
-			IsHave:    true , 
-			PromtJson: staticJsons[k],      // statik JSON namunasi
+			Prompt:    allPrompts[k], // bazadan kelgan matn
+			IsHave:    true,
+			PromtJson: staticJsons[k], // statik JSON namunasi
 		})
 	}
 

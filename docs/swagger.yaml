@@ -38,6 +38,13 @@ definitions:
       response:
         type: string
     type: object
+  entity.BotIntegrationResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
   entity.Category:
     properties:
       created_at:
@@ -461,6 +468,8 @@ definitions:
         type: string
       custom_name:
         type: string
+      fon_color:
+        type: string
       guid:
         type: string
       order_count:
@@ -615,6 +624,8 @@ definitions:
         type: string
       businessName:
         type: string
+      chat_token:
+        type: string
       createdAt:
         type: string
       deletedAt:
@@ -718,6 +729,8 @@ definitions:
   entity.UpdateOrderStatusRequest:
     properties:
       custom_name:
+        type: string
+      fon_color:
         type: string
       guid:
         type: string
@@ -4839,8 +4852,7 @@ paths:
         "200":
           description: Success
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/entity.BotIntegrationResponse'
         "400":
           description: Bad Request
           schema:
