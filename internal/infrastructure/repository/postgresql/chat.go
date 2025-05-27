@@ -78,6 +78,15 @@ func (p *ChatRepo) List(ctx context.Context, req *entity.ListChatHistoryRequest)
 
 	args = append(args, req.BusinessID)
 	argID++
+	const defaultLimit = 100
+	const maxLimit = 1000
+
+	if req.Limit <= 0 {
+		req.Limit = defaultLimit
+	}
+	if req.Limit > maxLimit {
+		req.Limit = maxLimit
+	}
 
 	if req.ChatID > 0 {
 		where += fmt.Sprintf(" AND chat_id = $%d", argID)
@@ -85,7 +94,6 @@ func (p *ChatRepo) List(ctx context.Context, req *entity.ListChatHistoryRequest)
 		argID++
 	}
 
-	// Ixtiyoriy limit
 	if req.Limit > 0 {
 		limitStmt = fmt.Sprintf(" LIMIT $%d", argID)
 		args = append(args, req.Limit)
