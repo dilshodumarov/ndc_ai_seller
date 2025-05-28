@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	hashedBytes, err := bcrypt.GenerateFromPassword([]byte("7"), bcrypt.DefaultCost)
+	hashedBytes, err := bcrypt.GenerateFromPassword([]byte("adminai"), bcrypt.DefaultCost)
 	if err != nil {
 		return
 	}

@@ -146,18 +146,19 @@ func (r *OrderRoutes) listOrders(c *gin.Context) {
 	if err != nil {
 		offset = 0
 	}
-	// BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
-	// if code != 0 {
-	// 	r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	// }
+	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
+	if code != 0 {
+		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
 	filter := &entity.OrderFilter{
 		ClientID:      c.Query("client_id"),
-		BusinessID:    "",
+		BusinessID:    BusinessID,
 		Status:        c.Query("status"),
 		PaymentMethod: c.Query("payment_method"),
 		Platform:      c.Query("platform"),
 		Search:        c.Query("search"),
 		Daye:          day,
+		
 	}
 
 	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
