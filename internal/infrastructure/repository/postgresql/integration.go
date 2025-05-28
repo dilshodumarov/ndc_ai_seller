@@ -26,7 +26,7 @@ func NewIntegrationRepo(db *postgres.Postgres) *integrationRepo {
 func (r *integrationRepo) Create(ctx context.Context, req *entity.IntegrationCreate) error {
 	query := fmt.Sprintf(`
 		INSERT INTO %s (owner_id, integration_token, status) 
-		VALUES ($1, $2, $3, $4)
+		VALUES ($1, $2, $3)
 	`, r.tableName)
 
 	_, err := r.db.Exec(ctx, query,

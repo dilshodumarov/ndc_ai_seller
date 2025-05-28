@@ -75,6 +75,37 @@ func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
+
+	botURL := "http://ai-seller-bot:8081/start"
+
+	botReq := entity.BotIntegration{
+		Guid:  req.BusinessId,
+		Token: req.IntegrationToken,
+	}
+
+	body, err := json.Marshal(botReq)
+	if err != nil {
+		i.handleResponse(c, status_http.InternalServerError, "Failed to marshal bot request: "+err.Error())
+		return
+	}
+
+	resp, err := http.Post(botURL, "application/json", bytes.NewBuffer(body))
+	if err != nil {
+		i.handleResponse(c, status_http.InternalServerError, "Failed to send request to bot: "+err.Error())
+		return
+	}
+	defer resp.Body.Close()
+
+	var botResp entity.BotIntegrationResponse
+	if err := json.NewDecoder(resp.Body).Decode(&botResp); err != nil {
+		i.handleResponse(c, status_http.InternalServerError, "Failed to decode bot response: "+err.Error())
+		return
+	}
+	if botResp.Code != 0 {
+		i.handleResponse(c, status_http.InternalServerError, "Bot error: "+botResp.Message)
+		return
+	}
+
 	i.handleResponse(c, status_http.Created, "Integration created successfully")
 }
 
