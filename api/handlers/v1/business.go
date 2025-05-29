@@ -11,6 +11,7 @@ import (
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+	"sugurta/internal/pkg/helper"
 	"sugurta/internal/usecase/business"
 	"sugurta/internal/usecase/settings"
 
@@ -24,22 +25,21 @@ import (
 
 type businessRoutes struct {
 	handlers.BaseHandler
-	log           *zap.Logger
-	cfg           *config.Config
-	enforcer      *casbin.CachedEnforcer
-	bussnesUscase business.Business
+	log            *zap.Logger
+	cfg            *config.Config
+	enforcer       *casbin.CachedEnforcer
+	bussnesUscase  business.Business
 	settingsUscase settings.SettingsStorage
 }
 
 // NewAuthRoutes creates a new auth routes controller
 func NewBusinessRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) {
 	r := &businessRoutes{
-		log:           option.Logger,
-		cfg:           option.Config,
-		enforcer:      option.Enforcer,
-		bussnesUscase: option.Business,
+		log:            option.Logger,
+		cfg:            option.Config,
+		enforcer:       option.Enforcer,
+		bussnesUscase:  option.Business,
 		settingsUscase: option.Settings,
-		
 	}
 
 	business := apiV1Group.Group("/business")
@@ -74,11 +74,11 @@ func (b *businessRoutes) CreateBusiness(c *gin.Context) {
 		b.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	// UserId, code := helper.GetUserIdFromToken(c, b.Config)
-	// if code != 0 {
-	// 	b.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-	// }
-	//business.OwnerID=UserId
+	UserId, code := helper.GetUserIdFromToken(c, b.cfg)
+	if code != 0 {
+		b.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
+	business.OwnerID = UserId
 	if business.Name == "" {
 		b.handleResponse(c, status_http.BadRequest, "name is required")
 	}
@@ -91,13 +91,13 @@ func (b *businessRoutes) CreateBusiness(c *gin.Context) {
 		b.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
-	err=b.settingsUscase.CreateDefaultOrderStatuses(c,id)
+	err = b.settingsUscase.CreateDefaultOrderStatuses(c, id)
 	if err != nil {
 		fmt.Println(err)
 		b.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
-	err=b.settingsUscase.CreateSettings(c,&entity.CreateSettingsRequest{BusinessID: id})
+	err = b.settingsUscase.CreateSettings(c, &entity.CreateSettingsRequest{BusinessID: id})
 	if err != nil {
 		fmt.Println(err)
 		b.handleResponse(c, status_http.InternalServerError, err.Error())

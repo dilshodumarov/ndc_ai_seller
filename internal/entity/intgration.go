@@ -7,18 +7,17 @@ type IntegrationCreate struct {
 	IntegrationToken string `json:"integration_token"`
 }
 
-
 type IntegrationCreateForSwagger struct {
 	IntegrationToken string `json:"integration_token"`
 }
 
 type IntegrationUpdate struct {
-	ID                string `json:"id"`
-	Token             string `json:"token"`
+	ID    string `json:"id"`
+	Token string `json:"token"`
 }
 
 type IntegrationUpdateForSwagger struct {
-	Token             string `json:"token"`
+	Token string `json:"token"`
 }
 
 type IntegrationUpdateStatus struct {
@@ -58,10 +57,10 @@ type TokenUsage struct {
 }
 
 type IntegrationGetResponse struct {
-	Guid              string    `json:"guid"`
-	Status            string    `json:"status"`
-	StartedAt         time.Time `json:"started_at"`
-	StoppedAt         time.Time `json:"stopped_at"`
+	Guid      string    `json:"guid"`
+	Status    string    `json:"status"`
+	StartedAt time.Time `json:"started_at"`
+	StoppedAt time.Time `json:"stopped_at"`
 }
 
 type IntegrationUpdateResponse struct {
@@ -70,8 +69,9 @@ type IntegrationUpdateResponse struct {
 }
 
 type BotIntegration struct {
-	Token string `json:"token"`
-	Guid  string `json:"guid"`
+	Token      string `json:"token"`
+	BusinessID string `json:"business_id"`
+	UserID     string `json:"user_id"`
 }
 
 type BotNotification struct {
@@ -84,28 +84,22 @@ type BotIntegrationResponse struct {
 	Message string `json:"message"`
 }
 
-
-
-
 type IntegrationExistenceResponse struct {
 	TelegramAccount bool `json:"telegram_account"`
 	TelegramBot     bool `json:"telegram_bot"`
 	Instagram       bool `json:"instagram"`
 }
 
-
-
 type MessageRequest struct {
 	Phone  string `json:"phone"`
-	UserID string  `json:"user_id"`
+	UserID string `json:"user_id"`
 	Text   string `json:"text"`
 }
 
-
 type MessageResponse struct {
-	Phone  string `json:"phone"`
-	Fromid string `json:"fromid"` // `fromid` nomini to'g'ri qilib o'zgartirdim
-	Text   string `json:"text"`
-	Code   int `json:"code"`  // "Code" ni string sifatida o'zgartirdim
+	Phone   string `json:"phone"`
+	Fromid  string `json:"fromid"` // `fromid` nomini to'g'ri qilib o'zgartirdim
+	Text    string `json:"text"`
+	Code    int    `json:"code"`    // "Code" ni string sifatida o'zgartirdim
 	Message string `json:"message"` // Add a message field for better logging
 }

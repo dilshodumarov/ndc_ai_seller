@@ -66,6 +66,10 @@ func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 	if code != 0 {
 		i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}
+	UserId, code := helper.GetUserIdFromToken(c, i.cfg)
+	if code != 0 {
+		i.handleResponse(c, status_http.Unauthorized, "Unauthorized")
+	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		i.handleResponse(c, status_http.BadRequest, err.Error())
 		return
@@ -75,12 +79,13 @@ func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
-
-	botURL := "http://ai-seller-bot:8081/start"
+//ai-seller-bot
+	botURL := "http://localhost:8081/start"
 
 	botReq := entity.BotIntegration{
-		Guid:  req.BusinessId,
+		BusinessID:  req.BusinessId,
 		Token: req.IntegrationToken,
+		UserID:UserId,
 	}
 
 	body, err := json.Marshal(botReq)
@@ -138,7 +143,7 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 	if req.Token != "" {
 		BotStart := entity.BotIntegration{
 			Token: req.Token,
-			Guid:  res.GUID,
+			BusinessID:  res.GUID,
 		}
 		body, err := json.Marshal(BotStart)
 		if err != nil {
@@ -205,7 +210,7 @@ func (i *integrationRoutes) UpdateStatus(c *gin.Context) {
 		}
 
 		botReq := entity.BotIntegration{
-			Guid:  res.BusinessId,
+			BusinessID:  res.BusinessId,
 			Token: res.IntegrationToken,
 		}
 		if req.Status == "stop" {
