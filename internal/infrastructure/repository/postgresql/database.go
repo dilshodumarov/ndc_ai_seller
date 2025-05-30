@@ -93,21 +93,62 @@ func (r *databaseRepo) Delete(ctx context.Context, guid string) error {
 	return nil
 }
 
+func (r *databaseRepo) List(ctx context.Context, filter *entity.Filter) (*entity.Databaselist, error) {
+	var (
+		args     []interface{}
+		argID    = 1
+		where    = "WHERE 1=1"
+		limit    = 10
+		offset   = 0
+	)
 
-func (r *databaseRepo) List(ctx context.Context) ([]*entity.Database, error) {
-	query := `
+	// Search filter
+	if filter.Search != "" {
+		where += fmt.Sprintf(` AND (name ILIKE $%d OR description ILIKE $%d)`, argID, argID+1)
+		searchTerm := "%" + filter.Search + "%"
+		args = append(args, searchTerm, searchTerm)
+		argID += 2
+	}
+
+	// Limit and Page
+	if filter.Limit > 0 {
+		limit = filter.Limit
+	}
+	if filter.Page <= 0 {
+		filter.Page = 1
+	}
+	offset = (filter.Page - 1) * limit
+
+	// 🟡 1. Count query
+	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM "database" %s`, where)
+
+	var count int
+	if err := r.db.QueryRow(ctx, countQuery, args...).Scan(&count); err != nil {
+		return nil, fmt.Errorf("count databases: %w", err)
+	}
+
+	// 🟢 2. Data query with LIMIT + OFFSET
+	dataQuery := fmt.Sprintf(`
 		SELECT guid, name, description, tokens, created_at, updated_at
 		FROM "database"
+		%s
 		ORDER BY created_at DESC
-	`
+		LIMIT $%d OFFSET $%d
+	`, where, argID, argID+1)
 
-	rows, err := r.db.Query(ctx, query)
+	args = append(args, limit, offset)
+
+	rows, err := r.db.Query(ctx, dataQuery, args...)
 	if err != nil {
 		return nil, fmt.Errorf("list databases: %w", err)
 	}
 	defer rows.Close()
 
-	var results []*entity.Database
+	results := &entity.Databaselist{
+		Page:  filter.Page,
+		Limit: limit,
+		Count: count,
+	}
 
 	for rows.Next() {
 		var (
@@ -140,7 +181,7 @@ func (r *databaseRepo) List(ctx context.Context) ([]*entity.Database, error) {
 			db.Tokens = &val
 		}
 
-		results = append(results, &db)
+		results.Items = append(results.Items, db)
 	}
 
 	if err := rows.Err(); err != nil {

@@ -11,6 +11,19 @@ type Database struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+type Databaselist struct {
+	Items []Database `json:"items"`
+	Page  int        `json:"page"`
+	Limit int        `json:"limit"`
+	Count int        `json:"count"`
+}
+
+type Filter struct {
+	Search string `json:"search"`
+	Page   int    `json:"page"`
+	Limit  int    `json:"limit"`
+}
+
 type CreateDatabaseRequest struct {
 	Name        *string `json:"name"`
 	Description *string `json:"description"`

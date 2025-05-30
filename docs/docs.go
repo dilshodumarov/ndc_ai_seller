@@ -3354,7 +3354,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get list of all database entries",
+                "description": "Get list of all database entries with optional filtering and pagination",
                 "produces": [
                     "application/json"
                 ],
@@ -3362,6 +3362,26 @@ const docTemplate = `{
                     "DATABASE"
                 ],
                 "summary": "List all databases",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search keyword",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number (default is 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Items per page (default is 10)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "List of databases",

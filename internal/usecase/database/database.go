@@ -48,9 +48,9 @@ func (ds *databaseService) Delete(ctx context.Context, guid string) error {
 	return ds.databaseRepo.Delete(ctx, guid)
 }
 
-func (ds *databaseService) List(ctx context.Context) ([]*entity.Database, error) {
+func (ds *databaseService)List(ctx context.Context, filter *entity.Filter) (*entity.Databaselist, error) {
 	ctx, cancel := context.WithTimeout(ctx, ds.ctxTimeout)
 	defer cancel()
 
-	return ds.databaseRepo.List(ctx)
+	return ds.databaseRepo.List(ctx,filter)
 }

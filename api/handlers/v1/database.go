@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
@@ -173,15 +174,36 @@ func (r *databaseRoutes) DeleteDatabase(c *gin.Context) {
 
 // ListDatabases godoc
 // @Summary List all databases
-// @Description Get list of all database entries
+// @Description Get list of all database entries with optional filtering and pagination
 // @Tags DATABASE
 // @Produce json
 // @Security BearerAuth
-// @Success 200 {object} status_http.Response{data=[]entity.Database} "List of databases"
+// @Param search query string false "Search keyword"
+// @Param page query int false "Page number (default is 1)"
+// @Param limit query int false "Items per page (default is 10)"
+// @Success 200 {object} status_http.Response{data=entity.Databaselist} "List of databases"
 // @Failure 500 {object} status_http.Response{data=string} "Internal Server Error"
 // @Router /database/list [get]
 func (r *databaseRoutes) ListDatabases(c *gin.Context) {
-	list, err := r.dbUsecase.List(c)
+	var filter entity.Filter
+
+	filter.Search = c.Query("search")
+
+	// page
+	if p := c.Query("page"); p != "" {
+		if page, err := strconv.Atoi(p); err == nil && page > 0 {
+			filter.Page = page
+		}
+	}
+
+	// limit
+	if l := c.Query("limit"); l != "" {
+		if limit, err := strconv.Atoi(l); err == nil && limit > 0 {
+			filter.Limit = limit
+		}
+	}
+
+	list, err := r.dbUsecase.List(c, &filter)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return

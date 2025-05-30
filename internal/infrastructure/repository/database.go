@@ -10,5 +10,5 @@ type Database interface {
 	GetByID(ctx context.Context, guid string) (*entity.Database, error)
 	Update(ctx context.Context, req *entity.UpdateDatabaseRequest) error
 	Delete(ctx context.Context, guid string) error
-	List(ctx context.Context) ([]*entity.Database, error)
+	List(ctx context.Context, filter *entity.Filter) (*entity.Databaselist, error)
 }
