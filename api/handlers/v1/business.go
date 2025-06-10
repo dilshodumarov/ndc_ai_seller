@@ -273,13 +273,19 @@ func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 		challenge := c.Query("hub.challenge")
 		verificationToken := c.Query("hub.verify_token")
 
+		log.Printf("Webhook Verification Attempt: token=%s, challenge=%s\n", verificationToken, challenge)
+
 		if verificationToken == "your_verification_token" {
+			log.Println("Webhook successfully verified!")
 			c.String(http.StatusOK, challenge)
 		} else {
-			fmt.Println("Baortttt")
+			log.Println("Webhook verification failed: invalid token")
 			c.AbortWithStatus(http.StatusForbidden)
 		}
+
 	case http.MethodPost:
+		log.Println("Webhook POST request received")
+
 		// Body o'qiladi
 		body, err := io.ReadAll(c.Request.Body)
 		if err != nil {
@@ -288,6 +294,8 @@ func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 			return
 		}
 		defer c.Request.Body.Close()
+
+		log.Printf("Raw Body: %s\n", string(body))
 
 		// JSON body unmarshal
 		var event map[string]interface{}
@@ -298,15 +306,18 @@ func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 		}
 
 		// Webhook event log
-		log.Printf("Instagram Event Received: %+v\n", event)
+		log.Printf("Parsed Instagram Webhook Event: %+v\n", event)
 
-		// TODO: Bu yerda xabarlarni saqlash, userga yuborish, notifikatsiya qilish va h.k.
+		// TODO: Xabarni saqlash, DM javob, admin panelga log yozish
 
 		c.Status(http.StatusOK)
+
 	default:
+		log.Printf("Unsupported method: %s\n", c.Request.Method)
 		c.AbortWithStatus(http.StatusMethodNotAllowed)
 	}
 }
+
 
 func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 	code := c.Query("code")
