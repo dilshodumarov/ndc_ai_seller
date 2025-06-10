@@ -273,19 +273,13 @@ func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 		challenge := c.Query("hub.challenge")
 		verificationToken := c.Query("hub.verify_token")
 
-		log.Printf("Webhook Verification Attempt: token=%s, challenge=%s\n", verificationToken, challenge)
-
 		if verificationToken == "your_verification_token" {
-			log.Println("Webhook successfully verified!")
 			c.String(http.StatusOK, challenge)
 		} else {
-			log.Println("Webhook verification failed: invalid token")
+			fmt.Println("Baortttt")
 			c.AbortWithStatus(http.StatusForbidden)
 		}
-
 	case http.MethodPost:
-		log.Println("Webhook POST request received")
-
 		// Body o'qiladi
 		body, err := io.ReadAll(c.Request.Body)
 		if err != nil {
@@ -294,8 +288,6 @@ func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 			return
 		}
 		defer c.Request.Body.Close()
-
-		log.Printf("Raw Body: %s\n", string(body))
 
 		// JSON body unmarshal
 		var event map[string]interface{}
@@ -306,28 +298,24 @@ func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 		}
 
 		// Webhook event log
-		log.Printf("Parsed Instagram Webhook Event: %+v\n", event)
+		log.Printf("Instagram Event Received: %+v\n", event)
 
-		// TODO: Xabarni saqlash, DM javob, admin panelga log yozish
+		// TODO: Bu yerda xabarlarni saqlash, userga yuborish, notifikatsiya qilish va h.k.
 
 		c.Status(http.StatusOK)
-
 	default:
-		log.Printf("Unsupported method: %s\n", c.Request.Method)
 		c.AbortWithStatus(http.StatusMethodNotAllowed)
 	}
 }
 
-
 func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 	code := c.Query("code")
 	if code == "" {
-		fmt.Println("Code not found in query params")
+		log.Println("Code not found in query params")
 		c.JSON(http.StatusBadRequest, "Code not found in query params")
 		return
 	}
 
-	// Token olish uchun ma'lumot
 	data := url.Values{}
 	data.Set("client_id", "700909965624963")                      // o'zgaruvchi qilsa ham bo'ladi
 	data.Set("client_secret", "22f5cd4d15549e880f749b1332b503fd") // xavfsizlik uchun env da saqlang
@@ -335,35 +323,78 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 	data.Set("redirect_uri", "https://dilshodforever.uz/v1/business/oauth/callback") // to'g'riligi muhim
 	data.Set("code", code)
 
-	// Instagram token olish endpointi
 	resp, err := http.PostForm("https://api.instagram.com/oauth/access_token", data)
 	if err != nil {
-		log.Println("Error sending token request:", err)
+		log.Println("Error requesting access token:", err)
 		c.JSON(http.StatusInternalServerError, "Failed to request access token")
 		return
 	}
 	defer resp.Body.Close()
 
-	// Javobni o'qish
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Println("Error reading token response body:", err)
-		c.JSON(http.StatusInternalServerError, "Failed to read token response")
-		return
-	}
+	body, _ := io.ReadAll(resp.Body)
 
-	// Tokenni log qilish yoki JSON ga parse qilish
-	var tokenResp map[string]interface{}
+	var tokenResp struct {
+		AccessToken string `json:"access_token"`
+		UserID      string `json:"user_id"`
+	}
 	if err := json.Unmarshal(body, &tokenResp); err != nil {
-		log.Println("Error unmarshaling token response:", err)
-		c.JSON(http.StatusInternalServerError, "Failed to parse token response")
+		log.Println("Error parsing token response:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to parse token")
 		return
 	}
 
-	// Access tokenni logga chiqarish yoki saqlash (database, redis, h.k.)
-	log.Printf("Access Token Response: %+v\n", tokenResp)
+	// 🔥 Step 2: Get Facebook pages linked to the user
+	pagesURL := fmt.Sprintf("https://graph.facebook.com/v19.0/me/accounts?access_token=%s", tokenResp.AccessToken)
+	pagesResp, err := http.Get(pagesURL)
+	if err != nil {
+		log.Println("Error getting pages:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to get pages")
+		return
+	}
+	defer pagesResp.Body.Close()
 
-	// TODO: tokenResp["access_token"], tokenResp["user_id"] ni DBga saqlash mumkin
+	var pages struct {
+		Data []struct {
+			ID          string `json:"id"`
+			Name        string `json:"name"`
+			AccessToken string `json:"access_token"`
+			ConnectedInstagramAcct struct {
+				ID string `json:"id"`
+			} `json:"connected_instagram_account"`
+		} `json:"data"`
+	}
 
-	c.JSON(http.StatusOK, tokenResp)
+	pagesBody, _ := io.ReadAll(pagesResp.Body)
+	if err := json.Unmarshal(pagesBody, &pages); err != nil {
+		log.Println("Error parsing pages:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to parse pages")
+		return
+	}
+
+	// 🔥 Step 3: Subscribe each page to webhook
+	for _, page := range pages.Data {
+		if page.ConnectedInstagramAcct.ID == "" {
+			log.Printf("Page '%s' has no connected Instagram account", page.Name)
+			continue
+		}
+
+		subscribeURL := fmt.Sprintf("https://graph.facebook.com/v19.0/%s/subscribed_apps", page.ID)
+		subscribeResp, err := http.PostForm(subscribeURL, url.Values{
+			"access_token": {page.AccessToken},
+		})
+		if err != nil {
+			log.Printf("Error subscribing page %s: %v", page.Name, err)
+			continue
+		}
+		defer subscribeResp.Body.Close()
+
+		subBody, _ := io.ReadAll(subscribeResp.Body)
+		log.Printf("Subscribed to page '%s': %s", page.Name, string(subBody))
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"access_token": tokenResp.AccessToken,
+		"user_id":      tokenResp.UserID,
+		"message":      "Instagram connected and webhook subscribed",
+	})
 }
