@@ -371,7 +371,7 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "Failed to parse pages")
 		return
 	}
-
+	id:=""
 	// 🔥 Step 3: Subscribe each page to webhook
 	for _, page := range pages.Data {
 		if page.ConnectedInstagramAcct.ID == "" {
@@ -379,6 +379,7 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 			continue
 		}
 		fmt.Println(1111111,page.ID)
+		id=page.ID
 		subscribeURL := fmt.Sprintf("https://graph.facebook.com/v19.0/%s/subscribed_apps", page.ID)
 		subscribeResp, err := http.PostForm(subscribeURL, url.Values{
 			"access_token": {page.AccessToken},
@@ -397,5 +398,6 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 		"access_token": tokenResp.AccessToken,
 		"user_id":      tokenResp.UserID,
 		"message":      "Instagram connected and webhook subscribed",
+		"pageid":       id,
 	})
 }
