@@ -378,7 +378,7 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 			log.Printf("Page '%s' has no connected Instagram account", page.Name)
 			continue
 		}
-
+		fmt.Println(1111111,page.ID)
 		subscribeURL := fmt.Sprintf("https://graph.facebook.com/v19.0/%s/subscribed_apps", page.ID)
 		subscribeResp, err := http.PostForm(subscribeURL, url.Values{
 			"access_token": {page.AccessToken},
