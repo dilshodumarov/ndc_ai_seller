@@ -269,18 +269,16 @@ func (h *businessRoutes) handleResponse(c *gin.Context, status status_http.Statu
 func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 	switch c.Request.Method {
 	case http.MethodGet:
-		// Facebook/Instagram webhook verification
 		challenge := c.Query("hub.challenge")
 		verificationToken := c.Query("hub.verify_token")
 
 		if verificationToken == "your_verification_token" {
 			c.String(http.StatusOK, challenge)
 		} else {
-			fmt.Println("Baortttt")
 			c.AbortWithStatus(http.StatusForbidden)
 		}
+
 	case http.MethodPost:
-		// Body o'qiladi
 		body, err := io.ReadAll(c.Request.Body)
 		if err != nil {
 			log.Println("Error reading webhook body:", err)
@@ -289,20 +287,25 @@ func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 		}
 		defer c.Request.Body.Close()
 
-		// JSON body unmarshal
-		var event map[string]interface{}
-		if err := json.Unmarshal(body, &event); err != nil {
+		var payload entity.InstagramWebhookPayload
+		if err := json.Unmarshal(body, &payload); err != nil {
 			log.Println("Error parsing webhook event:", err)
 			c.AbortWithStatus(http.StatusBadRequest)
 			return
 		}
 
-		// Webhook event log
-		log.Printf("Instagram Event Received: %+v\n", event)
-
-		// TODO: Bu yerda xabarlarni saqlash, userga yuborish, notifikatsiya qilish va h.k.
+		for _, entry := range payload.Entry {
+			for _, msg := range entry.Messaging {
+				if msg.Message != nil && !msg.Message.IsEcho {
+					log.Printf("New message from %s: %s", msg.Sender.ID, msg.Message.Text)
+					// TODO: xabarni saqlash, yuborish, loglash va h.k.
+					fmt.Println("message:=", msg)
+				}
+			}
+		}
 
 		c.Status(http.StatusOK)
+
 	default:
 		c.AbortWithStatus(http.StatusMethodNotAllowed)
 	}
@@ -317,10 +320,10 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 	}
 
 	data := url.Values{}
-	data.Set("client_id", "700909965624963")                      // o'zgaruvchi qilsa ham bo'ladi
-	data.Set("client_secret", "22f5cd4d15549e880f749b1332b503fd") // xavfsizlik uchun env da saqlang
+	data.Set("client_id", "700909965624963")                      
+	data.Set("client_secret", "22f5cd4d15549e880f749b1332b503fd") 
 	data.Set("grant_type", "authorization_code")
-	data.Set("redirect_uri", "https://dilshodforever.uz/v1/business/oauth/callback") // to'g'riligi muhim
+	data.Set("redirect_uri", "https://dilshodforever.uz/v1/business/oauth/callback") 
 	data.Set("code", code)
 
 	resp, err := http.PostForm("https://api.instagram.com/oauth/access_token", data)
