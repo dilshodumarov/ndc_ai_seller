@@ -353,7 +353,7 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 		AccessToken string      `json:"access_token"`
 		UserID      json.Number `json:"user_id"` // json.Number bu string/raqam formatda o'qiy oladi
 	}
-
+	fmt.Println("Body: ", string(body))
 	if err := json.Unmarshal(body, &tokenResp); err != nil {
 		log.Println("Error parsing token response:", err)
 		c.JSON(http.StatusInternalServerError, "Failed to parse token")
@@ -417,3 +417,6 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 		"pageid":       id,
 	})
 }
+
+
+
