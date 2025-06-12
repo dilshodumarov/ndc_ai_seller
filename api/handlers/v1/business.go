@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -275,39 +276,51 @@ func (b *businessRoutes) HandleInstagramWebhook(c *gin.Context) {
 		if verificationToken == "your_verification_token" {
 			c.String(http.StatusOK, challenge)
 		} else {
-			c.AbortWithStatus(http.StatusForbidden)
+			b.handleResponse(c, status_http.Status{
+				Code:          http.StatusForbidden,
+				Status:        "error",
+				Description:   "Invalid verification token",
+				CustomMessage: "Instagram verification failed",
+			}, nil)
 		}
 
 	case http.MethodPost:
+		defer c.Request.Body.Close()
 		body, err := io.ReadAll(c.Request.Body)
 		if err != nil {
-			log.Println("Error reading webhook body:", err)
-			c.AbortWithStatus(http.StatusInternalServerError)
+			b.handleResponse(c, status_http.Status{
+				Code:          http.StatusInternalServerError,
+				Status:        "error",
+				Description:   "Error reading request body",
+				CustomMessage: err.Error(),
+			}, nil)
 			return
 		}
-		defer c.Request.Body.Close()
-
-		var payload entity.InstagramWebhookPayload
-		if err := json.Unmarshal(body, &payload); err != nil {
-			log.Println("Error parsing webhook event:", err)
-			c.AbortWithStatus(http.StatusBadRequest)
+		fmt.Println("message: ",string(body))
+		resp, err := http.Post("http://ai-seller-bot:8081/send-message-instagram", "application/json", bytes.NewReader(body))
+		if err != nil {
+			b.handleResponse(c, status_http.Status{
+				Code:          http.StatusInternalServerError,
+				Status:        "error",
+				Description:   "Failed to send request to bot",
+				CustomMessage: err.Error(),
+			}, nil)
 			return
 		}
+		defer resp.Body.Close()
 
-		for _, entry := range payload.Entry {
-			for _, msg := range entry.Messaging {
-				if msg.Message != nil && !msg.Message.IsEcho {
-					log.Printf("New message from %s: %s", msg.Sender.ID, msg.Message.Text)
-					// TODO: xabarni saqlash, yuborish, loglash va h.k.
-					fmt.Println("message:=", msg)
-				}
-			}
-		}
-
-		c.Status(http.StatusOK)
+		b.handleResponse(c, status_http.Status{
+			Code:        http.StatusOK,
+			Status:      "success",
+			Description: "Message forwarded to bot successfully",
+		}, nil)
 
 	default:
-		c.AbortWithStatus(http.StatusMethodNotAllowed)
+		b.handleResponse(c, status_http.Status{
+			Code:        http.StatusMethodNotAllowed,
+			Status:      "error",
+			Description: "Method not allowed",
+		}, nil)
 	}
 }
 
@@ -320,10 +333,10 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 	}
 
 	data := url.Values{}
-	data.Set("client_id", "700909965624963")                      
-	data.Set("client_secret", "22f5cd4d15549e880f749b1332b503fd") 
+	data.Set("client_id", "700909965624963")
+	data.Set("client_secret", "22f5cd4d15549e880f749b1332b503fd")
 	data.Set("grant_type", "authorization_code")
-	data.Set("redirect_uri", "https://dilshodforever.uz/v1/business/oauth/callback") 
+	data.Set("redirect_uri", "https://dilshodforever.uz/v1/business/oauth/callback")
 	data.Set("code", code)
 
 	resp, err := http.PostForm("https://api.instagram.com/oauth/access_token", data)
@@ -340,7 +353,7 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 		AccessToken string      `json:"access_token"`
 		UserID      json.Number `json:"user_id"` // json.Number bu string/raqam formatda o'qiy oladi
 	}
-	
+
 	if err := json.Unmarshal(body, &tokenResp); err != nil {
 		log.Println("Error parsing token response:", err)
 		c.JSON(http.StatusInternalServerError, "Failed to parse token")
@@ -359,9 +372,9 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 
 	var pages struct {
 		Data []struct {
-			ID          string `json:"id"`
-			Name        string `json:"name"`
-			AccessToken string `json:"access_token"`
+			ID                     string `json:"id"`
+			Name                   string `json:"name"`
+			AccessToken            string `json:"access_token"`
 			ConnectedInstagramAcct struct {
 				ID string `json:"id"`
 			} `json:"connected_instagram_account"`
@@ -374,15 +387,15 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "Failed to parse pages")
 		return
 	}
-	id:=""
+	id := ""
 	// 🔥 Step 3: Subscribe each page to webhook
 	for _, page := range pages.Data {
 		if page.ConnectedInstagramAcct.ID == "" {
 			log.Printf("Page '%s' has no connected Instagram account", page.Name)
 			continue
 		}
-		fmt.Println(1111111,page.ID)
-		id=page.ID
+		fmt.Println(1111111, page.ID)
+		id = page.ID
 		subscribeURL := fmt.Sprintf("https://graph.facebook.com/v19.0/%s/subscribed_apps", page.ID)
 		subscribeResp, err := http.PostForm(subscribeURL, url.Values{
 			"access_token": {page.AccessToken},
