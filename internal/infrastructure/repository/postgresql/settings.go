@@ -89,7 +89,6 @@ func (r *settingsRepo) Update(ctx context.Context, req *entity.UpdateOrderStatus
 		argID++
 	}
 
-
 	args = append(args, req.GUID)
 
 	query := fmt.Sprintf(`
@@ -168,23 +167,26 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 		`, countCondition)
 	} else {
 		query = fmt.Sprintf(`
-			SELECT 
-				NULL AS guid,
-				NULL AS business_id,
-				NULL AS fon_color,
-				NULL AS type_id,
-				NULL AS custom_name,
-				ost.name AS type_name,
-				ost.status_number,
-				NULL AS created_at,
-				COUNT(%s) AS order_count
-			FROM order_status_type ost
-			LEFT JOIN "order" o 
-				ON o.status = ost.name AND o.business_id = $1
-			GROUP BY ost.name, ost.status_number
-			ORDER BY ost.status_number
-		`, countCondition)
+	SELECT 
+		NULL AS guid,
+		NULL AS business_id,
+		NULL AS fon_color,
+		NULL AS type_id,
+		NULL AS custom_name,
+		ost.name AS type_name,
+		ost.status_number,
+		NULL AS created_at,
+		COUNT(%s) AS order_count
+	FROM order_status_type ost
+	LEFT JOIN "order" o 
+		ON o.status = ost.name AND o.business_id = $1 AND o.deleted_at IS NULL
+	GROUP BY ost.name, ost.status_number
+	ORDER BY ost.status_number
+`, countCondition)
+
 	}
+
+
 
 	rows, err := r.db.Query(ctx, query, args...)
 	if err != nil {
@@ -195,9 +197,9 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 	var result []*entity.OrderStatus
 	for rows.Next() {
 		var (
-			guid, businessID, typeID, customName,fonColor sql.NullString
-			createdAt                            sql.NullTime
-			status                               entity.OrderStatus
+			guid, businessID, typeID, customName, fonColor sql.NullString
+			createdAt                                      sql.NullTime
+			status                                         entity.OrderStatus
 		)
 
 		err := rows.Scan(
@@ -633,3 +635,7 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 
 	return result, nil
 }
+
+
+
+

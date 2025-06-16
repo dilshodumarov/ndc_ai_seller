@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+
 const (
 	orderTableName = `"order"`
 )
@@ -26,7 +27,7 @@ func NewOrderRepo(db *postgres.Postgres) *OrderRepo {
 	}
 }
 
-func (r *OrderRepo) Create(ctx context.Context, o *entity.CreateOrderRequest) (id string, err error) {
+func (r *OrderRepo) Create(ctx context.Context,o *entity.CreateOrderRequest) (id string, err error) {
 	query := fmt.Sprintf(`
 		INSERT INTO %s (client_id,  business_id, location_url, status, total_price, payment_method, status_changed_time, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())

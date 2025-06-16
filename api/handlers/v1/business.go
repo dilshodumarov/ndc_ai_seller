@@ -334,7 +334,7 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 
 	data := url.Values{}
 	data.Set("client_id", "700909965624963")
-	data.Set("client_secret", "22f5cd4d15549e880f749b1332b503fd")
+	data.Set("client_secret", "dff534402f4026921ee41af2f8a5c415")
 	data.Set("grant_type", "authorization_code")
 	data.Set("redirect_uri", "https://dilshodforever.uz/v1/business/oauth/callback")
 	data.Set("code", code)
