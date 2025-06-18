@@ -99,3 +99,5 @@ func (h *minioRoutes) Media(c *gin.Context) {
 	fmt.Println("url: ", madeUrl)
 	c.JSON(201, gin.H{"url": madeUrl})
 }
+
+
