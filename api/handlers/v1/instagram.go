@@ -35,6 +35,7 @@ func NewInstagramRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpt
 // InstagramLogin godoc
 // @Summary Instagram login redirect
 // @Description Redirect user to Instagram OAuth page
+// @Security BearerAuth
 // @Tags INSTAGRAM
 // @Produce json
 // @Success 302 {string} string "Redirect"
