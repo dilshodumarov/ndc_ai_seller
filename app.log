@@ -27983,3 +27983,22 @@ main.main.func1
 2025-06-18T16:16:59.937+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
 2025-06-18T16:19:07.871+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
 2025-06-18T16:29:21.802+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-19T17:32:15.025+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-19T17:32:16.204+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-06-19T17:32:16.214+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-06-19T17:32:16.215+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-06-19T17:32:16.216+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-06-19T17:32:16.458+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-06-19T17:32:16.635+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/favicon-32x32.png 
+2025-06-19T17:32:29.386+0500	INFO	middleware/logger.go:26	::1 - POST /v1/instagram/login 
+2025-06-19T17:33:26.871+0500	INFO	middleware/logger.go:26	::1 - POST /v1/instagram/login 
+2025-06-19T17:36:12.442+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-19T17:36:12.442+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-06-19T17:36:15.849+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-19T17:36:16.935+0500	INFO	middleware/logger.go:26	::1 - POST /v1/instagram/login 
+2025-06-19T17:37:14.811+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-19T17:37:14.821+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
