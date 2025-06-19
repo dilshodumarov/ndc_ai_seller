@@ -19,7 +19,7 @@ type InstagramRoutes struct {
 
 // NewAuthRoutes creates a new auth routes controller
 func NewInstagramRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption) {
-	r := &businessRoutes{
+	r := &InstagramRoutes{
 		log:      option.Logger,
 		cfg:      option.Config,
 		enforcer: option.Enforcer,
@@ -27,7 +27,7 @@ func NewInstagramRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpt
 
 	instagram := apiV1Group.Group("/instagram")
 	{
-		instagram.POST("/login", r.CreateBusiness)
+		instagram.POST("/login", r.InstagramLogin)
 
 	}
 }
@@ -40,7 +40,7 @@ func NewInstagramRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpt
 // @Produce json
 // @Success 302 {string} string "Redirect"
 // @Router /instagram/login [post]
-func (b *businessRoutes) InstagramLogin(c *gin.Context) {
+func (b *InstagramRoutes) InstagramLogin(c *gin.Context) {
 	fmt.Println("Instagram login requested")
 
 	authURL := "https://www.instagram.com/oauth/authorize?client_id=700909965624963&redirect_uri=https://dilshodforever.uz/v1/business/oauth/callback&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights"
