@@ -3518,6 +3518,11 @@ const docTemplate = `{
         },
         "/instagram/login": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Redirect user to Instagram OAuth page",
                 "produces": [
                     "application/json"

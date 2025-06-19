@@ -2886,6 +2886,8 @@ paths:
           description: Redirect
           schema:
             type: string
+      security:
+      - BearerAuth: []
       summary: Instagram login redirect
       tags:
       - INSTAGRAM
