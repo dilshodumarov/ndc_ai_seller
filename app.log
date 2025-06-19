@@ -27980,3 +27980,6 @@ main.main.func1
 2025-06-13T11:11:56.796+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0&day=7&status=yangi 
 2025-06-13T11:12:08.572+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0&day=1000&status=yangi 
 2025-06-13T11:13:47.112+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0&day=365&status=yangi 
+2025-06-18T16:16:59.937+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-18T16:19:07.871+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-18T16:29:21.802+0500	INFO	app/main.go:40	api gateway service stops
