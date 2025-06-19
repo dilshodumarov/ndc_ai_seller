@@ -3394,10 +3394,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/entity.Database"
-                                            }
+                                            "$ref": "#/definitions/entity.Databaselist"
                                         }
                                     }
                                 }
@@ -3514,6 +3511,26 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/instagram/login": {
+            "post": {
+                "description": "Redirect user to Instagram OAuth page",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "INSTAGRAM"
+                ],
+                "summary": "Instagram login redirect",
+                "responses": {
+                    "302": {
+                        "description": "Redirect",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -7466,6 +7483,26 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "entity.Databaselist": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Database"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
                 }
             }
         },

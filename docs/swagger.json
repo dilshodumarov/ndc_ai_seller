@@ -3387,10 +3387,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/entity.Database"
-                                            }
+                                            "$ref": "#/definitions/entity.Databaselist"
                                         }
                                     }
                                 }
@@ -3507,6 +3504,26 @@
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/instagram/login": {
+            "post": {
+                "description": "Redirect user to Instagram OAuth page",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "INSTAGRAM"
+                ],
+                "summary": "Instagram login redirect",
+                "responses": {
+                    "302": {
+                        "description": "Redirect",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -7459,6 +7476,26 @@
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "entity.Databaselist": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.Database"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
                 }
             }
         },

@@ -163,6 +163,7 @@ func NewRouter(option *RouteOption) *gin.Engine {
 		v1.NewNotificationRoutes(apiV1Group, handleOption)
 		v1.NewSettingsRoutes(apiV1Group, handleOption)
 		v1.NewDatabaseRoutes(apiV1Group, handleOption)
+		v1.NewInstagramRoutes(apiV1Group,handleOption)
 	}
 
 	return app

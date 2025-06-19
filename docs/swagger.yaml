@@ -243,6 +243,19 @@ definitions:
       updated_at:
         type: string
     type: object
+  entity.Databaselist:
+    properties:
+      count:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/entity.Database'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+    type: object
   entity.ForgotPasswordRequest:
     properties:
       email:
@@ -2795,9 +2808,7 @@ paths:
             - $ref: '#/definitions/status_http.Response'
             - properties:
                 data:
-                  items:
-                    $ref: '#/definitions/entity.Database'
-                  type: array
+                  $ref: '#/definitions/entity.Databaselist'
               type: object
         "500":
           description: Internal Server Error
@@ -2865,6 +2876,19 @@ paths:
       summary: Update an existing database record
       tags:
       - DATABASE
+  /instagram/login:
+    post:
+      description: Redirect user to Instagram OAuth page
+      produces:
+      - application/json
+      responses:
+        "302":
+          description: Redirect
+          schema:
+            type: string
+      summary: Instagram login redirect
+      tags:
+      - INSTAGRAM
   /integration/create:
     post:
       consumes:
