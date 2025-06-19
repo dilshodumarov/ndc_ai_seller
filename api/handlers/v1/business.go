@@ -18,7 +18,7 @@ import (
 
 	"net/http"
 	"net/url"
-	
+
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
@@ -431,10 +431,10 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 
 	// Step 1: Get short-lived access token
 	data := url.Values{}
-	data.Set("client_id", "700909965624963")
-	data.Set("client_secret", "dff534402f4026921ee41af2f8a5c415")
-	data.Set("grant_type", "authorization_code")
-	data.Set("redirect_uri", "https://dilshodforever.uz/v1/business/oauth/callback")
+	data.Set("client_id", b.cfg.AppConfig.ClientID)
+	data.Set("client_secret",  b.cfg.AppConfig.ClientSecret)
+	data.Set("grant_type",  b.cfg.AppConfig.GrantType)
+	data.Set("redirect_uri",  b.cfg.AppConfig.RedirectURI)
 	data.Set("code", code)
 
 	resp, err := http.PostForm("https://api.instagram.com/oauth/access_token", data)
