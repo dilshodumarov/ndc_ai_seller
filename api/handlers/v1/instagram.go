@@ -3,6 +3,7 @@ package v1
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"sugurta/api/handlers"
 	"sugurta/internal/pkg/config"
 	"sugurta/internal/pkg/helper"
@@ -51,11 +52,12 @@ func (b *InstagramRoutes) InstagramLogin(c *gin.Context) {
 		return
 	}
 
-	redirectURI := fmt.Sprintf("https://dilshodforever.uz/v1/business/oauth/callback?id=%s", businessID)
+	redirectURI := "https://dilshodforever.uz/v1/business/oauth/callback"
 
 	authURL := fmt.Sprintf(
-		"https://www.instagram.com/oauth/authorize?client_id=700909965624963&redirect_uri=%s&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights",
-		redirectURI,
+		"https://www.instagram.com/oauth/authorize?client_id=700909965624963&redirect_uri=%s&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights&state=%s",
+		url.QueryEscape(redirectURI),
+		url.QueryEscape(businessID),
 	)
 
 	c.JSON(200, gin.H{

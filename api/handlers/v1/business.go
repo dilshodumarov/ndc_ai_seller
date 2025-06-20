@@ -428,8 +428,9 @@ func (b *businessRoutes) HandleInstagramCallback(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "Code not found in query params")
 		return
 	}
-	id:=c.Query("id")
-	fmt.Println("iddddddddd", id)
+	state := c.Query("state") 
+
+	fmt.Println("Business ID:", state)
 	// Step 1: Get short-lived access token
 	data := url.Values{}
 	data.Set("client_id", b.cfg.AppConfig.ClientID)
