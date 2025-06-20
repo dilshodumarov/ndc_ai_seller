@@ -1,12 +1,19 @@
 package v1
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"sugurta/api/handlers"
+	status_http "sugurta/api/http_status"
+	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
 	"sugurta/internal/pkg/helper"
+	"sugurta/internal/usecase/telegram"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
@@ -18,6 +25,7 @@ type InstagramRoutes struct {
 	log      *zap.Logger
 	cfg      *config.Config
 	enforcer *casbin.CachedEnforcer
+	telegram telegram.TelegramAccount
 }
 
 // NewAuthRoutes creates a new auth routes controller
@@ -26,11 +34,14 @@ func NewInstagramRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpt
 		log:      option.Logger,
 		cfg:      option.Config,
 		enforcer: option.Enforcer,
+		telegram: option.Telegram,
 	}
 
 	instagram := apiV1Group.Group("/instagram")
 	{
 		instagram.POST("/login", r.InstagramLogin)
+		instagram.Any("/webhook/instagram", r.HandleInstagramWebhook)
+		instagram.Any("/oauth/callback", r.HandleInstagramCallback)
 
 	}
 }
@@ -52,7 +63,7 @@ func (b *InstagramRoutes) InstagramLogin(c *gin.Context) {
 		return
 	}
 
-	redirectURI := "https://dilshodforever.uz/v1/business/oauth/callback"
+	redirectURI := "https://dilshodforever.uz/v1/instagram/oauth/callback"
 
 	authURL := fmt.Sprintf(
 		"https://www.instagram.com/oauth/authorize?client_id=700909965624963&redirect_uri=%s&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights&state=%s",
@@ -62,5 +73,198 @@ func (b *InstagramRoutes) InstagramLogin(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"url": authURL,
+	})
+}
+
+func (b *InstagramRoutes) HandleInstagramWebhook(c *gin.Context) {
+	switch c.Request.Method {
+	case http.MethodGet:
+		challenge := c.Query("hub.challenge")
+		verificationToken := c.Query("hub.verify_token")
+
+		if verificationToken == "your_verification_token" {
+			c.String(http.StatusOK, challenge)
+		} else {
+			b.handleResponse(c, status_http.Status{
+				Code:          http.StatusForbidden,
+				Status:        "error",
+				Description:   "Invalid verification token",
+				CustomMessage: "Instagram verification failed",
+			}, nil)
+		}
+
+	case http.MethodPost:
+		defer c.Request.Body.Close()
+		body, err := io.ReadAll(c.Request.Body)
+		if err != nil {
+			b.handleResponse(c, status_http.Status{
+				Code:          http.StatusInternalServerError,
+				Status:        "error",
+				Description:   "Error reading request body",
+				CustomMessage: err.Error(),
+			}, nil)
+			return
+		}
+		fmt.Println("message: ", string(body))
+		resp, err := http.Post("http://ai-seller-bot:8081/send-message-instagram", "application/json", bytes.NewReader(body))
+		if err != nil {
+			b.handleResponse(c, status_http.Status{
+				Code:          http.StatusInternalServerError,
+				Status:        "error",
+				Description:   "Failed to send request to bot",
+				CustomMessage: err.Error(),
+			}, nil)
+			return
+		}
+		defer resp.Body.Close()
+
+		b.handleResponse(c, status_http.Status{
+			Code:        http.StatusOK,
+			Status:      "success",
+			Description: "Message forwarded to bot successfully",
+		}, nil)
+
+	default:
+		b.handleResponse(c, status_http.Status{
+			Code:        http.StatusMethodNotAllowed,
+			Status:      "error",
+			Description: "Method not allowed",
+		}, nil)
+	}
+}
+
+func (b *InstagramRoutes) HandleInstagramCallback(c *gin.Context) {
+	code := c.Query("code")
+	if code == "" {
+		b.abortWithError(c, http.StatusBadRequest, "Code not found in query params")
+		return
+	}
+	businessID := c.Query("state") // state orqali businessID kelyapti
+
+	// Step 1: Get short-lived access token
+	shortToken, userID, err := b.getShortLivedToken(code)
+	if err != nil {
+		b.abortWithError(c, http.StatusInternalServerError, "Failed to request short-lived token")
+		return
+	}
+
+	// Step 2: Exchange to long-lived token
+	longToken, err := exchangeForLongLivedToken(shortToken)
+	if err != nil {
+		b.abortWithError(c, http.StatusInternalServerError, "Failed to exchange long-lived token")
+		return
+	}
+
+	// Step 3: Subscribe to webhook
+	if err := b.subscribeToWebhook(userID, longToken); err != nil {
+		b.abortWithError(c, http.StatusInternalServerError, "Failed to subscribe to webhook")
+		return
+	}
+
+	// Step 4: Save to DB
+	if _, err := b.telegram.Create(c, entity.CreateTelegramAccountRequest{
+		UserID:     userID,
+		From:       "instagram",
+		BusinessID: businessID,
+	}); err != nil {
+		b.abortWithError(c, http.StatusInternalServerError, "Failed to save account")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"access_token": longToken,
+		"user_id":      userID,
+		"message":      "Instagram connected and webhook subscribed",
+	})
+}
+
+// ---- Helpers ----
+
+func (b *InstagramRoutes) getShortLivedToken(code string) (string, string, error) {
+	data := url.Values{}
+	data.Set("client_id", b.cfg.AppConfig.ClientID)
+	data.Set("client_secret", b.cfg.AppConfig.ClientSecret)
+	data.Set("grant_type", b.cfg.AppConfig.GrantType)
+	data.Set("redirect_uri", b.cfg.AppConfig.RedirectURI)
+	data.Set("code", code)
+
+	resp, err := http.PostForm("https://api.instagram.com/oauth/access_token", data)
+	if err != nil {
+		return "", "", err
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+	var tokenResp struct {
+		AccessToken string      `json:"access_token"`
+		UserID      json.Number `json:"user_id"`
+	}
+
+	if err := json.Unmarshal(body, &tokenResp); err != nil {
+		return "", "", err
+	}
+	return tokenResp.AccessToken, tokenResp.UserID.String(), nil
+}
+
+func (b *InstagramRoutes) subscribeToWebhook(userID, token string) error {
+	url := fmt.Sprintf("https://graph.instagram.com/v23.0/%s/subscribed_apps?subscribed_fields=comments,messages&access_token=%s", userID, token)
+	resp, err := http.Post(url, "application/json", nil)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	log.Printf("Subscribed to Instagram Webhook: %s", string(body))
+	return nil
+}
+
+func (b *InstagramRoutes) abortWithError(c *gin.Context, code int, message string) {
+	log.Println(message)
+	c.JSON(code, gin.H{"error": message})
+}
+
+// Helper function to exchange long-lived token
+func exchangeForLongLivedToken(shortToken string) (string, error) {
+	url := fmt.Sprintf("https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=%s&access_token=%s",
+		"dff534402f4026921ee41af2f8a5c415", shortToken)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	var tokenResp struct {
+		AccessToken string `json:"access_token"`
+		ExpiresIn   int    `json:"expires_in"`
+	}
+	if err := json.Unmarshal(body, &tokenResp); err != nil {
+		return "", err
+	}
+
+	return tokenResp.AccessToken, nil
+}
+
+func (h *InstagramRoutes) handleResponse(c *gin.Context, status status_http.Status, data interface{}) {
+	switch code := status.Code; {
+	case code < 400:
+	default:
+		h.log.Error(
+			"response",
+			zap.Int("code", status.Code),
+			zap.String("status", status.Status),
+			zap.Any("description", status.Description),
+			zap.Any("data", data),
+			zap.Any("custom_message", status.CustomMessage),
+		)
+	}
+
+	c.JSON(status.Code, status_http.Response{
+		Status:        status.Status,
+		Description:   status.Description,
+		Data:          data,
+		CustomMessage: status.CustomMessage,
 	})
 }

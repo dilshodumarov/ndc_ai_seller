@@ -28,12 +28,17 @@ func NewTelegramRepo(db *postgres.Postgres) *telegramRepo {
 
 func (r *telegramRepo) Create(ctx context.Context, req entity.CreateTelegramAccountRequest) (string, error) {
 	query := `
-		INSERT INTO telegram_accaunt (number, business_id)
-		VALUES ($1, $2)
+		INSERT INTO telegram_accaunt (number, user_id, "from", business_id)
+		VALUES ($1, $2, $3, $4)
 		RETURNING guid
 	`
 	var id string
-	err := r.db.QueryRow(ctx, query, req.Number, req.BusinessID).Scan(&id)
+	err := r.db.QueryRow(ctx, query,
+		req.Number,
+		req.UserID,
+		req.From,  // 'telegram' yoki 'instagram'
+		req.BusinessID,
+	).Scan(&id)
 	if err != nil {
 		return "", fmt.Errorf("telegramRepo - Create: %w", err)
 	}

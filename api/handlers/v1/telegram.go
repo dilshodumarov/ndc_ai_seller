@@ -91,6 +91,7 @@ func (h *telegramRoutes) SendTelegramVerify(c *gin.Context) {
 		_, err := h.telegram.Create(c, entity.CreateTelegramAccountRequest{
 			Number:     input.Phone,
 			BusinessID: input.BussnesId,
+			From: "telegram",
 		})
 		if err != nil {
 			fmt.Println(err)

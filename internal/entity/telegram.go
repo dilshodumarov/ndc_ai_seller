@@ -10,9 +10,12 @@ type TelegramAccount struct {
 }
 
 type CreateTelegramAccountRequest struct {
-	Number     string `json:"number"`
-	BusinessID string `json:"business_id"`
+	Number     string
+	UserID     string
+	From       string  // 'telegram' yoki 'instagram'
+	BusinessID string
 }
+
 
 type UpdateTelegramAccountRequest struct {
 	Phone         string `json:"phone"`
