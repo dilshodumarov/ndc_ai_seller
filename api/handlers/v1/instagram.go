@@ -136,51 +136,14 @@ func (b *InstagramRoutes) HandleInstagramWebhook(c *gin.Context) {
 func (b *InstagramRoutes) HandleInstagramCallback(c *gin.Context) {
 	code := c.Query("code")
 	if code == "" {
-		b.abortWithError(c, http.StatusBadRequest, "Code not found in query params")
+		log.Println("Code not found in query params")
+		c.JSON(http.StatusBadRequest, "Code not found in query params")
 		return
 	}
-	businessID := c.Query("state") // state orqali businessID kelyapti
+	state := c.Query("state")
 
+	fmt.Println("Business ID:", state)
 	// Step 1: Get short-lived access token
-	shortToken, userID, err := b.getShortLivedToken(code)
-	if err != nil {
-		b.abortWithError(c, http.StatusInternalServerError, "Failed to request short-lived token")
-		return
-	}
-
-	// Step 2: Exchange to long-lived token
-	longToken, err := exchangeForLongLivedToken(shortToken)
-	if err != nil {
-		b.abortWithError(c, http.StatusInternalServerError, "Failed to exchange long-lived token")
-		return
-	}
-
-	// Step 3: Subscribe to webhook
-	if err := b.subscribeToWebhook(userID, longToken); err != nil {
-		b.abortWithError(c, http.StatusInternalServerError, "Failed to subscribe to webhook")
-		return
-	}
-
-	// Step 4: Save to DB
-	if _, err := b.telegram.Create(c, entity.CreateTelegramAccountRequest{
-		UserID:     userID,
-		From:       "instagram",
-		BusinessID: businessID,
-	}); err != nil {
-		b.abortWithError(c, http.StatusInternalServerError, "Failed to save account")
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"access_token": longToken,
-		"user_id":      userID,
-		"message":      "Instagram connected and webhook subscribed",
-	})
-}
-
-// ---- Helpers ----
-
-func (b *InstagramRoutes) getShortLivedToken(code string) (string, string, error) {
 	data := url.Values{}
 	data.Set("client_id", b.cfg.AppConfig.ClientID)
 	data.Set("client_secret", b.cfg.AppConfig.ClientSecret)
@@ -190,37 +153,63 @@ func (b *InstagramRoutes) getShortLivedToken(code string) (string, string, error
 
 	resp, err := http.PostForm("https://api.instagram.com/oauth/access_token", data)
 	if err != nil {
-		return "", "", err
+		log.Println("Error requesting access token:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to request access token")
+		return
 	}
 	defer resp.Body.Close()
 
 	body, _ := io.ReadAll(resp.Body)
+
 	var tokenResp struct {
 		AccessToken string      `json:"access_token"`
 		UserID      json.Number `json:"user_id"`
 	}
-
+	fmt.Println("Body: ", string(body))
 	if err := json.Unmarshal(body, &tokenResp); err != nil {
-		return "", "", err
+		log.Println("Error parsing token response:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to parse token")
+		return
 	}
-	return tokenResp.AccessToken, tokenResp.UserID.String(), nil
-}
 
-func (b *InstagramRoutes) subscribeToWebhook(userID, token string) error {
-	url := fmt.Sprintf("https://graph.instagram.com/v23.0/%s/subscribed_apps?subscribed_fields=comments,messages&access_token=%s", userID, token)
-	resp, err := http.Post(url, "application/json", nil)
+	// 🔥 Step 2: (Optional) Convert short-lived token to long-lived token
+	longLivedToken, err := exchangeForLongLivedToken(tokenResp.AccessToken)
 	if err != nil {
-		return err
+		log.Println("Error exchanging long-lived token:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to exchange long-lived token")
+		return
 	}
-	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
-	log.Printf("Subscribed to Instagram Webhook: %s", string(body))
-	return nil
-}
 
-func (b *InstagramRoutes) abortWithError(c *gin.Context, code int, message string) {
-	log.Println(message)
-	c.JSON(code, gin.H{"error": message})
+	// 🔥 Step 3: Subscribe to Webhook directly on Instagram
+	subscribeURL := fmt.Sprintf("https://graph.instagram.com/v23.0/%s/subscribed_apps?subscribed_fields=comments,messages&access_token=%s", tokenResp.UserID.String(), longLivedToken)
+
+	subscribeResp, err := http.Post(subscribeURL, "application/json", nil)
+	if err != nil {
+		log.Println("Error subscribing to webhook:", err)
+		c.JSON(http.StatusInternalServerError, "Failed to subscribe to webhook")
+		return
+	}
+	defer subscribeResp.Body.Close()
+
+	subscribeBody, _ := io.ReadAll(subscribeResp.Body)
+	log.Printf("Subscribed to Instagram Webhook: %s", string(subscribeBody))
+	_, err = b.telegram.Create(c, entity.CreateTelegramAccountRequest{
+		UserID:     tokenResp.UserID.String(),
+		From:       "instagram",
+		BusinessID: state,
+	})
+	if err != nil {
+
+		log.Println("Error subscribing to webhook:", err)
+		c.JSON(http.StatusInternalServerError, "Server error")
+		return
+
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"access_token": longLivedToken,
+		"user_id":      tokenResp.UserID,
+		"message":      "Instagram connected and webhook subscribed",
+	})
 }
 
 // Helper function to exchange long-lived token
