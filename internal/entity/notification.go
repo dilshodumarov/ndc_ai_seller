@@ -5,35 +5,35 @@ import (
 )
 
 type CreateNotificationRequest struct {
-	UserID  string
-	Title   string
-	Message string
-	Type    string
+	UserID  string `json:"user_id"`
+	Title   string `json:"title"`
+	Message string `json:"message"`
+	Type    string `json:"type"`
 }
 
 type UpdateNotificationRequest struct {
-	GUID    string
-	Title   string
-	Message string
-	Type    string
-	IsRead  bool
-	ReadAt  *time.Time
+	GUID    string     `json:"guid"`
+	Title   string     `json:"title"`
+	Message string     `json:"message"`
+	Type    string     `json:"type"`
+	IsRead  bool       `json:"is_read"`
+	ReadAt  *time.Time `json:"read_at"`
 }
 
 type GetNotification struct {
-	GUID      string
-	UserID    string
-	Title     string
-	Message   string
-	Type      string
-	IsRead    bool
-	CreatedAt time.Time
-	ReadAt    time.Time
+	GUID      string    `json:"guid"`
+	UserID    string    `json:"user_id"`
+	Title     string    `json:"title"`
+	Message   string    `json:"message"`
+	Type      string    `json:"type"`
+	IsRead    bool      `json:"is_read"`
+	CreatedAt time.Time `json:"created_at"`
+	ReadAt    time.Time `json:"read_at"`
 }
 
-type ListNotification struct{
-	Notification []GetNotification
-	Count        int
+type ListNotification struct {
+	Notification []GetNotification `json:"notification"`
+	Count        int               `json:"count"`
 }
 
 type ListNotificationRequest struct {

@@ -6,32 +6,33 @@ type (
 	//Product
 
 	CreateProductRequest struct {
-		BusinessID   string `json:"business_id"`
-		Name         string `json:"name"`
+		BusinessID   string  `json:"business_id"`
+		Name         string  `json:"name"`
 		CategoryID   *string `json:"category_id"`
-		ShortInfo    string `json:"short_info"`
-		Description  string `json:"description"`
-		Cost         int    `json:"cost"`
-		Count        int    `json:"count"`
-		DiscountCost int    `json:"discount_cost"`
-		Discount     int    `json:"discount"`
-		Status       bool   `json:"status"`
+		ShortInfo    string  `json:"short_info"`
+		Description  string  `json:"description"`
+		Cost         int     `json:"cost"`
+		Count        int     `json:"count"`
+		DiscountCost int     `json:"discount_cost"`
+		Discount     int     `json:"discount"`
+		Status       bool    `json:"status"`
 		Image_url    []string
 	}
 	CreateProductImage struct {
-		ProductId string
-		ImageUrl  string
+		ProductId string `json:"product_id"`
+		ImageUrl  string `json:"image_url"`
 	}
+
 	CreateProductRequestForSwagger struct {
-		Name         string `json:"name"`
+		Name         string  `json:"name"`
 		CategoryID   *string `json:"category_id"`
-		ShortInfo    string `json:"short_info"`
-		Description  string `json:"description"`
-		Cost         int    `json:"cost"`
-		Count        int    `json:"count"`
-		DiscountCost int    `json:"discount_cost"`
-		Discount     int    `json:"discount"`
-		Status       bool   `json:"status"`
+		ShortInfo    string  `json:"short_info"`
+		Description  string  `json:"description"`
+		Cost         int     `json:"cost"`
+		Count        int     `json:"count"`
+		DiscountCost int     `json:"discount_cost"`
+		Discount     int     `json:"discount"`
+		Status       bool    `json:"status"`
 		Image_url    []string
 	}
 
@@ -49,9 +50,9 @@ type (
 		CreatedAt    time.Time `json:"created_at"`
 		UpdatedAt    time.Time `json:"updated_at"`
 		Image_urls   []string
-		ProductId    int       `json:"product_id"`
-		Status       bool      `json:"status"`
-		CategoryName string    `json:"category"`
+		ProductId    int    `json:"product_id"`
+		Status       bool   `json:"status"`
+		CategoryName string `json:"category"`
 	}
 
 	UpdateProductRequest struct {
@@ -64,7 +65,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
-	    Status       *bool    `json:"status"`
+		Status       *bool  `json:"status"`
 		Image_url    []string
 	}
 
@@ -77,7 +78,7 @@ type (
 		Count        int    `json:"count"`
 		DiscountCost int    `json:"discount_cost"`
 		Discount     int    `json:"discount"`
-		Status      *bool  `json:"status"`
+		Status       *bool  `json:"status"`
 		Image_url    []string
 	}
 
@@ -88,20 +89,19 @@ type (
 	}
 
 	GetAllProductsResponse struct {
-		Items []Product `json:"items"`
-		Count uint64    `json:"count"`
+		Items      []Product `json:"items"`
+		Count      uint64    `json:"count"`
 		TotalCount uint64    `json:"totalcount"`
 	}
-	 ProductFilter struct {
-		OwnerID    string  // majburiy
-		CategoryID string  // optional
-		Search     string  // optional
-		Limit      uint64  // required
-		Page       uint64  // required
-		ProductId  int
-		ProductCount int
-		Status     string
-	}
-	
-)
 
+	ProductFilter struct {
+		OwnerID      string `json:"owner_id"`
+		CategoryID   string `json:"category_id"`
+		Search       string `json:"search"`
+		Limit        uint64 `json:"limit"`
+		Page         uint64 `json:"page"`
+		ProductId    int    `json:"product_id"`
+		ProductCount int    `json:"product_count"`
+		Status       string `json:"status"`
+	}
+)

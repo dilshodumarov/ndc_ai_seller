@@ -4898,14 +4898,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/orders/list": {
+        "/orders/list/archived": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "List all orders with optional filters",
+                "description": "List orders with status 'arxiv'",
                 "consumes": [
                     "application/json"
                 ],
@@ -4915,7 +4915,7 @@ const docTemplate = `{
                 "tags": [
                     "Orders"
                 ],
-                "summary": "List Orders",
+                "summary": "List Archived Orders",
                 "parameters": [
                     {
                         "type": "integer",
@@ -4934,7 +4934,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 7,
-                        "description": "day",
+                        "description": "Day",
                         "name": "day",
                         "in": "query"
                     },
@@ -4946,8 +4946,95 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Status",
-                        "name": "status",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Platform",
+                        "name": "platform",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment Method",
+                        "name": "payment_method",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.GetAllOrdersResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/list/cancelled": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List orders with status 'bekor_qilindi'",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "List Cancelled Orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 7,
+                        "description": "Day",
+                        "name": "day",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Client ID",
+                        "name": "client_id",
                         "in": "query"
                     },
                     {
@@ -4958,7 +5045,565 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "platform",
+                        "description": "Platform",
+                        "name": "platform",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment Method",
+                        "name": "payment_method",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.GetAllOrdersResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/list/delivered": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List orders with status 'yetkazildi'",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "List Delivered Orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 7,
+                        "description": "Day",
+                        "name": "day",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Client ID",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Platform",
+                        "name": "platform",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment Method",
+                        "name": "payment_method",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.GetAllOrdersResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/list/new": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List orders with status 'yangi'",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "List New Orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 7,
+                        "description": "Day",
+                        "name": "day",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Client ID",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Platform",
+                        "name": "platform",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment Method",
+                        "name": "payment_method",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.GetAllOrdersResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/list/online-paid": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List orders with status 'online_tolov_tasdigi'",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "List Online Paid Orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 7,
+                        "description": "Day",
+                        "name": "day",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Client ID",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Platform",
+                        "name": "platform",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment Method",
+                        "name": "payment_method",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.GetAllOrdersResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/list/pending-payment": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List orders with status 'tolov_qilmoqchi'",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "List Pending Payment Orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 7,
+                        "description": "Day",
+                        "name": "day",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Client ID",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Platform",
+                        "name": "platform",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment Method",
+                        "name": "payment_method",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.GetAllOrdersResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/list/ready-to-pick": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List orders with status 'olishga_tayyor'",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "List Ready To Pick Orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 7,
+                        "description": "Day",
+                        "name": "day",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Client ID",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Platform",
+                        "name": "platform",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Payment Method",
+                        "name": "payment_method",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.GetAllOrdersResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/status_http.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/list/to-deliver": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List orders with status 'yetkazish_kerak'",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "List To Deliver Orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 7,
+                        "description": "Day",
+                        "name": "day",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Client ID",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Platform",
                         "name": "platform",
                         "in": "query"
                     },
@@ -6760,6 +7405,13 @@ const docTemplate = `{
                         "description": "status name",
                         "name": "status",
                         "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 7,
+                        "description": "Day",
+                        "name": "day",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -7259,7 +7911,7 @@ const docTemplate = `{
                 "phone": {
                     "type": "string"
                 },
-                "userName": {
+                "user_name": {
                     "type": "string"
                 }
             }
@@ -7321,7 +7973,7 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "ownerID": {
+                "owner_id": {
                     "type": "string"
                 }
             }
@@ -7371,7 +8023,7 @@ const docTemplate = `{
                 "type": {
                     "type": "string"
                 },
-                "userID": {
+                "user_id": {
                     "type": "string"
                 }
             }
@@ -7422,10 +8074,10 @@ const docTemplate = `{
         "entity.CreateProductImage": {
             "type": "object",
             "properties": {
-                "imageUrl": {
+                "image_url": {
                     "type": "string"
                 },
-                "productId": {
+                "product_id": {
                     "type": "string"
                 }
             }
@@ -7570,19 +8222,19 @@ const docTemplate = `{
         "entity.GetNotification": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "guid": {
                     "type": "string"
                 },
-                "isRead": {
+                "is_read": {
                     "type": "boolean"
                 },
                 "message": {
                     "type": "string"
                 },
-                "readAt": {
+                "read_at": {
                     "type": "string"
                 },
                 "title": {
@@ -7591,7 +8243,7 @@ const docTemplate = `{
                 "type": {
                     "type": "string"
                 },
-                "userID": {
+                "user_id": {
                     "type": "string"
                 }
             }
@@ -7710,16 +8362,16 @@ const docTemplate = `{
         "entity.Order": {
             "type": "object",
             "properties": {
-                "adminStatus": {
+                "admin_status": {
                     "type": "string"
                 },
-                "businessID": {
+                "business_id": {
                     "type": "string"
                 },
                 "client": {
                     "$ref": "#/definitions/entity.ClientInfo"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "description": {
@@ -7728,26 +8380,25 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "imageUrl": {
+                "image_url": {
                     "type": "string"
                 },
                 "location": {
                     "type": "string"
                 },
-                "locationURL": {
+                "location_url": {
                     "type": "string"
                 },
-                "orderId": {
+                "order_id": {
                     "type": "string"
                 },
-                "paymentMethod": {
+                "payment_method": {
                     "type": "string"
                 },
                 "platform": {
                     "type": "string"
                 },
                 "products": {
-                    "description": "\u003c--- Products field qo‘shamiz",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/entity.OrderProduct"
@@ -7756,16 +8407,16 @@ const docTemplate = `{
                 "status": {
                     "type": "string"
                 },
-                "statusChangedTime": {
+                "status_changed_time": {
                     "type": "string"
                 },
-                "statusNumber": {
+                "status_number": {
                     "type": "integer"
                 },
-                "totalPrice": {
+                "total_price": {
                     "type": "number"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 }
             }
@@ -7779,17 +8430,19 @@ const docTemplate = `{
                 "count": {
                     "type": "integer"
                 },
-                "imageURL": {
-                    "type": "string"
+                "image_urls": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "name": {
                     "type": "string"
                 },
-                "productID": {
+                "product_id": {
                     "type": "string"
                 },
-                "productTotalPrice": {
-                    "description": "order_products.price",
+                "product_total_price": {
                     "type": "integer"
                 }
             }
@@ -7803,7 +8456,7 @@ const docTemplate = `{
                 "count": {
                     "type": "integer"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "description": {
@@ -7812,34 +8465,34 @@ const docTemplate = `{
                 "discount": {
                     "type": "integer"
                 },
-                "discountCost": {
+                "discount_cost": {
                     "type": "integer"
                 },
-                "imageURL": {
+                "image_url": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "orderProductCreatedAt": {
+                "order_product_created_at": {
                     "type": "string"
                 },
                 "price": {
                     "type": "number"
                 },
-                "productID": {
+                "product_id": {
                     "type": "string"
                 },
-                "productTotalPrice": {
+                "product_total_price": {
                     "type": "number"
                 },
-                "shortInfo": {
+                "short_info": {
                     "type": "string"
                 },
                 "status": {
                     "type": "boolean"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 }
             }
@@ -7863,7 +8516,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "order_count": {
-                    "description": "yangi maydon",
                     "type": "integer"
                 },
                 "prompts": {
@@ -8081,64 +8733,64 @@ const docTemplate = `{
         "entity.Settings": {
             "type": "object",
             "properties": {
-                "brandName": {
+                "brand_name": {
                     "type": "string"
                 },
-                "businessID": {
+                "business_id": {
                     "type": "string"
                 },
-                "businessName": {
+                "business_name": {
                     "type": "string"
                 },
                 "chat_token": {
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
-                "deletedAt": {
+                "deleted_at": {
                     "type": "string"
                 },
-                "errorMessage": {
+                "error_message": {
                     "type": "string"
                 },
-                "firstMessage": {
+                "first_message": {
                     "type": "string"
                 },
                 "guid": {
                     "type": "string"
                 },
-                "intelligenceLevel": {
+                "intelligence_level": {
                     "type": "integer"
                 },
-                "isStop": {
+                "is_stop": {
                     "type": "boolean"
                 },
                 "name": {
                     "type": "string"
                 },
-                "promptOrder": {
+                "prompt_order": {
                     "type": "string"
                 },
-                "promptProduct": {
+                "prompt_product": {
                     "type": "string"
                 },
-                "promptText": {
+                "prompt_text": {
                     "type": "string"
                 },
                 "status": {
                     "type": "boolean"
                 },
-                "stopUntil": {
+                "stop_until": {
                     "type": "integer"
                 },
-                "tokenLimit": {
+                "token_limit": {
                     "type": "integer"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
-                "waitingTime": {
+                "waiting_time": {
                     "type": "integer"
                 }
             }
@@ -8229,13 +8881,13 @@ const docTemplate = `{
                 "guid": {
                     "type": "string"
                 },
-                "isRead": {
+                "is_read": {
                     "type": "boolean"
                 },
                 "message": {
                     "type": "string"
                 },
-                "readAt": {
+                "read_at": {
                     "type": "string"
                 },
                 "title": {
@@ -8363,7 +9015,7 @@ const docTemplate = `{
         "entity.UpdatePromptOrdersRequest": {
             "type": "object",
             "properties": {
-                "orderStatus": {
+                "order_status": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/entity.UpdateOrderStatusRequest"
@@ -8374,22 +9026,22 @@ const docTemplate = `{
         "entity.UpdateSettingsRequest": {
             "type": "object",
             "properties": {
-                "brandName": {
+                "brand_name": {
                     "type": "string"
                 },
-                "businessName": {
+                "business_name": {
                     "type": "string"
-                },
-                "chatTokenInt": {
-                    "type": "integer"
                 },
                 "chat_token": {
                     "type": "string"
                 },
-                "errorMessage": {
+                "chat_token_int": {
+                    "type": "integer"
+                },
+                "error_message": {
                     "type": "string"
                 },
-                "firstMessage": {
+                "first_message": {
                     "type": "string"
                 },
                 "guid": {
@@ -8398,7 +9050,7 @@ const docTemplate = `{
                 "intelligence_level": {
                     "type": "integer"
                 },
-                "isStop": {
+                "is_stop": {
                     "type": "boolean"
                 },
                 "name": {

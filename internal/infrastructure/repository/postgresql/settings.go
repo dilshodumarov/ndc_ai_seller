@@ -130,19 +130,32 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 	}
 
 	var (
-		query          string
-		args           = []interface{}{req.BusinessID}
-		countCondition string
+		query string
+		args  []interface{}
 	)
 
+	// Filtr parametrlari
+	args = append(args, req.BusinessID) // $1
+	statusParam := ""
+	dayParam := ""
+	argPos := 2
+
 	if req.Status != "" {
-
-		countCondition = "CASE WHEN o.status = $2 AND o.deleted_at IS NULL THEN o.guid END"
+		statusParam = fmt.Sprintf("AND o.status = $%d", argPos)
 		args = append(args, req.Status)
-	} else {
-
-		countCondition = "CASE WHEN o.deleted_at IS NULL THEN o.guid END"
+		argPos++
 	}
+	if req.Days > 0 {
+		fromDate := time.Now().AddDate(0, 0, -req.Days)
+		dayParam = fmt.Sprintf("AND o.created_at >= $%d", argPos)
+		args = append(args, fromDate)
+		argPos++
+	}
+
+	joinFilter := fmt.Sprintf(`
+	LEFT JOIN "order" o 
+		ON o.status = ost.name AND o.business_id = $1 AND o.deleted_at IS NULL %s %s
+	`, statusParam, dayParam)
 
 	if exists {
 		query = fmt.Sprintf(`
@@ -155,38 +168,33 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 				ost.name as type_name,
 				ost.status_number,
 				os.created_at,
-				COUNT(%s) AS order_count
+				COUNT(o.guid) AS order_count
 			FROM order_status_type ost
 			LEFT JOIN order_status os 
 				ON os.type_id = ost.guid AND os.business_id = $1
-			LEFT JOIN "order" o 
-				ON o.status = ost.name AND o.business_id = $1
+			%s
 			GROUP BY os.guid, os.business_id, os.type_id, os.custom_name, os.created_at,
 			         ost.name, ost.status_number
 			ORDER BY ost.status_number
-		`, countCondition)
+		`, joinFilter)
 	} else {
 		query = fmt.Sprintf(`
-	SELECT 
-		NULL AS guid,
-		NULL AS business_id,
-		NULL AS fon_color,
-		NULL AS type_id,
-		NULL AS custom_name,
-		ost.name AS type_name,
-		ost.status_number,
-		NULL AS created_at,
-		COUNT(%s) AS order_count
-	FROM order_status_type ost
-	LEFT JOIN "order" o 
-		ON o.status = ost.name AND o.business_id = $1 AND o.deleted_at IS NULL
-	GROUP BY ost.name, ost.status_number
-	ORDER BY ost.status_number
-`, countCondition)
-
+			SELECT 
+				NULL AS guid,
+				NULL AS business_id,
+				NULL AS fon_color,
+				NULL AS type_id,
+				NULL AS custom_name,
+				ost.name AS type_name,
+				ost.status_number,
+				NULL AS created_at,
+				COUNT(o.guid) AS order_count
+			FROM order_status_type ost
+			%s
+			GROUP BY ost.name, ost.status_number
+			ORDER BY ost.status_number
+		`, joinFilter)
 	}
-
-
 
 	rows, err := r.db.Query(ctx, query, args...)
 	if err != nil {
@@ -240,6 +248,20 @@ func (r *settingsRepo) List(ctx context.Context, req entity.OrderStatusFilter) (
 	}
 
 	return result, nil
+}
+
+// Day filter builder
+// Day filter builder
+func buildDayFilter(day int, args *[]interface{}, argPos *int) string {
+	if day <= 0 {
+		return ""
+	}
+	// Go tarafda datetime hisoblaymiz:
+	fromDate := time.Now().AddDate(0, 0, -day)
+	*args = append(*args, fromDate)
+	filter := fmt.Sprintf("AND o.created_at >= $%d", *argPos)
+	*argPos++
+	return filter
 }
 
 func (r *settingsRepo) GetStatusByName(ctx context.Context, name, bussnesid string) (*string, error) {
@@ -635,7 +657,3 @@ func (r *settingsRepo) GetPromptOrders(ctx context.Context, guid string) ([]enti
 
 	return result, nil
 }
-
-
-
-

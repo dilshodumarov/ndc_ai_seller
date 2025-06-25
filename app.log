@@ -28002,3 +28002,227 @@ main.main.func1
 2025-06-19T17:37:14.821+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
 main.main.func1
 	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-06-23T15:55:27.666+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-23T15:55:30.832+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-06-23T15:55:30.842+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-06-23T15:55:30.842+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-06-23T15:55:30.842+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-06-23T15:55:31.058+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-06-23T15:55:47.669+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-06-23T15:56:17.153+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0&day=7 
+2025-06-23T16:01:03.471+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-23T16:01:08.538+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-23T16:01:16.830+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0&day=7 
+2025-06-23T16:01:26.394+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-23T16:01:26.395+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-06-23T16:01:49.052+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-23T16:01:50.333+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-06-23T16:02:04.794+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-23T16:09:36.640+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-23T16:10:05.517+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-06-23T16:10:31.881+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-06-23T16:14:14.456+0500	INFO	middleware/logger.go:26	::1 - DELETE /v1/business/delete/2 
+2025-06-23T16:14:16.089+0500	INFO	middleware/logger.go:26	::1 - DELETE /v1/business/delete/2 
+2025-06-23T16:14:18.529+0500	INFO	middleware/logger.go:26	::1 - DELETE /v1/business/delete/2 
+2025-06-23T16:14:41.350+0500	INFO	middleware/logger.go:26	::1 - POST /v1/business/create 
+2025-06-23T16:14:43.382+0500	INFO	middleware/logger.go:26	::1 - POST /v1/business/create 
+2025-06-23T16:17:21.021+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0&day=7 
+2025-06-23T16:17:29.113+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-23T16:17:29.115+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-06-23T16:18:19.564+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-23T16:18:24.205+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list?limit=10&offset=0&day=7 
+2025-06-24T09:22:57.398+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-24T09:23:02.187+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/index.html 
+2025-06-24T09:23:02.214+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui.css 
+2025-06-24T09:23:02.214+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-standalone-preset.js 
+2025-06-24T09:23:02.214+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/swagger-ui-bundle.js 
+2025-06-24T09:23:02.458+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-06-24T09:23:31.157+0500	INFO	middleware/logger.go:26	::1 - POST /v1/auth/login 
+2025-06-24T09:23:59.740+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list-new?limit=10&offset=0&day=7 
+2025-06-24T09:24:29.983+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-24T09:24:29.984+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-06-24T09:24:37.147+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-24T09:24:37.906+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-06-24T09:24:49.024+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list/new?limit=10&offset=0&day=7 
+2025-06-24T09:25:32.547+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list/new?limit=10&offset=0&day=365 
+2025-06-24T09:43:13.362+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-24T09:43:13.362+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-06-24T09:51:02.051+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-24T09:51:12.249+0500	INFO	middleware/logger.go:26	::1 - GET /v1/orders/list/new?limit=10&offset=0&day=7 
+2025-06-24T09:59:26.713+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-24T09:59:26.714+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-06-24T10:03:46.209+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-24T10:05:55.550+0500	INFO	middleware/logger.go:26	::1 - GET /swagger/doc.json 
+2025-06-24T10:06:04.853+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list?day=7 
+2025-06-24T10:06:19.701+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list?day=365 
+2025-06-24T10:12:00.814+0500	ERROR	v1/settings.go:483	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "List order_status: failed to encode args[2]: unable to encode 365 into text format for text (OID 25): cannot find encode plan", "custom_message": ""}
+sugurta/api/handlers/v1.(*settingsRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:483
+sugurta/api/handlers/v1.(*settingsRoutes).ListOrderStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:188
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-06-24T10:12:00.814+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list?status=yangi&day=365 
+2025-06-24T10:13:41.712+0500	ERROR	v1/settings.go:483	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "List order_status: failed to encode args[2]: unable to encode 7 into text format for text (OID 25): cannot find encode plan", "custom_message": ""}
+sugurta/api/handlers/v1.(*settingsRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:483
+sugurta/api/handlers/v1.(*settingsRoutes).ListOrderStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:188
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-06-24T10:13:41.713+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list?status=yangi 
+2025-06-24T10:14:35.883+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-24T10:14:35.884+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-06-24T10:14:40.156+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-24T10:14:42.851+0500	ERROR	v1/settings.go:483	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "List order_status: failed to encode args[2]: unable to encode time.Date(2025, time.June, 17, 10, 14, 42, 729347658, time.Local) into text format for text (OID 25): cannot find encode plan", "custom_message": ""}
+sugurta/api/handlers/v1.(*settingsRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:483
+sugurta/api/handlers/v1.(*settingsRoutes).ListOrderStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:188
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-06-24T10:14:42.851+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list?status=yangi 
+2025-06-24T10:15:00.529+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list 
+2025-06-24T10:15:05.854+0500	ERROR	v1/settings.go:483	response	{"code": 500, "status": "INTERNAL_SERVER_ERROR", "description": "The server encountered an unexpected condition that prevented it from fulfilling the request", "data": "List order_status: failed to encode args[2]: unable to encode time.Date(2025, time.June, 17, 10, 15, 5, 650433560, time.Local) into text format for text (OID 25): cannot find encode plan", "custom_message": ""}
+sugurta/api/handlers/v1.(*settingsRoutes).handleResponse
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:483
+sugurta/api/handlers/v1.(*settingsRoutes).ListOrderStatus
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/handlers/v1/settings.go:188
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.AuthMiddleware.func4
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/authorizer.go:104
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Recovery.func3
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/recovery.go:40
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+sugurta/api.NewRouter.Logger.func2
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/api/middleware/logger.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/recovery.go:102
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/logger.go:249
+github.com/gin-gonic/gin.(*Context).Next
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/context.go:185
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:633
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/home/dilshod/go/pkg/mod/github.com/gin-gonic/gin@v1.10.0/gin.go:589
+net/http.serverHandler.ServeHTTP
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:3210
+net/http.(*conn).serve
+	/home/dilshod/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.23.5.linux-amd64/src/net/http/server.go:2092
+2025-06-24T10:15:05.854+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list?status=yangi 
+2025-06-24T10:17:35.276+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-24T10:17:35.276+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31
+2025-06-24T10:17:39.262+0500	INFO	app/main.go:29	Listen: 	{"address": "0.0.0.0:8080"}
+2025-06-24T10:17:42.015+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list?status=yangi 
+2025-06-24T10:18:09.662+0500	INFO	middleware/logger.go:26	::1 - GET /v1/settings/order-status/list?status=yangi&day=365 
+2025-06-24T10:18:15.236+0500	INFO	app/main.go:40	api gateway service stops
+2025-06-24T10:18:15.236+0500	ERROR	app/main.go:31	app run	{"error": "http: Server closed"}
+main.main.func1
+	/home/dilshod/Documents/ndc_ai/sugurta_go_api_geteway/cmd/app/main.go:31

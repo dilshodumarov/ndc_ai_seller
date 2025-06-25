@@ -145,11 +145,11 @@ func (b *InstagramRoutes) HandleInstagramCallback(c *gin.Context) {
 	fmt.Println("Business ID:", state)
 	// Step 1: Get short-lived access token
 	data := url.Values{}
-	data.Set("client_id", b.cfg.AppConfig.ClientID)
-	data.Set("client_secret", b.cfg.AppConfig.ClientSecret)
-	data.Set("grant_type", b.cfg.AppConfig.GrantType)
-	data.Set("redirect_uri", b.cfg.AppConfig.RedirectURI)
-	data.Set("code", code)
+	// data.Set("client_id", b.cfg.AppConfig.ClientID)
+	// data.Set("client_secret", b.cfg.AppConfig.ClientSecret)
+	// data.Set("grant_type", b.cfg.AppConfig.GrantType)
+	// data.Set("redirect_uri", b.cfg.AppConfig.RedirectURI)
+	// data.Set("code", code)
 
 	resp, err := http.PostForm("https://api.instagram.com/oauth/access_token", data)
 	if err != nil {

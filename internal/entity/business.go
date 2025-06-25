@@ -4,16 +4,18 @@ import "time"
 
 type (
 	CreateBusinessRequest struct {
-		OwnerID          string
-		Name             string
-		Description      string
+		OwnerID     string `json:"owner_id"`
+		Name        string `json:"name"`
+		Description string `json:"description"`
 	}
+
 	CreateBusinessRequestForSwagger struct {
-		Name             string
-		Description      string
+		Name        string `json:"name"`
+		Description string `json:"description"`
 	}
+
 	StartBot struct {
-		BusinessId string
+		BusinessId string `json:"business_id"`
 	}
 	Business struct {
 		ID          string    `json:"id"`

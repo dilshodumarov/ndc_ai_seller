@@ -5,26 +5,26 @@ import (
 )
 
 type Settings struct {
-	GUID              string
-	Name              string
-	BrandName         string
-	BusinessName      string
-	Status            bool
-	BusinessID        string
-	PromptText        string
-	PromptOrder       string
-	WaitingTime       int
-	PromptProduct     string
-	TokenLimit        int
-	IntelligenceLevel int
-	ErrorMessage      string
-	FirstMessage      string
-	IsStop            bool
-	StopUntil         int
-	CreatedAt         time.Time
-	UpdatedAt         time.Time
-	DeletedAt         *time.Time
-	ChatToken         string `json:"chat_token"`
+	GUID              string     `json:"guid"`
+	Name              string     `json:"name"`
+	BrandName         string     `json:"brand_name"`
+	BusinessName      string     `json:"business_name"`
+	Status            bool       `json:"status"`
+	BusinessID        string     `json:"business_id"`
+	PromptText        string     `json:"prompt_text"`
+	PromptOrder       string     `json:"prompt_order"`
+	WaitingTime       int        `json:"waiting_time"`
+	PromptProduct     string     `json:"prompt_product"`
+	TokenLimit        int        `json:"token_limit"`
+	IntelligenceLevel int        `json:"intelligence_level"`
+	ErrorMessage      string     `json:"error_message"`
+	FirstMessage      string     `json:"first_message"`
+	IsStop            bool       `json:"is_stop"`
+	StopUntil         int        `json:"stop_until"`
+	CreatedAt         time.Time  `json:"created_at"`
+	UpdatedAt         time.Time  `json:"updated_at"`
+	DeletedAt         *time.Time `json:"deleted_at"`
+	ChatToken         string     `json:"chat_token"`
 }
 
 type CreateSettingsRequest struct {
@@ -32,26 +32,26 @@ type CreateSettingsRequest struct {
 }
 
 type UpdateSettingsRequest struct {
-	GUID              string `json:"guid"`
-	Name              string `json:"name"`
-	Status            *bool  `json:"status"`
-	PromptText        string `json:"prompt_text"`
-	WaitingTime       int    `json:"waiting_time"`
-	PromptProduct     string `json:"prompt_product"`
-	TokenLimit        int    `json:"token_limit"`
-	IntelligenceLevel int    `json:"intelligence_level"`
-	StopUntil         int    `json:"stop_until"`
-	ChatToken         string `json:"chat_token"`
-	ChatTokenInt      int
-	BrandName         string
-	BusinessName      string
-	ErrorMessage      string
-	FirstMessage      string
-	IsStop            *bool
+	GUID              string  `json:"guid"`
+	Name              string  `json:"name"`
+	Status            *bool   `json:"status"`
+	PromptText        string  `json:"prompt_text"`
+	WaitingTime       int     `json:"waiting_time"`
+	PromptProduct     string  `json:"prompt_product"`
+	TokenLimit        int     `json:"token_limit"`
+	IntelligenceLevel int     `json:"intelligence_level"`
+	StopUntil         int     `json:"stop_until"`
+	ChatToken         string  `json:"chat_token"`
+	ChatTokenInt      int     `json:"chat_token_int"`
+	BrandName         string  `json:"brand_name"`
+	BusinessName      string  `json:"business_name"`
+	ErrorMessage      string  `json:"error_message"`
+	FirstMessage      string  `json:"first_message"`
+	IsStop            *bool   `json:"is_stop"`
 }
 
 type UpdatePromptOrdersRequest struct {
-	OrderStatus []UpdateOrderStatusRequest
+	OrderStatus []UpdateOrderStatusRequest `json:"order_status"`
 }
 
 type PromptOrderResponse struct {

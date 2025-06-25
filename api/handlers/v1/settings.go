@@ -163,18 +163,26 @@ func (r *settingsRoutes) DeleteOrderStatus(c *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Param status query string false "status name"
+// @Param day query int false "Day" default(7)
 // @Success 200 {object} status_http.Response{data=[]entity.OrderStatus} "OK"
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
 // @Router /settings/order-status/list [get]
 func (r *settingsRoutes) ListOrderStatus(c *gin.Context) {
-	Status:=c.Query("status")
+	Status := c.Query("status")
+	dayStr := c.DefaultQuery("day", "7")
 	BusinessID, code := helper.GetBusnessIdFromToken(c, r.cfg)
 	if code != 0 {
 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 	}
+
+	day, err := strconv.Atoi(dayStr)
+	if err != nil {
+		day = 7
+	}
 	res, err := r.settingsUC.List(c, entity.OrderStatusFilter{
 		BusinessID: BusinessID,
-		Status: Status,
+		Status:     Status,
+		Days:       day,
 	})
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -260,13 +268,13 @@ func (r *settingsRoutes) UpdateSettings(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	TokenInt,err:=strconv.Atoi(req.ChatToken)
-	if err!=nil{
+	TokenInt, err := strconv.Atoi(req.ChatToken)
+	if err != nil {
 		fmt.Println(err)
 		r.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-	req.ChatTokenInt=TokenInt
+	req.ChatTokenInt = TokenInt
 	err = r.settingsUC.UpdateSettings(c, &req)
 	if err != nil {
 		if err.Error() == "no rows affected" {

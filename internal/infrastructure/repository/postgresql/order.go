@@ -10,7 +10,6 @@ import (
 	"time"
 )
 
-
 const (
 	orderTableName = `"order"`
 )
@@ -27,7 +26,7 @@ func NewOrderRepo(db *postgres.Postgres) *OrderRepo {
 	}
 }
 
-func (r *OrderRepo) Create(ctx context.Context,o *entity.CreateOrderRequest) (id string, err error) {
+func (r *OrderRepo) Create(ctx context.Context, o *entity.CreateOrderRequest) (id string, err error) {
 	query := fmt.Sprintf(`
 		INSERT INTO %s (client_id,  business_id, location_url, status, total_price, payment_method, status_changed_time, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
@@ -67,19 +66,34 @@ func (r *OrderRepo) Create(ctx context.Context,o *entity.CreateOrderRequest) (id
 
 func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 	query := `
-	SELECT 
-		o.guid, o.order_id,o.status_number,o.image_url,o.business_id,o.platform,o.location_url, o.status, o.total_price, 
-		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,o.location,o.user_note,
+SELECT 
+	o.guid, o.order_id, o.status_number, o.image_url, o.business_id, o.platform, o.location_url, o.status, o.total_price, 
+	o.payment_method, o.status_changed_time, o.created_at, o.updated_at, o.location, o.user_note,
 
-		c.guid, c.first_name, c.phone, c.user_name,
+	c.guid, c.first_name, c.phone, c.user_name,
 
-		p.guid, p.name, p.image_url, p.cost,
-		op.count, op.price
-	FROM "order" o
-	LEFT JOIN order_products op ON o.guid = op.order_id
-	LEFT JOIN product p ON p.guid = op.product_id
-	LEFT JOIN client c ON o.client_id = c.guid
-	WHERE o.guid = $1 and o.deleted_at is null
+	p.guid, p.name, 
+	COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls,
+	p.cost,
+	op.count, op.price
+
+FROM "order" o
+LEFT JOIN order_products op ON o.guid = op.order_id
+LEFT JOIN product p ON p.guid = op.product_id
+LEFT JOIN product_pictures pp ON p.guid = pp.product_id
+LEFT JOIN client c ON o.client_id = c.guid
+
+WHERE o.guid = $1 AND o.deleted_at IS NULL
+
+GROUP BY 
+	o.guid, o.order_id, o.status_number, o.image_url, o.business_id, o.platform, o.location_url, o.status, o.total_price, 
+	o.payment_method, o.status_changed_time, o.created_at, o.updated_at, o.location, o.user_note,
+
+	c.guid, c.first_name, c.phone, c.user_name,
+
+	p.guid, p.name, p.cost,
+	op.count, op.price
+
 `
 
 	rows, err := r.db.Query(ctx, query, id)
@@ -119,7 +133,7 @@ func (r *OrderRepo) Get(ctx context.Context, id string) (*entity.Order, error) {
 		)
 
 		if primageurl.Valid {
-			product.ImageURL = primageurl.String
+			product.ImageURL = strings.Split(primageurl.String, ",")
 		}
 		products = append(products, product)
 		if err != nil {
@@ -179,11 +193,9 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		args = append(args, filter.ID)
 		argPos++
 	}
-	if filter.Daye > 0 {
-		if filter.Daye > 0 {
-			where = append(where, fmt.Sprintf("o.created_at >= NOW() - INTERVAL '%d days'", filter.Daye))
-		}
 
+	if filter.Daye > 0 {
+		where = append(where, fmt.Sprintf("o.created_at >= NOW() - INTERVAL '%d days'", filter.Daye))
 	}
 
 	if filter.Platform != "" {
@@ -277,16 +289,27 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		o.guid, o.order_id, o.status_number, o.image_url,
 		c.guid, c.first_name, c.phone, c.user_name,
 		o.business_id, o.platform, o.location_url, o.status, o.total_price,
-		o.payment_method, o.status_changed_time, o.created_at, o.updated_at,o.location,o.user_note,
+		o.payment_method, o.status_changed_time, o.created_at, o.updated_at, o.location, o.user_note,
 		os.custom_name,
-		p.guid, p.name, p.image_url, p.cost,
+		p.guid, p.name, 
+		COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls,
+		p.cost,
 		op.count, op.total_price
 	FROM %s o
 	LEFT JOIN order_status os ON o.order_status_id = os.guid
 	INNER JOIN order_products op ON o.guid = op.order_id
 	INNER JOIN product p ON p.guid = op.product_id
+	LEFT JOIN product_pictures pp ON p.guid = pp.product_id
 	INNER JOIN client c ON o.client_id = c.guid
 	WHERE o.guid IN (%s) AND o.deleted_at IS NULL
+	GROUP BY 
+		o.guid, o.order_id, o.status_number, o.image_url,
+		c.guid, c.first_name, c.phone, c.user_name,
+		o.business_id, o.platform, o.location_url, o.status, o.total_price,
+		o.payment_method, o.status_changed_time, o.created_at, o.updated_at, o.location, o.user_note,
+		os.custom_name,
+		p.guid, p.name, p.cost,
+		op.count, op.total_price
 	ORDER BY o.created_at DESC
 `, r.tableName, inClause)
 
@@ -352,7 +375,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			order.AdminStatus = nullStatusName.String
 		}
 		if primageURL.Valid {
-			product.ImageURL = primageURL.String
+			product.ImageURL = strings.Split(primageURL.String, ",")
 		}
 		if imageURL.Valid {
 			order.ImageUrl = imageURL.String
@@ -478,7 +501,12 @@ func buildWhereClause(filter *entity.OrderFilter, alias string) (string, []inter
 		}
 		return name
 	}
-
+	if filter.Daye > 0 {
+		where = append(where, fmt.Sprintf("o.created_at >= NOW() - ($%d * INTERVAL '1 day')", argPos))
+		args = append(args, filter.Daye)
+		argPos++
+	}
+	
 	if filter.ID != "" {
 		where = append(where, fmt.Sprintf(`%s = $%d`, col("guid"), argPos))
 		args = append(args, filter.ID)
