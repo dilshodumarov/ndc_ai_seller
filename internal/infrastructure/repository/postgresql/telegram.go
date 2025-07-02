@@ -84,7 +84,7 @@ func (r *telegramRepo) Update(ctx context.Context, req entity.UpdateTelegramAcco
 	}
 
 	// Add updated_at always
-	setClauses = append(setClauses, fmt.Sprintf("updated_at = CURRENT_TIMESTAMP"))
+	setClauses = append(setClauses, "updated_at = CURRENT_TIMESTAMP")
 
 	query := fmt.Sprintf(`
 		UPDATE telegram_accaunt

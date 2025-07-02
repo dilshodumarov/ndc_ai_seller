@@ -13,6 +13,7 @@ import (
 	"sugurta/internal/pkg/config"
 	"sugurta/internal/pkg/helper"
 	"sugurta/internal/usecase/product"
+	"time"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
@@ -36,7 +37,7 @@ func NewProductRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOptio
 		enforcer:      option.Enforcer,
 		productUscase: option.Product,
 	}
-
+	r.BaseHandler.Cache = option.Cache
 	productGroup := apiV1Group.Group("/product")
 	{
 		productGroup.POST("/create", r.createProduct)
@@ -103,7 +104,7 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 			}
 		}
 	}
-
+	p.Cache.IncrementCacheVersion(c, "product_list_version")
 	p.handleResponse(c, status_http.Created, "Product created successfully")
 
 	// if product.Discount != 0 {
@@ -159,7 +160,22 @@ func (p *productRoutes) getProductByID(c *gin.Context) {
 		p.handleResponse(c, status_http.BadRequest, "Invalid UUID format")
 		return
 	}
-	product, err := p.productUscase.Get(c, id)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	version := p.Cache.GetCacheVersion(ctx, "product_list_version")
+
+	cacheKey := fmt.Sprintf("product:v=%d:id=%s", version, id)
+
+	product, err := helper.GetOrSetCache(
+		ctx,
+		p.Cache,
+		cacheKey,
+		func() (*entity.Product, error) {
+			return p.productUscase.Get(ctx, id)
+		},
+	)
 	if err != nil {
 		fmt.Println(err)
 		p.handleResponse(c, status_http.InternalServerError, "error getting product")
@@ -193,37 +209,35 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 		return
 	}
-
+	
 	filter := entity.ProductFilter{
 		OwnerID:    ownerId,
 		CategoryID: c.Query("category_id"),
 		Search:     c.Query("search"),
 		Status:     c.Query("status"),
 	}
-	prid := c.Query("product_id")
-	if prid != "" {
+
+	if prid := c.Query("product_id"); prid != "" {
 		strprid, err := strconv.Atoi(prid)
 		if err != nil {
-			fmt.Println(err)
 			p.handleResponse(c, status_http.BadRequest, "Invalid product id")
 			return
 		}
 		filter.ProductId = strprid
 	}
-	count := c.Query("product_count")
-	if count != "" {
+
+	if count := c.Query("product_count"); count != "" {
 		strcount, err := strconv.Atoi(count)
 		if err != nil {
-			fmt.Println(err)
-			p.handleResponse(c, status_http.BadRequest, "Invalid profuct_count")
+			p.handleResponse(c, status_http.BadRequest, "Invalid product_count")
 			return
 		}
 		filter.ProductCount = strcount
 	}
-	// Default values
+
 	limitStr := c.DefaultQuery("limit", "10")
 	pageStr := c.DefaultQuery("page", "1")
-	fmt.Println(filter)
+
 	limit, err := strconv.ParseUint(limitStr, 10, 64)
 	if err != nil || limit == 0 {
 		p.handleResponse(c, status_http.BadRequest, "Invalid limit parameter")
@@ -239,9 +253,21 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 	filter.Limit = limit
 	filter.Page = page
 
-	result, err := p.productUscase.List(c, filter)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	version := p.Cache.GetCacheVersion(ctx, "product_list_version")
+
+	cacheKey := fmt.Sprintf("product:list:v=%d:owner=%s:cat=%s:search=%s:status=%s:id=%d:count=%d:page=%d:limit=%d",
+		version, filter.OwnerID, filter.CategoryID, filter.Search, filter.Status,
+		filter.ProductId, filter.ProductCount, filter.Page, filter.Limit)
+
+	result, err := helper.GetOrSetCache(ctx, p.Cache, cacheKey, func() (*entity.GetAllProductsResponse, error) {
+		return p.productUscase.List(c, filter)
+	},
+	)
+
 	if err != nil {
-		fmt.Println("List error:", err)
 		p.handleResponse(c, status_http.InternalServerError, "Error listing products")
 		return
 	}
@@ -298,7 +324,7 @@ func (p *productRoutes) updateProduct(c *gin.Context) {
 			}
 		}
 	}
-
+	p.Cache.IncrementCacheVersion(c, "product_list_version")
 	p.handleResponse(c, status_http.OK, "Product updated successfully")
 }
 
@@ -354,7 +380,7 @@ func (p *productRoutes) updateProducts(c *gin.Context) {
 			}
 		}
 	}
-
+	p.Cache.IncrementCacheVersion(c, "product_list_version")
 	p.handleResponse(c, status_http.OK, "Products updated successfully")
 }
 
@@ -387,7 +413,7 @@ func (p *productRoutes) deleteProduct(c *gin.Context) {
 		p.handleResponse(c, status_http.InternalServerError, "error deleting product")
 		return
 	}
-
+	p.Cache.IncrementCacheVersion(c, "product_list_version")
 	p.handleResponse(c, status_http.OK, "Product deleted successfully")
 }
 
@@ -415,7 +441,7 @@ func (p *productRoutes) addProductPicture(c *gin.Context) {
 		p.handleResponse(c, status_http.InternalServerError, "Failed to add image: "+err.Error())
 		return
 	}
-
+	p.Cache.IncrementCacheVersion(c, "product_list_version")
 	p.handleResponse(c, status_http.Created, id)
 }
 

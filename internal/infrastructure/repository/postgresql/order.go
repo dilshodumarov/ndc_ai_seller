@@ -3,7 +3,9 @@ package postgresql
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/postgres"
@@ -182,11 +184,11 @@ GROUP BY
 
 	return order, nil
 }
-
 func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit, offset uint64) (*entity.GetAllOrdersResponse, error) {
 	var where []string
 	var args []interface{}
 	argPos := 1
+
 	// Filterlar
 	if filter.ID != "" {
 		where = append(where, fmt.Sprintf("o.guid = $%d", argPos))
@@ -237,14 +239,14 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 
 	// Step 1: Faqat order_id'larni olish
 	orderIDQuery := fmt.Sprintf(`
-	SELECT DISTINCT ON (o.guid) o.guid
-	FROM %s o
-	LEFT JOIN order_products op ON o.guid = op.order_id
-	LEFT JOIN product p ON p.guid = op.product_id
-	LEFT JOIN client c ON o.client_id = c.guid
-	%s 
-	ORDER BY o.guid, o.created_at DESC
-`, r.tableName, whereClause)
+		SELECT DISTINCT ON (o.guid) o.guid
+		FROM %s o
+		LEFT JOIN order_products op ON o.guid = op.order_id
+		LEFT JOIN product p ON p.guid = op.product_id
+		LEFT JOIN client c ON o.client_id = c.guid
+		%s 
+		ORDER BY o.guid, o.created_at DESC
+	`, r.tableName, whereClause)
 
 	if limit > 0 {
 		orderIDQuery += fmt.Sprintf(" LIMIT $%d OFFSET $%d", len(args)+1, len(args)+2)
@@ -253,7 +255,6 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 
 	orderIDRows, err := r.db.Query(ctx, orderIDQuery, args...)
 	if err != nil {
-
 		return nil, r.db.Error(err)
 	}
 	defer orderIDRows.Close()
@@ -262,17 +263,13 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	for orderIDRows.Next() {
 		var id string
 		if err := orderIDRows.Scan(&id); err != nil {
-
 			return nil, r.db.Error(err)
 		}
 		orderIDs = append(orderIDs, id)
 	}
 
 	if len(orderIDs) == 0 {
-		return &entity.GetAllOrdersResponse{
-			Items: []entity.Order{},
-			Total: 0,
-		}, nil
+		return &entity.GetAllOrdersResponse{Items: []entity.Order{}, Total: 0}, nil
 	}
 
 	// Step 2: IN clause bilan to‘liq ma'lumotlarni olish
@@ -282,58 +279,75 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		inClause += fmt.Sprintf("$%d,", i+1)
 		inArgs[i] = id
 	}
-	inClause = inClause[:len(inClause)-1]
+	inClause = strings.TrimSuffix(inClause, ",")
 
 	fullQuery := fmt.Sprintf(`
-	SELECT 
-		o.guid, o.order_id, o.status_number, o.image_url,
-		c.guid, c.first_name, c.phone, c.user_name,
-		o.business_id, o.platform, o.location_url, o.status, o.total_price,
-		o.payment_method, o.status_changed_time, o.created_at, o.updated_at, o.location, o.user_note,
+		SELECT 
+		o.guid,
+		o.order_id,
+		o.status_number,
+		o.image_url,
+		c.guid AS client_guid,
+		c.first_name,
+		c.phone,
+		c.user_name,
+		o.business_id,
+		o.platform,
+		o.location_url,
+		o.status,
+		o.total_price,
+		o.payment_method,
+		o.status_changed_time,
+		o.created_at,
+		o.updated_at,
+		o.location,
+		o.user_note,
 		os.custom_name,
-		p.guid, p.name, 
-		COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls,
-		p.cost,
-		op.count, op.total_price
-	FROM %s o
-	LEFT JOIN order_status os ON o.order_status_id = os.guid
-	INNER JOIN order_products op ON o.guid = op.order_id
-	INNER JOIN product p ON p.guid = op.product_id
-	LEFT JOIN product_pictures pp ON p.guid = pp.product_id
-	INNER JOIN client c ON o.client_id = c.guid
-	WHERE o.guid IN (%s) AND o.deleted_at IS NULL
-	GROUP BY 
-		o.guid, o.order_id, o.status_number, o.image_url,
-		c.guid, c.first_name, c.phone, c.user_name,
-		o.business_id, o.platform, o.location_url, o.status, o.total_price,
-		o.payment_method, o.status_changed_time, o.created_at, o.updated_at, o.location, o.user_note,
-		os.custom_name,
-		p.guid, p.name, p.cost,
-		op.count, op.total_price
-	ORDER BY o.created_at DESC
-`, r.tableName, inClause)
+		(
+			SELECT json_agg(
+				json_build_object(
+					'product_id', p.guid,
+					'name', p.name,
+					'cost', p.cost,
+					'count', op.count,
+					'total_price', op.total_price,
+					'image_urls', (
+						SELECT array_agg(pp.image_url)
+						FROM product_pictures pp
+						WHERE pp.product_id = p.guid
+					)
+				)
+			)
+			FROM order_products op
+			JOIN product p ON p.guid = op.product_id
+			WHERE op.order_id = o.guid
+		) AS products
+		FROM %s o
+		JOIN client c ON o.client_id = c.guid
+		LEFT JOIN order_status os ON o.order_status_id = os.guid
+		WHERE o.guid IN (%s) AND o.deleted_at IS NULL
+		ORDER BY o.created_at DESC
+	`, r.tableName, inClause)
 
 	rows, err := r.db.Query(ctx, fullQuery, inArgs...)
 	if err != nil {
-
 		return nil, r.db.Error(err)
 	}
 	defer rows.Close()
 
 	orderMap := make(map[string]*entity.Order)
 	for rows.Next() {
+		var order entity.Order
 		var (
-			order                               entity.Order
-			product                             entity.OrderProduct
 			nullStatusChangedTime               sql.NullTime
 			nullStatusName                      sql.NullString
 			clientGUID, clientName, clientPhone sql.NullString
-			imageURL                            sql.NullString
-			primageURL                          sql.NullString
 			username                            sql.NullString
+			imageURL                            sql.NullString
 			paymentMethod                       sql.NullString
 			location                            sql.NullString
 			description                         sql.NullString
+			productJSON                         []byte
 		)
 
 		if err := rows.Scan(
@@ -346,18 +360,11 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 			&order.TotalPrice, &paymentMethod,
 			&nullStatusChangedTime, &order.CreatedAt, &order.UpdatedAt, &location, &description,
 			&nullStatusName,
-			&product.ProductID, &product.Name, &primageURL, &product.Cost,
-			&product.Count, &product.ProductTotalPrice,
+			&productJSON,
 		); err != nil {
 			return nil, r.db.Error(err)
 		}
 
-		if existingOrder, ok := orderMap[order.ID]; ok {
-			existingOrder.Products = append(existingOrder.Products, product)
-			continue
-		}
-
-		// yangi order
 		if nullStatusChangedTime.Valid {
 			order.StatusChangedTime = &nullStatusChangedTime.Time
 		}
@@ -370,31 +377,29 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		if description.Valid {
 			order.Description = description.String
 		}
-
 		if nullStatusName.Valid {
 			order.AdminStatus = nullStatusName.String
-		}
-		if primageURL.Valid {
-			product.ImageURL = strings.Split(primageURL.String, ",")
 		}
 		if imageURL.Valid {
 			order.ImageUrl = imageURL.String
 		}
-		order.Client = entity.ClientInfo{}
-		if clientGUID.Valid {
-			order.Client.GUID = clientGUID.String
-		}
-		if username.Valid {
-			order.Client.UserName = username.String
-		}
-		if clientName.Valid {
-			order.Client.Name = clientName.String
-		}
-		if clientPhone.Valid {
-			order.Client.Phone = clientPhone.String
+
+		order.Client = entity.ClientInfo{
+			GUID:     clientGUID.String,
+			Name:     clientName.String,
+			Phone:    clientPhone.String,
+			UserName: username.String,
 		}
 
-		order.Products = []entity.OrderProduct{product}
+		if len(productJSON) > 0 {
+			var products []entity.OrderProduct
+			if err := json.Unmarshal(productJSON, &products); err != nil {
+				log.Println("product unmarshal error:", err)
+			} else {
+				order.Products = products
+			}
+		}
+
 		orderMap[order.ID] = &order
 	}
 
@@ -408,15 +413,16 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	// Step 3: total count
 	countWhere, countArgs := buildWhereClause(filter, "o")
 	countQuery := fmt.Sprintf(`SELECT COUNT(DISTINCT o.guid) FROM %s o
-	LEFT JOIN order_products op ON o.guid = op.order_id
-	LEFT JOIN product p ON p.guid = op.product_id
-	LEFT JOIN client c ON o.client_id = c.guid
-	%s AND o.deleted_at is null`, r.tableName, countWhere)
+		LEFT JOIN order_products op ON o.guid = op.order_id
+		LEFT JOIN product p ON p.guid = op.product_id
+		LEFT JOIN client c ON o.client_id = c.guid
+		%s AND o.deleted_at is null`, r.tableName, countWhere)
 
 	var totalCount uint64
 	if err := r.db.QueryRow(ctx, countQuery, countArgs...).Scan(&totalCount); err != nil {
 		return nil, r.db.Error(err)
 	}
+
 	return &entity.GetAllOrdersResponse{
 		Items: orders,
 		Total: totalCount,
@@ -506,7 +512,7 @@ func buildWhereClause(filter *entity.OrderFilter, alias string) (string, []inter
 		args = append(args, filter.Daye)
 		argPos++
 	}
-	
+
 	if filter.ID != "" {
 		where = append(where, fmt.Sprintf(`%s = $%d`, col("guid"), argPos))
 		args = append(args, filter.ID)

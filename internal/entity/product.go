@@ -6,17 +6,17 @@ type (
 	//Product
 
 	CreateProductRequest struct {
-		BusinessID   string  `json:"business_id"`
-		Name         string  `json:"name"`
-		CategoryID   *string `json:"category_id"`
-		ShortInfo    string  `json:"short_info"`
-		Description  string  `json:"description"`
-		Cost         int     `json:"cost"`
-		Count        int     `json:"count"`
-		DiscountCost int     `json:"discount_cost"`
-		Discount     int     `json:"discount"`
-		Status       bool    `json:"status"`
-		Image_url    []string
+		BusinessID   string   `json:"business_id"`
+		Name         string   `json:"name"`
+		CategoryID   *string  `json:"category_id"`
+		ShortInfo    string   `json:"short_info"`
+		Description  string   `json:"description"`
+		Cost         int      `json:"cost"`
+		Count        int      `json:"count"`
+		DiscountCost int      `json:"discount_cost"`
+		Discount     int      `json:"discount"`
+		Status       bool     `json:"status"`
+		Image_url    []string `json:"image_urls"`
 	}
 	CreateProductImage struct {
 		ProductId string `json:"product_id"`
@@ -24,16 +24,16 @@ type (
 	}
 
 	CreateProductRequestForSwagger struct {
-		Name         string  `json:"name"`
-		CategoryID   *string `json:"category_id"`
-		ShortInfo    string  `json:"short_info"`
-		Description  string  `json:"description"`
-		Cost         int     `json:"cost"`
-		Count        int     `json:"count"`
-		DiscountCost int     `json:"discount_cost"`
-		Discount     int     `json:"discount"`
-		Status       bool    `json:"status"`
-		Image_url    []string
+		Name         string   `json:"name"`
+		CategoryID   *string  `json:"category_id"`
+		ShortInfo    string   `json:"short_info"`
+		Description  string   `json:"description"`
+		Cost         int      `json:"cost"`
+		Count        int      `json:"count"`
+		DiscountCost int      `json:"discount_cost"`
+		Discount     int      `json:"discount"`
+		Status       bool     `json:"status"`
+		Image_url    []string `json:"image_urls"`
 	}
 
 	Product struct {
@@ -49,37 +49,37 @@ type (
 		Discount     int       `json:"discount"`
 		CreatedAt    time.Time `json:"created_at"`
 		UpdatedAt    time.Time `json:"updated_at"`
-		Image_urls   []string
-		ProductId    int    `json:"product_id"`
-		Status       bool   `json:"status"`
-		CategoryName string `json:"category"`
+		Image_urls   []string  `json:"image_urls"`
+		ProductId    int       `json:"product_id"`
+		Status       bool      `json:"status"`
+		CategoryName string    `json:"category"`
 	}
 
 	UpdateProductRequest struct {
-		ID           string `json:"id"`
-		Name         string `json:"name"`
-		CategoryID   string `json:"category_id"`
-		ShortInfo    string `json:"short_info"`
-		Description  string `json:"description"`
-		Cost         int    `json:"cost"`
-		Count        int    `json:"count"`
-		DiscountCost int    `json:"discount_cost"`
-		Discount     int    `json:"discount"`
-		Status       *bool  `json:"status"`
-		Image_url    []string
+		ID           string   `json:"id"`
+		Name         string   `json:"name"`
+		CategoryID   string   `json:"category_id"`
+		ShortInfo    string   `json:"short_info"`
+		Description  string   `json:"description"`
+		Cost         int      `json:"cost"`
+		Count        int      `json:"count"`
+		DiscountCost int      `json:"discount_cost"`
+		Discount     int      `json:"discount"`
+		Status       *bool    `json:"status"`
+		Image_url    []string `json:"image_urls"`
 	}
 
 	UpdateProductRequestForSwagger struct {
-		Name         string `json:"name"`
-		CategoryID   string `json:"category_id"`
-		ShortInfo    string `json:"short_info"`
-		Description  string `json:"description"`
-		Cost         int    `json:"cost"`
-		Count        int    `json:"count"`
-		DiscountCost int    `json:"discount_cost"`
-		Discount     int    `json:"discount"`
-		Status       *bool  `json:"status"`
-		Image_url    []string
+		Name         string   `json:"name"`
+		CategoryID   string   `json:"category_id"`
+		ShortInfo    string   `json:"short_info"`
+		Description  string   `json:"description"`
+		Cost         int      `json:"cost"`
+		Count        int      `json:"count"`
+		DiscountCost int      `json:"discount_cost"`
+		Discount     int      `json:"discount"`
+		Status       *bool    `json:"status"`
+		Image_url    []string `json:"image_urls"`
 	}
 
 	GetAllProductsRequest struct {

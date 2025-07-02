@@ -79,7 +79,7 @@ func (p *BotCommandsRepo) UpdateBotCommand(ctx context.Context, cmd entity.BotCo
 	}
 
 	// updated_at har doim update qilinadi
-	setParts = append(setParts, fmt.Sprintf("updated_at = CURRENT_TIMESTAMP"))
+	setParts = append(setParts, "updated_at = CURRENT_TIMESTAMP")
 
 	query := fmt.Sprintf(`
 		UPDATE bot_commands

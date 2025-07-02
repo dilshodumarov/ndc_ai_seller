@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"slices"
 	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
@@ -51,23 +52,10 @@ func NewOrderRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption)
 	{
 		orderGroup.POST("/create", r.createOrder)
 		orderGroup.GET("/get/:id", r.getOrder)
-
 		orderGroup.PUT("/update/:id", r.updateOrder)
 		orderGroup.DELETE("/delete/:id", r.deleteOrder)
 		orderGroup.GET("/export", r.exportOrders)
-		orderGroup.GET("/products/:id", r.getOrderProductsByOrderID)
-
-	}
-	listOrders := orderGroup.Group("/list")
-	{
-		listOrders.GET("/new", r.ListNewOrders)
-		listOrders.GET("/ready-to-pick", r.ListReadyToPickOrders)
-		listOrders.GET("/pending-payment", r.ListPendingPaymentOrders)
-		listOrders.GET("/online-paid", r.ListOnlinePaidOrders)
-		listOrders.GET("/to-deliver", r.ListToDeliverOrders)
-		listOrders.GET("/delivered", r.ListDeliveredOrders)
-		listOrders.GET("/cancelled", r.ListCancelledOrders)
-		listOrders.GET("/archived", r.ListArchivedOrders)
+		orderGroup.GET("/list", r.ListOrders)
 	}
 
 }
@@ -124,9 +112,9 @@ func (r *OrderRoutes) getOrder(c *gin.Context) {
 	r.handleResponse(c, status_http.OK, order)
 }
 
-// @Router /orders/list/new [get]
-// @Summary List New Orders
-// @Description List orders with status 'yangi'
+// @Router /orders/list [get]
+// @Summary List Orders
+// @Description List orders with specific statuses
 // @Tags Orders
 // @Accept json
 // @Produce json
@@ -134,38 +122,47 @@ func (r *OrderRoutes) getOrder(c *gin.Context) {
 // @Param limit query int false "Limit" default(10)
 // @Param offset query int false "Offset" default(0)
 // @Param day query int false "Day" default(7)
+// @Param status query string true "Status"
 // @Param client_id query string false "Client ID"
 // @Param search query string false "Search"
 // @Param platform query string false "Platform"
 // @Param payment_method query string false "Payment Method"
 // @Success 200 {object} entity.GetAllOrdersResponse
 // @Failure 500 {object} status_http.Response{data=string} "Server Error"
-func (r *OrderRoutes) ListNewOrders(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "10")
-	offsetStr := c.DefaultQuery("offset", "0")
-	dayStr := c.DefaultQuery("day", "7")
+func (r *OrderRoutes) ListOrders(c *gin.Context) {
+	allowedStatuses := []string{
+		"yangi",
+		"yetkazish_kerak",
+		"yetkazildi",
+		"online_tolov_tasdigi",
+		"tolov_qilmoqchi",
+		"bekor_qilindi",
+		"arxiv",
+		"olishga_tayyor",
+	}
 
-	day, err := strconv.Atoi(dayStr)
-	if err != nil {
-		day = 7
+	// --- Query params
+	limit := parseQueryInt(c, "limit", 10)
+	offset := parseQueryInt(c, "offset", 0)
+	day := parseQueryInt(c, "day", 7)
+	status := c.Query("status")
+
+	if !slices.Contains(allowedStatuses, status) {
+		r.handleResponse(c, status_http.BadRequest, "Invalid status")
+		return
 	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		limit = 10
-	}
-	offset, err := strconv.Atoi(offsetStr)
-	if err != nil {
-		offset = 0
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
+
+	businessID, code := helper.GetBusnessIdFromToken(c, r.Config)
 	if code != 0 {
 		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 		return
 	}
+
+	// --- Filter
 	filter := &entity.OrderFilter{
 		ClientID:      c.Query("client_id"),
-		BusinessID:    BusinessID,
-		Status:        "yangi",
+		BusinessID:    businessID,
+		Status:        status,
 		PaymentMethod: c.Query("payment_method"),
 		Platform:      c.Query("platform"),
 		Search:        c.Query("search"),
@@ -174,413 +171,6 @@ func (r *OrderRoutes) ListNewOrders(c *gin.Context) {
 
 	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
 	if err != nil {
-		fmt.Println(err)
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
-
-	r.handleResponse(c, status_http.OK, result)
-}
-
-// @Router /orders/list/ready-to-pick [get]
-// @Summary List Ready To Pick Orders
-// @Description List orders with status 'olishga_tayyor'
-// @Tags Orders
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param limit query int false "Limit" default(10)
-// @Param offset query int false "Offset" default(0)
-// @Param day query int false "Day" default(7)
-// @Param client_id query string false "Client ID"
-// @Param search query string false "Search"
-// @Param platform query string false "Platform"
-// @Param payment_method query string false "Payment Method"
-// @Success 200 {object} entity.GetAllOrdersResponse
-// @Failure 500 {object} status_http.Response{data=string} "Server Error"
-func (r *OrderRoutes) ListReadyToPickOrders(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "10")
-	offsetStr := c.DefaultQuery("offset", "0")
-	dayStr := c.DefaultQuery("day", "7")
-
-	day, err := strconv.Atoi(dayStr)
-	if err != nil {
-		day = 7
-	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		limit = 10
-	}
-	offset, err := strconv.Atoi(offsetStr)
-	if err != nil {
-		offset = 0
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
-	if code != 0 {
-		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-		return
-	}
-	filter := &entity.OrderFilter{
-		ClientID:      c.Query("client_id"),
-		BusinessID:    BusinessID,
-		Status:        "olishga_tayyor",
-		PaymentMethod: c.Query("payment_method"),
-		Platform:      c.Query("platform"),
-		Search:        c.Query("search"),
-		Daye:          day,
-	}
-
-	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
-	if err != nil {
-		fmt.Println(err)
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
-
-	r.handleResponse(c, status_http.OK, result)
-}
-
-// @Router /orders/list/pending-payment [get]
-// @Summary List Pending Payment Orders
-// @Description List orders with status 'tolov_qilmoqchi'
-// @Tags Orders
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param limit query int false "Limit" default(10)
-// @Param offset query int false "Offset" default(0)
-// @Param day query int false "Day" default(7)
-// @Param client_id query string false "Client ID"
-// @Param search query string false "Search"
-// @Param platform query string false "Platform"
-// @Param payment_method query string false "Payment Method"
-// @Success 200 {object} entity.GetAllOrdersResponse
-// @Failure 500 {object} status_http.Response{data=string} "Server Error"
-func (r *OrderRoutes) ListPendingPaymentOrders(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "10")
-	offsetStr := c.DefaultQuery("offset", "0")
-	dayStr := c.DefaultQuery("day", "7")
-
-	day, err := strconv.Atoi(dayStr)
-	if err != nil {
-		day = 7
-	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		limit = 10
-	}
-	offset, err := strconv.Atoi(offsetStr)
-	if err != nil {
-		offset = 0
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
-	if code != 0 {
-		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-		return
-	}
-	filter := &entity.OrderFilter{
-		ClientID:      c.Query("client_id"),
-		BusinessID:    BusinessID,
-		Status:        "tolov_qilmoqchi",
-		PaymentMethod: c.Query("payment_method"),
-		Platform:      c.Query("platform"),
-		Search:        c.Query("search"),
-		Daye:          day,
-	}
-
-	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
-	if err != nil {
-		fmt.Println(err)
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
-
-	r.handleResponse(c, status_http.OK, result)
-}
-
-// @Router /orders/list/online-paid [get]
-// @Summary List Online Paid Orders
-// @Description List orders with status 'online_tolov_tasdigi'
-// @Tags Orders
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param limit query int false "Limit" default(10)
-// @Param offset query int false "Offset" default(0)
-// @Param day query int false "Day" default(7)
-// @Param client_id query string false "Client ID"
-// @Param search query string false "Search"
-// @Param platform query string false "Platform"
-// @Param payment_method query string false "Payment Method"
-// @Success 200 {object} entity.GetAllOrdersResponse
-// @Failure 500 {object} status_http.Response{data=string} "Server Error"
-func (r *OrderRoutes) ListOnlinePaidOrders(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "10")
-	offsetStr := c.DefaultQuery("offset", "0")
-	dayStr := c.DefaultQuery("day", "7")
-
-	day, err := strconv.Atoi(dayStr)
-	if err != nil {
-		day = 7
-	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		limit = 10
-	}
-	offset, err := strconv.Atoi(offsetStr)
-	if err != nil {
-		offset = 0
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
-	if code != 0 {
-		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-		return
-	}
-	filter := &entity.OrderFilter{
-		ClientID:      c.Query("client_id"),
-		BusinessID:    BusinessID,
-		Status:        "online_tolov_tasdigi",
-		PaymentMethod: c.Query("payment_method"),
-		Platform:      c.Query("platform"),
-		Search:        c.Query("search"),
-		Daye:          day,
-	}
-
-	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
-	if err != nil {
-		fmt.Println(err)
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
-
-	r.handleResponse(c, status_http.OK, result)
-}
-
-// @Router /orders/list/to-deliver [get]
-// @Summary List To Deliver Orders
-// @Description List orders with status 'yetkazish_kerak'
-// @Tags Orders
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param limit query int false "Limit" default(10)
-// @Param offset query int false "Offset" default(0)
-// @Param day query int false "Day" default(7)
-// @Param client_id query string false "Client ID"
-// @Param search query string false "Search"
-// @Param platform query string false "Platform"
-// @Param payment_method query string false "Payment Method"
-// @Success 200 {object} entity.GetAllOrdersResponse
-// @Failure 500 {object} status_http.Response{data=string} "Server Error"
-func (r *OrderRoutes) ListToDeliverOrders(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "10")
-	offsetStr := c.DefaultQuery("offset", "0")
-	dayStr := c.DefaultQuery("day", "7")
-
-	day, err := strconv.Atoi(dayStr)
-	if err != nil {
-		day = 7
-	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		limit = 10
-	}
-	offset, err := strconv.Atoi(offsetStr)
-	if err != nil {
-		offset = 0
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
-	if code != 0 {
-		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-		return
-	}
-	filter := &entity.OrderFilter{
-		ClientID:      c.Query("client_id"),
-		BusinessID:    BusinessID,
-		Status:        "yetkazish_kerak",
-		PaymentMethod: c.Query("payment_method"),
-		Platform:      c.Query("platform"),
-		Search:        c.Query("search"),
-		Daye:          day,
-	}
-
-	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
-	if err != nil {
-		fmt.Println(err)
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
-
-	r.handleResponse(c, status_http.OK, result)
-}
-
-// @Router /orders/list/delivered [get]
-// @Summary List Delivered Orders
-// @Description List orders with status 'yetkazildi'
-// @Tags Orders
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param limit query int false "Limit" default(10)
-// @Param offset query int false "Offset" default(0)
-// @Param day query int false "Day" default(7)
-// @Param client_id query string false "Client ID"
-// @Param search query string false "Search"
-// @Param platform query string false "Platform"
-// @Param payment_method query string false "Payment Method"
-// @Success 200 {object} entity.GetAllOrdersResponse
-// @Failure 500 {object} status_http.Response{data=string} "Server Error"
-func (r *OrderRoutes) ListDeliveredOrders(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "10")
-	offsetStr := c.DefaultQuery("offset", "0")
-	dayStr := c.DefaultQuery("day", "7")
-
-	day, err := strconv.Atoi(dayStr)
-	if err != nil {
-		day = 7
-	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		limit = 10
-	}
-	offset, err := strconv.Atoi(offsetStr)
-	if err != nil {
-		offset = 0
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
-	if code != 0 {
-		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-		return
-	}
-	filter := &entity.OrderFilter{
-		ClientID:      c.Query("client_id"),
-		BusinessID:    BusinessID,
-		Status:        "yetkazildi",
-		PaymentMethod: c.Query("payment_method"),
-		Platform:      c.Query("platform"),
-		Search:        c.Query("search"),
-		Daye:          day,
-	}
-
-	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
-	if err != nil {
-		fmt.Println(err)
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
-
-	r.handleResponse(c, status_http.OK, result)
-}
-
-// @Router /orders/list/cancelled [get]
-// @Summary List Cancelled Orders
-// @Description List orders with status 'bekor_qilindi'
-// @Tags Orders
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param limit query int false "Limit" default(10)
-// @Param offset query int false "Offset" default(0)
-// @Param day query int false "Day" default(7)
-// @Param client_id query string false "Client ID"
-// @Param search query string false "Search"
-// @Param platform query string false "Platform"
-// @Param payment_method query string false "Payment Method"
-// @Success 200 {object} entity.GetAllOrdersResponse
-// @Failure 500 {object} status_http.Response{data=string} "Server Error"
-func (r *OrderRoutes) ListCancelledOrders(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "10")
-	offsetStr := c.DefaultQuery("offset", "0")
-	dayStr := c.DefaultQuery("day", "7")
-
-	day, err := strconv.Atoi(dayStr)
-	if err != nil {
-		day = 7
-	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		limit = 10
-	}
-	offset, err := strconv.Atoi(offsetStr)
-	if err != nil {
-		offset = 0
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
-	if code != 0 {
-		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-		return
-	}
-	filter := &entity.OrderFilter{
-		ClientID:      c.Query("client_id"),
-		BusinessID:    BusinessID,
-		Status:        "bekor_qilindi",
-		PaymentMethod: c.Query("payment_method"),
-		Platform:      c.Query("platform"),
-		Search:        c.Query("search"),
-		Daye:          day,
-	}
-
-	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
-	if err != nil {
-		fmt.Println(err)
-		r.handleResponse(c, status_http.InternalServerError, err.Error())
-		return
-	}
-
-	r.handleResponse(c, status_http.OK, result)
-}
-
-// @Router /orders/list/archived [get]
-// @Summary List Archived Orders
-// @Description List orders with status 'arxiv'
-// @Tags Orders
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Param limit query int false "Limit" default(10)
-// @Param offset query int false "Offset" default(0)
-// @Param day query int false "Day" default(7)
-// @Param client_id query string false "Client ID"
-// @Param search query string false "Search"
-// @Param platform query string false "Platform"
-// @Param payment_method query string false "Payment Method"
-// @Success 200 {object} entity.GetAllOrdersResponse
-// @Failure 500 {object} status_http.Response{data=string} "Server Error"
-func (r *OrderRoutes) ListArchivedOrders(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "10")
-	offsetStr := c.DefaultQuery("offset", "0")
-	dayStr := c.DefaultQuery("day", "7")
-
-	day, err := strconv.Atoi(dayStr)
-	if err != nil {
-		day = 7
-	}
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil {
-		limit = 10
-	}
-	offset, err := strconv.Atoi(offsetStr)
-	if err != nil {
-		offset = 0
-	}
-	BusinessID, code := helper.GetBusnessIdFromToken(c, r.Config)
-	if code != 0 {
-		r.handleResponse(c, status_http.Unauthorized, "Unauthorized")
-		return
-	}
-	filter := &entity.OrderFilter{
-		ClientID:      c.Query("client_id"),
-		BusinessID:    BusinessID,
-		Status:        "arxiv",
-		PaymentMethod: c.Query("payment_method"),
-		Platform:      c.Query("platform"),
-		Search:        c.Query("search"),
-		Daye:          day,
-	}
-
-	result, err := r.OrderUseCase.List(c, filter, uint64(limit), uint64(offset))
-	if err != nil {
-		fmt.Println(err)
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
@@ -810,4 +400,13 @@ func (uc *OrderRoutes) ExportToExcel(ctx context.Context, filter *entity.OrderFi
 	}
 
 	return buf.Bytes(), nil
+}
+
+func parseQueryInt(c *gin.Context, key string, defaultVal int) int {
+	valStr := c.DefaultQuery(key, fmt.Sprintf("%d", defaultVal))
+	val, err := strconv.Atoi(valStr)
+	if err != nil {
+		return defaultVal
+	}
+	return val
 }

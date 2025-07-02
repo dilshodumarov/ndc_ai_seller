@@ -1,11 +1,13 @@
 package v1
 
 import (
+	"fmt"
 	"strconv"
 	"sugurta/api/handlers"
 	status_http "sugurta/api/http_status"
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+	"sugurta/internal/pkg/helper"
 	"sugurta/internal/usecase/database"
 
 	"github.com/casbin/casbin/v2"
@@ -30,7 +32,7 @@ func NewDatabaseRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOpti
 		enforcer:  option.Enforcer,
 		dbUsecase: option.Database,
 	}
-
+	r.BaseHandler.Cache = option.Cache
 	db := apiV1Group.Group("/database")
 	{
 		db.POST("/create", r.CreateDatabase)
@@ -59,7 +61,7 @@ func (r *databaseRoutes) CreateDatabase(c *gin.Context) {
 		r.handleResponse(c, status_http.BadRequest, err.Error())
 		return
 	}
-
+	
 	id, err := r.dbUsecase.Create(c, &req)
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
@@ -186,7 +188,6 @@ func (r *databaseRoutes) DeleteDatabase(c *gin.Context) {
 // @Router /database/list [get]
 func (r *databaseRoutes) ListDatabases(c *gin.Context) {
 	var filter entity.Filter
-
 	filter.Search = c.Query("search")
 
 	// page
@@ -203,7 +204,20 @@ func (r *databaseRoutes) ListDatabases(c *gin.Context) {
 		}
 	}
 
-	list, err := r.dbUsecase.List(c, &filter)
+	ctx := c.Request.Context()
+
+	// 🔢 Cache versiyasi
+	version := r.Cache.GetCacheVersion(ctx, "databases_version")
+
+	// 🔑 Cache key yaratish
+	cacheKey := fmt.Sprintf("databases:v=%d:search=%s:page=%d:limit=%d", version, filter.Search, filter.Page, filter.Limit)
+
+	// 📦 Redisdan olish yoki DB'dan fetch qilish
+	list, err := helper.GetOrSetCache(ctx, r.Cache, cacheKey, func() (*entity.Databaselist, error) {
+		return r.dbUsecase.List(ctx, &filter)
+		 
+	})
+
 	if err != nil {
 		r.handleResponse(c, status_http.InternalServerError, err.Error())
 		return

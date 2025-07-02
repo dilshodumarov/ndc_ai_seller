@@ -156,6 +156,8 @@ definitions:
         type: string
       tokens:
         type: integer
+    required:
+    - name
     type: object
   entity.CreateNotificationRequest:
     properties:
@@ -217,7 +219,7 @@ definitions:
         type: integer
       discount_cost:
         type: integer
-      image_url:
+      image_urls:
         items:
           type: string
         type: array
@@ -777,7 +779,7 @@ definitions:
         type: integer
       id:
         type: string
-      image_url:
+      image_urls:
         items:
           type: string
         type: array
@@ -802,7 +804,7 @@ definitions:
         type: integer
       discount_cost:
         type: integer
-      image_url:
+      image_urls:
         items:
           type: string
         type: array
@@ -3648,11 +3650,11 @@ paths:
       summary: Get Order
       tags:
       - Orders
-  /orders/list/archived:
+  /orders/list:
     get:
       consumes:
       - application/json
-      description: List orders with status 'arxiv'
+      description: List orders with specific statuses
       parameters:
       - default: 10
         description: Limit
@@ -3669,6 +3671,11 @@ paths:
         in: query
         name: day
         type: integer
+      - description: Status
+        in: query
+        name: status
+        required: true
+        type: string
       - description: Client ID
         in: query
         name: client_id
@@ -3703,413 +3710,7 @@ paths:
               type: object
       security:
       - BearerAuth: []
-      summary: List Archived Orders
-      tags:
-      - Orders
-  /orders/list/cancelled:
-    get:
-      consumes:
-      - application/json
-      description: List orders with status 'bekor_qilindi'
-      parameters:
-      - default: 10
-        description: Limit
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Offset
-        in: query
-        name: offset
-        type: integer
-      - default: 7
-        description: Day
-        in: query
-        name: day
-        type: integer
-      - description: Client ID
-        in: query
-        name: client_id
-        type: string
-      - description: Search
-        in: query
-        name: search
-        type: string
-      - description: Platform
-        in: query
-        name: platform
-        type: string
-      - description: Payment Method
-        in: query
-        name: payment_method
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.GetAllOrdersResponse'
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: List Cancelled Orders
-      tags:
-      - Orders
-  /orders/list/delivered:
-    get:
-      consumes:
-      - application/json
-      description: List orders with status 'yetkazildi'
-      parameters:
-      - default: 10
-        description: Limit
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Offset
-        in: query
-        name: offset
-        type: integer
-      - default: 7
-        description: Day
-        in: query
-        name: day
-        type: integer
-      - description: Client ID
-        in: query
-        name: client_id
-        type: string
-      - description: Search
-        in: query
-        name: search
-        type: string
-      - description: Platform
-        in: query
-        name: platform
-        type: string
-      - description: Payment Method
-        in: query
-        name: payment_method
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.GetAllOrdersResponse'
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: List Delivered Orders
-      tags:
-      - Orders
-  /orders/list/new:
-    get:
-      consumes:
-      - application/json
-      description: List orders with status 'yangi'
-      parameters:
-      - default: 10
-        description: Limit
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Offset
-        in: query
-        name: offset
-        type: integer
-      - default: 7
-        description: Day
-        in: query
-        name: day
-        type: integer
-      - description: Client ID
-        in: query
-        name: client_id
-        type: string
-      - description: Search
-        in: query
-        name: search
-        type: string
-      - description: Platform
-        in: query
-        name: platform
-        type: string
-      - description: Payment Method
-        in: query
-        name: payment_method
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.GetAllOrdersResponse'
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: List New Orders
-      tags:
-      - Orders
-  /orders/list/online-paid:
-    get:
-      consumes:
-      - application/json
-      description: List orders with status 'online_tolov_tasdigi'
-      parameters:
-      - default: 10
-        description: Limit
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Offset
-        in: query
-        name: offset
-        type: integer
-      - default: 7
-        description: Day
-        in: query
-        name: day
-        type: integer
-      - description: Client ID
-        in: query
-        name: client_id
-        type: string
-      - description: Search
-        in: query
-        name: search
-        type: string
-      - description: Platform
-        in: query
-        name: platform
-        type: string
-      - description: Payment Method
-        in: query
-        name: payment_method
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.GetAllOrdersResponse'
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: List Online Paid Orders
-      tags:
-      - Orders
-  /orders/list/pending-payment:
-    get:
-      consumes:
-      - application/json
-      description: List orders with status 'tolov_qilmoqchi'
-      parameters:
-      - default: 10
-        description: Limit
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Offset
-        in: query
-        name: offset
-        type: integer
-      - default: 7
-        description: Day
-        in: query
-        name: day
-        type: integer
-      - description: Client ID
-        in: query
-        name: client_id
-        type: string
-      - description: Search
-        in: query
-        name: search
-        type: string
-      - description: Platform
-        in: query
-        name: platform
-        type: string
-      - description: Payment Method
-        in: query
-        name: payment_method
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.GetAllOrdersResponse'
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: List Pending Payment Orders
-      tags:
-      - Orders
-  /orders/list/ready-to-pick:
-    get:
-      consumes:
-      - application/json
-      description: List orders with status 'olishga_tayyor'
-      parameters:
-      - default: 10
-        description: Limit
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Offset
-        in: query
-        name: offset
-        type: integer
-      - default: 7
-        description: Day
-        in: query
-        name: day
-        type: integer
-      - description: Client ID
-        in: query
-        name: client_id
-        type: string
-      - description: Search
-        in: query
-        name: search
-        type: string
-      - description: Platform
-        in: query
-        name: platform
-        type: string
-      - description: Payment Method
-        in: query
-        name: payment_method
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.GetAllOrdersResponse'
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: List Ready To Pick Orders
-      tags:
-      - Orders
-  /orders/list/to-deliver:
-    get:
-      consumes:
-      - application/json
-      description: List orders with status 'yetkazish_kerak'
-      parameters:
-      - default: 10
-        description: Limit
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        description: Offset
-        in: query
-        name: offset
-        type: integer
-      - default: 7
-        description: Day
-        in: query
-        name: day
-        type: integer
-      - description: Client ID
-        in: query
-        name: client_id
-        type: string
-      - description: Search
-        in: query
-        name: search
-        type: string
-      - description: Platform
-        in: query
-        name: platform
-        type: string
-      - description: Payment Method
-        in: query
-        name: payment_method
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.GetAllOrdersResponse'
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/status_http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      security:
-      - BearerAuth: []
-      summary: List To Deliver Orders
+      summary: List Orders
       tags:
       - Orders
   /orders/products/{id}:

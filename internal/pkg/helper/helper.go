@@ -1,7 +1,9 @@
 package helper
 
 import (
+	"context"
 	"crypto/rand"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/big"
@@ -13,6 +15,8 @@ import (
 
 	"sugurta/internal/entity"
 	"sugurta/internal/pkg/config"
+
+	"sugurta/internal/infrastructure/repository/redis"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
@@ -242,4 +246,55 @@ func ParseJWT(tokenString string, jwtKey string) (jwt.MapClaims, error) {
 	}
 
 	return claims, nil
+}
+
+func GetOrSetCache[T any](
+	ctx context.Context,
+	cache redis.Cache,
+	key string,
+	fetchFunc func() (T, error),
+) (T, error) {
+	var zero T
+
+	// Try get from Redis
+	if cache.IsAvailable(ctx) {
+		cachedData, err := cache.Get(ctx, key)
+		if err == nil {
+			fmt.Println("🔁 Redis raw:", string(cachedData))
+			if len(cachedData) > 0 {
+				var cached T
+				if err := json.Unmarshal(cachedData, &cached); err == nil {
+					fmt.Println("✅ Cache hit")
+					return cached, nil
+				} else {
+					fmt.Println("❌ JSON unmarshal error:", err)
+				}
+			}
+		} else {
+			fmt.Println("⚠️ Redis GET error:", err)
+		}
+	}
+
+	// Fetch from DB or another source
+	data, err := fetchFunc()
+	if err != nil {
+		return zero, err
+	}
+
+	// Set to Redis
+	if cache.IsAvailable(ctx) {
+		if jsonBytes, err := json.Marshal(data); err == nil {
+			err := cache.Set(ctx, key, jsonBytes, 10*time.Minute)
+			if err != nil {
+				fmt.Println("⚠️ Redis SET error:", err)
+			} else {
+				fmt.Println("✅ Cache SET successful")
+			}
+		} else {
+			fmt.Println("❌ JSON marshal error:", err)
+		}
+	}
+
+	fmt.Println("🐘 Fetched from PostgreSQL or Source")
+	return data, nil
 }

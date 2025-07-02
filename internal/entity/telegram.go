@@ -16,21 +16,19 @@ type CreateTelegramAccountRequest struct {
 	BusinessID string `json:"business_id"`
 }
 
-
 type UpdateTelegramAccountRequest struct {
-	Phone         string `json:"phone"`
-	Number     string `json:"number"`
-	Status     string `json:"status"`
+	Phone  string `json:"phone"`
+	Number string `json:"number"`
+	Status string `json:"status"`
 }
-
 
 type PhoneNumber struct {
 	Phone string `json:"phone"`
 }
 
 type CodeInput struct {
-	Phone    string `json:"phone"`
-	Code     string `json:"code"`
-	Password string `json:"password,omitempty"`
+	Phone     string `json:"phone"`
+	Code      string `json:"code"`
+	Password  string `json:"password,omitempty"`
 	BussnesId string `json:"bussnes_id"`
 }
