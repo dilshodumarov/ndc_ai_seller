@@ -184,6 +184,7 @@ GROUP BY
 
 	return order, nil
 }
+
 func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit, offset uint64) (*entity.GetAllOrdersResponse, error) {
 	var where []string
 	var args []interface{}
@@ -197,7 +198,9 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	}
 
 	if filter.Daye > 0 {
-		where = append(where, fmt.Sprintf("o.created_at >= NOW() - INTERVAL '%d days'", filter.Daye))
+		where = append(where, fmt.Sprintf("o.created_at >= NOW() - ($%d || ' days')::interval", argPos))
+		args = append(args, fmt.Sprintf("%d", filter.Daye)) // stringga o‘girildi
+		argPos++
 	}
 
 	if filter.Platform != "" {
@@ -232,6 +235,8 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	}
 
 	// WHERE clause
+	where = append(where, "o.deleted_at IS NULL")
+
 	whereClause := ""
 	if len(where) > 0 {
 		whereClause = "WHERE " + strings.Join(where, " AND ")
@@ -239,14 +244,17 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 
 	// Step 1: Faqat order_id'larni olish
 	orderIDQuery := fmt.Sprintf(`
-		SELECT DISTINCT ON (o.guid) o.guid
-		FROM %s o
-		LEFT JOIN order_products op ON o.guid = op.order_id
-		LEFT JOIN product p ON p.guid = op.product_id
-		LEFT JOIN client c ON o.client_id = c.guid
-		%s 
-		ORDER BY o.guid, o.created_at DESC
-	`, r.tableName, whereClause)
+	SELECT DISTINCT ON (o.guid) o.guid
+	FROM %s o
+	LEFT JOIN order_products op ON o.guid = op.order_id
+	LEFT JOIN product p ON p.guid = op.product_id
+	LEFT JOIN client c ON o.client_id = c.guid
+	%s
+	ORDER BY o.guid, o.created_at DESC
+`, r.tableName, whereClause)
+
+
+
 
 	if limit > 0 {
 		orderIDQuery += fmt.Sprintf(" LIMIT $%d OFFSET $%d", len(args)+1, len(args)+2)
@@ -255,6 +263,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 
 	orderIDRows, err := r.db.Query(ctx, orderIDQuery, args...)
 	if err != nil {
+		fmt.Println(111, err)
 		return nil, r.db.Error(err)
 	}
 	defer orderIDRows.Close()
@@ -267,6 +276,16 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 		}
 		orderIDs = append(orderIDs, id)
 	}
+
+	start := offset
+	end := offset + limit
+	if start > uint64(len(orderIDs)) {
+		start = uint64(len(orderIDs))
+	}
+	if end > uint64(len(orderIDs)) {
+		end = uint64(len(orderIDs))
+	}
+	orderIDs = orderIDs[start:end]
 
 	if len(orderIDs) == 0 {
 		return &entity.GetAllOrdersResponse{Items: []entity.Order{}, Total: 0}, nil
@@ -331,6 +350,7 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 
 	rows, err := r.db.Query(ctx, fullQuery, inArgs...)
 	if err != nil {
+		fmt.Println(22222, err)
 		return nil, r.db.Error(err)
 	}
 	defer rows.Close()
@@ -508,8 +528,8 @@ func buildWhereClause(filter *entity.OrderFilter, alias string) (string, []inter
 		return name
 	}
 	if filter.Daye > 0 {
-		where = append(where, fmt.Sprintf("o.created_at >= NOW() - ($%d * INTERVAL '1 day')", argPos))
-		args = append(args, filter.Daye)
+		where = append(where, fmt.Sprintf("o.created_at >= NOW() - ($%d || ' days')::interval", argPos))
+		args = append(args, fmt.Sprintf("%d", filter.Daye)) // stringga o‘girildi
 		argPos++
 	}
 

@@ -74,9 +74,9 @@ type RouteOption struct {
 
 // NewRouter -.
 // Swagger spec:
-// @title       Go Clean Template API
-// @description Using a translation service as an example
+// @title       AI Seller API
 // @version     1.0
+// @description This API powers the AI Seller platform for intelligent product recommendations and management.
 // @BasePath    /v1
 // @securityDefinitions.apikey BearerAuth
 // @in header

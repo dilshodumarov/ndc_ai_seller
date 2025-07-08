@@ -941,8 +941,9 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Using a translation service as an example
-  title: Go Clean Template API
+  description: This API powers the AI Seller platform for intelligent product recommendations
+    and management.
+  title: AI Seller API
   version: "1.0"
 paths:
   /auth/clients/{id}:
