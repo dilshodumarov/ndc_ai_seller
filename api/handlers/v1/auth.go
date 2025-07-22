@@ -251,18 +251,18 @@ func (a *authRoutes) verify(c *gin.Context) {
 	}
 
 	// Get verification code
-	code, err := a.Cache.Get(c, RegisterCodeKey+user.Email)
-	if err != nil {
-		a.handleResponse(c, status_http.Forbidden, ErrCodeExpired)
-		return
-	}
+	// code, err := a.Cache.Get(c, RegisterCodeKey+user.Email)
+	// if err != nil {
+	// 	a.handleResponse(c, status_http.Forbidden, ErrCodeExpired)
+	// 	return
+	// }
 
-	// Verify code
-	codeStr := strings.Trim(string(code), "\"")
-	if req.Code != codeStr {
-		a.handleResponse(c, status_http.Forbidden, ErrIncorrectCode)
-		return
-	}
+	// // Verify code
+	// codeStr := strings.Trim(string(code), "\"")
+	// if req.Code != codeStr {
+	// 	a.handleResponse(c, status_http.Forbidden, ErrIncorrectCode)
+	// 	return
+	// }
 
 	// Generate tokens
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

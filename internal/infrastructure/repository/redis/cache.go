@@ -2,6 +2,8 @@ package redis
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"strconv"
 	"sugurta/internal/pkg/redis"
 	"time"
@@ -27,11 +29,14 @@ type cache struct {
 }
 
 func (c *cache) Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error {
-	// tracing
-	// ctx, span := otlp_pkg.Start(ctx, "cecheService", "CasheRepoSet")
-	// defer span.End()
-	err := c.rdb.Client.Set(ctx, key, value, expiration).Err()
+	data, err := json.Marshal(value)
 	if err != nil {
+		return fmt.Errorf("failed to marshal data: %w", err)
+	}
+
+	err = c.rdb.Client.Set(ctx, key, data, expiration).Err()
+	if err != nil {
+		fmt.Println(9999)
 		return err
 	}
 	return nil
