@@ -22,56 +22,54 @@ type (
 	}
 
 	Order struct {
-		ID                string
-		OrderId           string
-		Client            ClientInfo
-		BusinessID        string
-		StatusNumber      int
-		LocationURL       string
-		Status            string
-		AdminStatus       string
-		TotalPrice        float64
-		PaymentMethod     string
-		Platform          string
-		ImageUrl          string
-		StatusChangedTime *time.Time
-		CreatedAt         time.Time
-		UpdatedAt         time.Time
-		Location          string
-		Description       string
-		Products          []OrderProduct // <--- Products field qo‘shamiz
-		
+		ID                string         `json:"id"`
+		OrderId           string         `json:"order_id"`
+		Client            ClientInfo     `json:"client"`
+		BusinessID        string         `json:"business_id"`
+		StatusNumber      int            `json:"status_number"`
+		LocationURL       string         `json:"location_url"`
+		Status            string         `json:"status"`
+		AdminStatus       string         `json:"admin_status"`
+		TotalPrice        float64        `json:"total_price"`
+		PaymentMethod     string         `json:"payment_method"`
+		Platform          string         `json:"platform"`
+		ImageUrl          string         `json:"image_url"`
+		StatusChangedTime *time.Time     `json:"status_changed_time"`
+		CreatedAt         time.Time      `json:"created_at"`
+		UpdatedAt         time.Time      `json:"updated_at"`
+		Location          string         `json:"location"`
+		Description       string         `json:"description"`
+		Products          []OrderProduct `json:"products"`
 	}
 
 	ClientInfo struct {
-		GUID     string
-		Name     string
-		Phone    string
-		UserName string
+		GUID     string `json:"guid"`
+		Name     string `json:"name"`
+		Phone    string `json:"phone"`
+		UserName string `json:"user_name"`
 	}
 
 	OrderProduct struct {
-		ProductID         string
-		Name              string
-		ImageURL          []string
-		Cost              int
-		Count             int
-		ProductTotalPrice int // order_products.price
+		ProductID         string   `json:"product_id"`
+		Name              string   `json:"name"`
+		ImageURL          []string `json:"image_urls"`
+		Cost              int      `json:"cost"`
+		Count             int      `json:"count"`
+		ProductTotalPrice int      `json:"product_total_price"`
 	}
 
 	OrderUpdate struct {
-		ID            string `json:"id"`
-		Status        string `json:"status"`
-		LocationURL   string `json:"location_url"`
-		PaymentMethod string `json:"payment_method"`
-		BussnesId     string
-		StatusNumber  int
-		StatusID      *string
+		ID            string  `json:"id"`
+		Status        string  `json:"status"`
+		LocationURL   string  `json:"location_url"`
+		PaymentMethod string  `json:"payment_method"`
+		BussnesId     string  `json:"bussnes_id"`
+		StatusNumber  int     `json:"status_number"`
+		StatusID      *string `json:"status_id"`
 	}
+
 	OrderUpdateForSwagger struct {
 		Status string `json:"status"`
-		// LocationURL   string `json:"location_url"`
-		// PaymentMethod string `json:"payment_method"`
 	}
 
 	GetAllOrdersResponse struct {
@@ -80,32 +78,32 @@ type (
 	}
 
 	OrderFilter struct {
-		ID            string
-		ClientID      string
-		BusinessID    string
-		Status        string
-		PaymentMethod string
-		Platform      string
-		Search        string
-		Daye          int
+		ID            string `json:"id"`
+		ClientID      string `json:"client_id"`
+		BusinessID    string `json:"business_id"`
+		Status        string `json:"status"`
+		PaymentMethod string `json:"payment_method"`
+		Platform      string `json:"platform"`
+		Search        string `json:"search"`
+		Daye          int    `json:"daye"`
 	}
-	OrderProductBuOrderID struct {
-		ProductID    string
-		Name         string
-		ImageURL     string
-		Cost         int
-		Status       bool
-		Discount     int
-		DiscountCost int
-		ShortInfo    string
-		Description  string
-		CreatedAt    time.Time
-		UpdatedAt    time.Time
 
-		Count                 int
-		Price                 float64
-		ProductTotalPrice     float64
-		OrderProductCreatedAt time.Time
+	OrderProductBuOrderID struct {
+		ProductID             string    `json:"product_id"`
+		Name                  string    `json:"name"`
+		ImageURL              string    `json:"image_url"`
+		Cost                  int       `json:"cost"`
+		Status                bool      `json:"status"`
+		Discount              int       `json:"discount"`
+		DiscountCost          int       `json:"discount_cost"`
+		ShortInfo             string    `json:"short_info"`
+		Description           string    `json:"description"`
+		CreatedAt             time.Time `json:"created_at"`
+		UpdatedAt             time.Time `json:"updated_at"`
+		Count                 int       `json:"count"`
+		Price                 float64   `json:"price"`
+		ProductTotalPrice     float64   `json:"product_total_price"`
+		OrderProductCreatedAt time.Time `json:"order_product_created_at"`
 	}
 )
 
@@ -119,6 +117,7 @@ type (
 		Count      int    `json:"count"`
 		Cost       int    `json:"cost"`
 	}
+
 	UpdateOrderProductsRequest struct {
 		ID         string `json:"id"`
 		BusinessID string `json:"business_id"`
@@ -127,6 +126,7 @@ type (
 		Count      int    `json:"count"`
 		Cost       int    `json:"cost"`
 	}
+
 	OrderProducts struct {
 		ID         string    `json:"id"`
 		BusinessID string    `json:"business_id"`
@@ -146,16 +146,16 @@ type OrderStatus struct {
 	CustomName   string              `json:"custom_name"`
 	TypeName     string              `json:"type_name"`
 	StatusNumber int                 `json:"status_number"`
-	OrderCount   int                 `json:"order_count"` // yangi maydon
+	FonColor     string              `json:"fon_color"`
+	OrderCount   int                 `json:"order_count"`
 	CreatedAt    time.Time           `json:"created_at"`
 	Prompts      PromptOrderResponse `json:"prompts"`
-	FonColor     string              `json:"fon_color"`
 }
 
 type OrderStatusFilter struct {
-	BusinessID string
-	Status     string
-	Days       int `json:"daye"`
+	BusinessID string `json:"business_id"`
+	Status     string `json:"status"`
+	Days       int    `json:"daye"`
 }
 
 type CreateOrderStatusRequest struct {

@@ -139,7 +139,7 @@ func NewConfig() (*Config, error) {
 	config.PG.PoolMax = cast.ToInt(getEnv("POSTGRES_POOL_MAX", "1"))
 
 	// redis configuration
-	config.Redis.Host = getEnv("REDIS_HOST", "3.75.171.99")
+	config.Redis.Host = getEnv("REDIS_HOST", "108.181.201.147")
 	config.Redis.Port = getEnv("REDIS_PORT", "6378")
 	config.Redis.Password = getEnv("REDIS_PASSWORD", "")
 	config.Redis.Name = getEnv("REDIS_DATABASE", "0")
@@ -300,7 +300,7 @@ func getEnv(key, defaultValue string) string {
 
 // 	// db configuration
 
-// 	config.DB.Host = getEnv("POSTGRES_HOST", "3.75.171.99")
+// 	config.DB.Host = getEnv("POSTGRES_HOST", "108.181.201.147")
 // 	config.DB.Port = getEnv("POSTGRES_PORT", "5435")
 // 	config.DB.Name = getEnv("POSTGRES_DATABASE", "seller_db")
 // 	config.DB.User = getEnv("POSTGRES_USER", "ai-seller")
@@ -310,7 +310,7 @@ func getEnv(key, defaultValue string) string {
 // 	config.PG.PoolMax = cast.ToInt(getEnv("POSTGRES_POOL_MAX", "1"))
 
 // 	// redis configuration
-// 	config.Redis.Host = getEnv("REDIS_HOST", "3.75.171.99")
+// 	config.Redis.Host = getEnv("REDIS_HOST", "108.181.201.147")
 // 	config.Redis.Port = getEnv("REDIS_PORT", "6378")
 // 	config.Redis.Password = getEnv("REDIS_PASSWORD", "")
 // 	config.Redis.Name = getEnv("REDIS_DATABASE", "0")

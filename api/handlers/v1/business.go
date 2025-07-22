@@ -222,7 +222,7 @@ func (b *businessRoutes) GetAllBusinesses(c *gin.Context) {
 		OwnerID: c.Query("user_id"),
 	}
 
-	fmt.Println(req)
+	
 	// UserId, code := helper.GetUserIdFromToken(c, b.Config)
 	// if code != 0 {
 
