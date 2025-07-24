@@ -16,7 +16,7 @@ type (
 		DiscountCost int      `json:"discount_cost"`
 		Discount     int      `json:"discount"`
 		Status       bool     `json:"status"`
-		Image_url    []string `json:"image_urls"`
+		Image_url    []string `json:"image_url"`
 	}
 	CreateProductImage struct {
 		ProductId string `json:"product_id"`
@@ -33,7 +33,7 @@ type (
 		DiscountCost int      `json:"discount_cost"`
 		Discount     int      `json:"discount"`
 		Status       bool     `json:"status"`
-		Image_url    []string `json:"image_urls"`
+		Image_url    []string `json:"image_url"`
 	}
 
 	Product struct {
@@ -49,7 +49,7 @@ type (
 		Discount     int       `json:"discount"`
 		CreatedAt    time.Time `json:"created_at"`
 		UpdatedAt    time.Time `json:"updated_at"`
-		Image_urls   []string  `json:"image_urls"`
+		Image_urls   []string  `json:"image_url"`
 		ProductId    int       `json:"product_id"`
 		Status       bool      `json:"status"`
 		CategoryName string    `json:"category"`
@@ -66,7 +66,7 @@ type (
 		DiscountCost int      `json:"discount_cost"`
 		Discount     int      `json:"discount"`
 		Status       *bool    `json:"status"`
-		Image_url    []string `json:"image_urls"`
+		Image_url    []string `json:"image_url"`
 	}
 
 	UpdateProductRequestForSwagger struct {
@@ -79,7 +79,7 @@ type (
 		DiscountCost int      `json:"discount_cost"`
 		Discount     int      `json:"discount"`
 		Status       *bool    `json:"status"`
-		Image_url    []string `json:"image_urls"`
+		Image_url    []string `json:"image_url"`
 	}
 
 	GetAllProductsRequest struct {
