@@ -106,50 +106,70 @@ GROUP BY
 
 	var order *entity.Order
 	products := make([]entity.OrderProduct, 0)
-
 	for rows.Next() {
 		var (
 			o                     entity.Order
 			product               entity.OrderProduct
 			nullStatusChangedTime sql.NullTime
-
+	
 			clientGUID    sql.NullString
 			clientName    sql.NullString
 			clientPhone   sql.NullString
 			imageurl      sql.NullString
-			primageurl    sql.NullString
 			username      sql.NullString
 			paymentMethod sql.NullString
 			location      sql.NullString
 			description   sql.NullString
+	
+			productID         sql.NullString
+			productName       sql.NullString
+			productImageURLs  sql.NullString
+			productCost       sql.NullInt64
+			productCount      sql.NullInt64
+			productTotalPrice sql.NullInt64
 		)
-
+	
 		err = rows.Scan(
 			&o.ID, &o.OrderId, &o.StatusNumber, &imageurl, &o.BusinessID, &o.Platform, &o.LocationURL, &o.Status, &o.TotalPrice,
 			&paymentMethod, &nullStatusChangedTime, &o.CreatedAt, &o.UpdatedAt, &location, &description,
-
-			&clientGUID, &clientName, &clientPhone, &username, // client
-
-			&product.ProductID, &product.Name, &primageurl, &product.Cost,
-			&product.Count, &product.ProductTotalPrice,
+	
+			&clientGUID, &clientName, &clientPhone, &username,
+	
+			&productID, &productName, &productImageURLs, &productCost,
+			&productCount, &productTotalPrice,
 		)
-
-		if primageurl.Valid {
-			product.ImageURL = strings.Split(primageurl.String, ",")
-		}
-		products = append(products, product)
 		if err != nil {
 			return nil, fmt.Errorf("OrderRepo - Get - scan row: %w", err)
 		}
-
+	
+		// Faqat birinchi marta orderni to‘ldiramiz
 		if order == nil {
 			order = &o
 			if nullStatusChangedTime.Valid {
 				order.StatusChangedTime = &nullStatusChangedTime.Time
 			}
 		}
+	
+		// Client
 		if clientGUID.Valid {
 			order.Client.GUID = clientGUID.String
+		}
+		if clientName.Valid {
+			order.Client.Name = clientName.String
+		}
+		if clientPhone.Valid {
+			order.Client.Phone = clientPhone.String
+		}
+		if username.Valid {
+			order.Client.UserName = username.String
+		}
+	
+		// Order
+		if imageurl.Valid {
+			order.ImageUrl = imageurl.String
+		}
+		if paymentMethod.Valid {
+			order.PaymentMethod = paymentMethod.String
 		}
 		if location.Valid {
 			order.Location = location.String
@@ -157,24 +177,30 @@ GROUP BY
 		if description.Valid {
 			order.Description = description.String
 		}
-		if paymentMethod.Valid {
-			order.PaymentMethod = paymentMethod.String
+	
+		// Product
+		if productID.Valid {
+			product.ProductID = productID.String
 		}
-		if username.Valid {
-			order.Client.UserName = username.String
+		if productName.Valid {
+			product.Name = productName.String
 		}
-		if imageurl.Valid {
-			order.ImageUrl = imageurl.String
+		if productImageURLs.Valid {
+			product.ImageURL = strings.Split(productImageURLs.String, ",")
 		}
-
-		if clientName.Valid {
-			order.Client.Name = clientName.String
+		if productCost.Valid {
+			product.Cost = int(productCost.Int64)
 		}
-		if clientPhone.Valid {
-			order.Client.Phone = clientPhone.String
+		if productCount.Valid {
+			product.Count = int(productCount.Int64)
 		}
-
+		if productTotalPrice.Valid {
+			product.ProductTotalPrice = int(productTotalPrice.Int64)
+		}
+	
+		products = append(products, product)
 	}
+	
 
 	if order == nil {
 		return nil, fmt.Errorf("OrderRepo - Get - no order found with id: %s", id)
@@ -252,9 +278,6 @@ func (r *OrderRepo) List(ctx context.Context, filter *entity.OrderFilter, limit,
 	%s
 	ORDER BY o.guid, o.created_at DESC
 `, r.tableName, whereClause)
-
-
-
 
 	if limit > 0 {
 		orderIDQuery += fmt.Sprintf(" LIMIT $%d OFFSET $%d", len(args)+1, len(args)+2)
@@ -577,15 +600,22 @@ func buildWhereClause(filter *entity.OrderFilter, alias string) (string, []inter
 func (r *OrderRepo) GetProductsByOrderID(ctx context.Context, orderID string) ([]entity.OrderProductBuOrderID, error) {
 	query := `
 	SELECT 
-	p.guid, p.name, p.image_url, p.cost, p.status, p.discount_cost, p.discount,
+		p.guid, p.name, 
+		COALESCE(STRING_AGG(pp.image_url, ','), '') AS image_urls,
+		p.cost, p.status, p.discount_cost, p.discount,
 		p.short_info, p.description, p.created_at, p.updated_at,
 		op.count, op.price, op.total_price, op.created_at
 	FROM "order" o
 	JOIN "order" parent_order ON parent_order.guid = o.order_guid
 	JOIN order_products op ON parent_order.guid = op.order_id
 	JOIN product p ON op.product_id = p.guid
-	WHERE o.guid = $1;
-	`
+	LEFT JOIN product_pictures pp ON p.guid = pp.product_id
+	WHERE o.guid = $1
+	GROUP BY 
+		p.guid, p.name, p.cost, p.status, p.discount_cost, p.discount,
+		p.short_info, p.description, p.created_at, p.updated_at,
+		op.count, op.price, op.total_price, op.created_at;
+`
 
 	rows, err := r.db.Query(ctx, query, orderID)
 	if err != nil {
@@ -599,24 +629,24 @@ func (r *OrderRepo) GetProductsByOrderID(ctx context.Context, orderID string) ([
 		var (
 			product entity.OrderProductBuOrderID
 
-			imageURL, shortInfo, description                sql.NullString
+			imageURLs, shortInfo, description               sql.NullString
 			status                                          sql.NullBool
 			discountCost, discount                          sql.NullInt64
 			productCreatedAt, productUpdatedAt, opCreatedAt sql.NullTime
 		)
 
 		err := rows.Scan(
-			&product.ProductID, &product.Name, &imageURL, &product.Cost, &status, &discountCost, &discount,
+			&product.ProductID, &product.Name, &imageURLs,
+			&product.Cost, &status, &discountCost, &discount,
 			&shortInfo, &description, &productCreatedAt, &productUpdatedAt,
-
 			&product.Count, &product.Price, &product.ProductTotalPrice, &opCreatedAt,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("OrderRepo - GetProductsByOrderID - scan: %w", err)
 		}
 
-		if imageURL.Valid {
-			product.ImageURL = imageURL.String
+		if imageURLs.Valid && imageURLs.String != "" {
+			product.ImageURL = strings.Split(imageURLs.String, ",")
 		}
 		if shortInfo.Valid {
 			product.ShortInfo = shortInfo.String

@@ -91,7 +91,7 @@ type (
 	OrderProductBuOrderID struct {
 		ProductID             string    `json:"product_id"`
 		Name                  string    `json:"name"`
-		ImageURL              string    `json:"image_url"`
+		ImageURL              []string  `json:"image_url"`
 		Cost                  int       `json:"cost"`
 		Status                bool      `json:"status"`
 		Discount              int       `json:"discount"`

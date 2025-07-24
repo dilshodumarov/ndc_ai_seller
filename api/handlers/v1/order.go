@@ -52,6 +52,7 @@ func NewOrderRoutes(apiV1Group *gin.RouterGroup, option *handlers.HandlerOption)
 	{
 		orderGroup.POST("/create", r.createOrder)
 		orderGroup.GET("/get/:id", r.getOrder)
+		orderGroup.GET("/products/:id", r.getOrderProductsByOrderID)
 		orderGroup.PUT("/update/:id", r.updateOrder)
 		orderGroup.DELETE("/delete/:id", r.deleteOrder)
 		orderGroup.GET("/export", r.exportOrders)
