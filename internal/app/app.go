@@ -96,11 +96,10 @@ func NewApp(cfg config.Config) (*App, error) {
 		return nil, err
 	}
 
-	fmt.Println("here 1")
+
 
 	enforcer.SetCache(policy.NewCache(&redisdb.Client))
 
-	fmt.Println("here 2")
 
 	var (
 		contextTimeout time.Duration
