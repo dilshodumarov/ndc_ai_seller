@@ -139,7 +139,7 @@ func NewConfig() (*Config, error) {
 	config.PG.PoolMax = cast.ToInt(getEnv("POSTGRES_POOL_MAX", "1"))
 
 	// redis configuration
-	config.Redis.Host = getEnv("REDIS_HOST", "redis")
+	config.Redis.Host = getEnv("REDIS_HOST", "ai-seller-redis")
 	config.Redis.Port = getEnv("REDIS_PORT", "6379")
 	config.Redis.Password = getEnv("REDIS_PASSWORD", "")
 	config.Redis.Name = getEnv("REDIS_DATABASE", "0")
