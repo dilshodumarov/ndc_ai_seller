@@ -140,7 +140,7 @@ func NewConfig() (*Config, error) {
 
 	// redis configuration
 	config.Redis.Host = getEnv("REDIS_HOST", "108.181.201.147")
-	config.Redis.Port = getEnv("REDIS_PORT", "6378")
+	config.Redis.Port = getEnv("REDIS_PORT", "6379")
 	config.Redis.Password = getEnv("REDIS_PASSWORD", "")
 	config.Redis.Name = getEnv("REDIS_DATABASE", "0")
 
