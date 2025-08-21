@@ -84,7 +84,7 @@ func (h *websocketRoutes) WebSocketHandler(c *gin.Context) {
 				conn.Close()
 				break
 			}
-			resp, err := http.Post("http://ai-seller-bot:8081/send-message", "application/json", bytes.NewBuffer(msg))
+			resp, err := http.Post("http://ai-seller-bot:8089/send-message", "application/json", bytes.NewBuffer(msg))
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 				return
@@ -123,13 +123,13 @@ func (h *websocketRoutes) SendChatMessage(c *gin.Context) {
 		UserID = msg.ChatMessage.UserId
 	} else {
 		UserID = msg.Notifications.UserId
-		_,err:=h.NotificationRepo.Create(c, &entity.CreateNotificationRequest{
+		_, err := h.NotificationRepo.Create(c, &entity.CreateNotificationRequest{
 			UserID:  msg.Notifications.UserId,
 			Title:   msg.Notifications.Title,
 			Message: msg.Notifications.Content,
 			Type:    "info",
 		})
-		if err!=nil{
+		if err != nil {
 			fmt.Println(err)
 		}
 	}

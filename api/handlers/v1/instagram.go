@@ -106,7 +106,7 @@ func (b *InstagramRoutes) HandleInstagramWebhook(c *gin.Context) {
 			return
 		}
 		fmt.Println("message: ", string(body))
-		resp, err := http.Post("http://ai-seller-bot:8081/send-message-instagram", "application/json", bytes.NewReader(body))
+		resp, err := http.Post("http://ai-seller-bot:8089/send-message-instagram", "application/json", bytes.NewReader(body))
 		if err != nil {
 			b.handleResponse(c, status_http.Status{
 				Code:          http.StatusInternalServerError,

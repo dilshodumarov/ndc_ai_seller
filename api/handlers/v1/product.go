@@ -119,7 +119,7 @@ func (p *productRoutes) createProduct(c *gin.Context) {
 	// 			return
 	// 		}
 
-	// 		resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
+	// 		resp, err := http.Post("http://ai-seller-bot:8089/notification", "application/json", bytes.NewBuffer(body))
 	// 		if err != nil {
 	// 			log.Println("Failed to send request to bot:", err)
 	// 			return
@@ -209,7 +209,7 @@ func (p *productRoutes) ListProducts(c *gin.Context) {
 		p.handleResponse(c, status_http.Unauthorized, "Unauthorized")
 		return
 	}
-	
+
 	filter := entity.ProductFilter{
 		OwnerID:    ownerId,
 		CategoryID: c.Query("category_id"),
@@ -715,7 +715,7 @@ func (h *productRoutes) handleResponse(c *gin.Context, status status_http.Status
 // 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal JSON"})
 // 		return
 // 	}
-// 	resp, err := http.Post("http://ai-seller-bot:8081/notification", "application/json", bytes.NewBuffer(body))
+// 	resp, err := http.Post("http://ai-seller-bot:8089/notification", "application/json", bytes.NewBuffer(body))
 // 	if err != nil {
 // 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 // 		return

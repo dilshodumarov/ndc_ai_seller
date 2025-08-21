@@ -79,13 +79,13 @@ func (i *integrationRoutes) CreateIntegration(c *gin.Context) {
 		i.handleResponse(c, status_http.InternalServerError, err.Error())
 		return
 	}
-//ai-seller-bot
-	botURL := "http://localhost:8081/start"
+	//ai-seller-bot
+	botURL := "http://localhost:8089/start"
 
 	botReq := entity.BotIntegration{
-		BusinessID:  req.BusinessId,
-		Token: req.IntegrationToken,
-		UserID:UserId,
+		BusinessID: req.BusinessId,
+		Token:      req.IntegrationToken,
+		UserID:     UserId,
 	}
 
 	body, err := json.Marshal(botReq)
@@ -142,8 +142,8 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 	}
 	if req.Token != "" {
 		BotStart := entity.BotIntegration{
-			Token: req.Token,
-			BusinessID:  res.GUID,
+			Token:      req.Token,
+			BusinessID: res.GUID,
 		}
 		body, err := json.Marshal(BotStart)
 		if err != nil {
@@ -151,7 +151,7 @@ func (i *integrationRoutes) UpdateIntegration(c *gin.Context) {
 			return
 		}
 		if res.Itype == "bot" {
-			resp, err := http.Post("http://ai-seller-bot:8081/start", "application/json", bytes.NewBuffer(body))
+			resp, err := http.Post("http://ai-seller-bot:8089/start", "application/json", bytes.NewBuffer(body))
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request"})
 				return
@@ -199,7 +199,7 @@ func (i *integrationRoutes) UpdateStatus(c *gin.Context) {
 
 	if req.Status != "" {
 
-		botURL := "http://ai-seller-bot:8081/"
+		botURL := "http://ai-seller-bot:8089/"
 		if req.Status == "active" {
 			botURL += "start"
 		} else if req.Status == "stop" {
@@ -210,8 +210,8 @@ func (i *integrationRoutes) UpdateStatus(c *gin.Context) {
 		}
 
 		botReq := entity.BotIntegration{
-			BusinessID:  res.BusinessId,
-			Token: res.IntegrationToken,
+			BusinessID: res.BusinessId,
+			Token:      res.IntegrationToken,
 		}
 		if req.Status == "stop" {
 
@@ -314,7 +314,7 @@ func (i *integrationRoutes) SendTelegramCode(c *gin.Context) {
 		return
 	}
 
-	botURL := "http://ai-seller-bot:8081/telegram/send-code"
+	botURL := "http://ai-seller-bot:8089/telegram/send-code"
 
 	body, err := json.Marshal(req)
 	if err != nil {
