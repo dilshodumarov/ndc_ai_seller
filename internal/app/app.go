@@ -81,7 +81,7 @@ func NewApp(cfg config.Config) (*App, error) {
 	// redis init
 	redisdb, err := redis.New(&cfg)
 	if err != nil {
-		return nil, err
+		// return nil, err
 	}
 
 	// otlp collector init
