@@ -79,10 +79,10 @@ func NewApp(cfg config.Config) (*App, error) {
 	}
 
 	// redis init
-	redisdb, err := redis.New(&cfg)
-	if err != nil {
-		// return nil, err
-	}
+	// redisdb, err := redis.New(&cfg)
+	// if err != nil {
+	// 	// return nil, err
+	// }
 
 	// otlp collector init
 	// shutdownOTLP, err := otlp.InitOTLPProvider(&cfg)
@@ -98,7 +98,7 @@ func NewApp(cfg config.Config) (*App, error) {
 
 
 
-	enforcer.SetCache(policy.NewCache(&redisdb.Client))
+	//enforcer.SetCache(policy.NewCache(&redisdb.Client))
 
 
 	var (
@@ -166,7 +166,7 @@ func NewApp(cfg config.Config) (*App, error) {
 		Config:   &cfg,
 		Logger:   logger,
 		DB:       db,
-		RedisDB:  redisdb,
+		//RedisDB:  redisdb,
 		Enforcer: enforcer,
 		//ShutdownOTLP: shutdownOTLP,
 		user:        userUseCase,
